@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/host_cell"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:foreground="?android:attr/selectableItemBackground">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="@string/setting_host_cell_title"
+                style="@style/ListText.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/host_cell_detail"
+                android:textSize="16sp"
+                android:maxLines="2"
+                android:textColor="@color/colorSecondaryText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <View
+            style="@style/DividerDefault"
+            android:layout_gravity="bottom"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/init_cell"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:foreground="?android:attr/selectableItemBackground">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="@string/setting_init_cell_title"
+                style="@style/ListText.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/init_cell_detail"
+                android:text="@string/setting_init_cell_detail"
+                android:textSize="16sp"
+                android:maxLines="2"
+                android:textColor="@color/colorSecondaryText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <View
+            android:layout_gravity="bottom"
+            style="@style/DividerDefault"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/license_cell"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:foreground="?android:attr/selectableItemBackground">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="@string/setting_license_cell_title"
+                style="@style/ListText.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <View
+            android:layout_gravity="bottom"
+            style="@style/DividerDefault"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:foreground="?android:attr/selectableItemBackground">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="@string/setting_version_cell_title"
+                style="@style/ListText.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/version"
+                android:textSize="16sp"
+                android:maxLines="2"
+                android:textColor="@color/colorSecondaryText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <View
+            android:layout_gravity="bottom"
+            style="@style/DividerDefault"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+    </FrameLayout>
+</LinearLayout>

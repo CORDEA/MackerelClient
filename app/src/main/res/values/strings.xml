@@ -1,0 +1,152 @@
+<resources>
+    <string name="app_name">Mackerel Client</string>
+
+    <string name="nav_alert">アラート</string>
+    <string name="nav_service">サービス</string>
+    <string name="nav_host">ホスト</string>
+    <string name="nav_monitor">監視設定</string>
+    <string name="nav_user">ユーザー</string>
+    <string name="nav_setting">設定</string>
+    <string name="nav_mackerel">Mackerel</string>
+    <string name="nav_sign_out">サインアウト</string>
+
+    <string name="prompt_api_key">API Key</string>
+    <string name="prompt_email">メールアドレス (optional)</string>
+    <string name="action_sign_in_short">サインイン</string>
+    <string name="action_sign_out_short">サインアウト</string>
+
+    <string name="title_activity_login">Mackerel Client</string>
+    <string name="title_activity_main">Mackerel Client</string>
+
+    <string name="navigation_drawer_open">ドロワーを開く</string>
+    <string name="navigation_drawer_close">ドロワーを閉じる</string>
+
+    <string name="action_settings">設定</string>
+    <string name="action_discard">変更を破棄する</string>
+    <string name="action_close">アラートを閉じる</string>
+    <string name="action_edit">編集</string>
+    <string name="action_delete">削除</string>
+    <string name="action_retire">退役</string>
+    <string name="action_refresh">更新</string>
+    <string name="action_add">追加</string>
+
+    <string name="in_progress_alert_title">Critical</string>
+    <string name="closed_alert_title">Others</string>
+    <string name="title_activity_metrics">ホストメトリック</string>
+
+    <string name="host_card_loadavg_title">loadavg5</string>
+    <string name="host_card_cpu_title">cpu.user</string>
+    <string name="host_card_memory_title">memory.used</string>
+    <string name="title_activity_service_metrics">サービスメトリック</string>
+
+    <string name="setting_host_cell_title">表示するホストのステータス</string>
+    <string name="setting_init_cell_title">メトリック設定を初期化</string>
+    <string name="setting_init_cell_detail">ホストとサービスで設定されたグラフ設定を初期化します。</string>
+
+    <string name="na_text">NA</string>
+    <string name="title_activity_metrics_edit">メトリックの編集</string>
+    <string name="title_activity_alert_detail">アラートの詳細</string>
+
+    <string name="button_positive">OK</string>
+
+    <string name="alert_detail_status">ステータス</string>
+    <string name="alert_detail_opened_at">発生時刻</string>
+    <string name="alert_detail_closed_at">解決時刻</string>
+    <string name="alert_detail_reason">理由</string>
+    <string name="alert_detail_type">監視設定種別</string>
+    <string name="alert_detail_value">監視対象の値</string>
+    <string name="alert_detail_message">メッセージ</string>
+
+    <string name="monitor_detail_type">監視設定種別</string>
+    <string name="monitor_detail_name">名前</string>
+    <string name="monitor_detail_service">サービス</string>
+    <string name="monitor_detail_duration">条件の持続時間</string>
+    <string name="monitor_detail_metric">メトリック</string>
+    <string name="monitor_detail_warning">Warning 条件</string>
+    <string name="monitor_detail_critical">Critical 条件</string>
+    <string name="monitor_detail_not_interval">通知の再送間隔</string>
+    <string name="monitor_detail_url">Url</string>
+    <string name="monitor_detail_scope">監視対象</string>
+    <string name="monitor_detail_ex_scope">除外対象</string>
+
+    <string name="host_detail_status">ステータス</string>
+    <string name="host_detail_memo">メモ</string>
+    <string name="host_detail_roles">ロール</string>
+    <string name="host_detail_created_at">登録時刻</string>
+
+    <string name="sign_in_error_dialog_title">サインインに失敗しました</string>
+    <string name="sign_in_error_dialog_message_mail">入力されたメールアドレスに該当するユーザーが存在しません。</string>
+    <string name="sign_in_error_dialog_message_key">API key を入力してください。</string>
+
+    <string name="metrics_card_delete_dialog_title">このカードを削除しますか？</string>
+
+    <string name="metrics_edit_dialog_title">メトリック名は最低 1 つ入力してください</string>
+
+    <string name="setting_host_dialog_title">ステータス</string>
+    <string name="title_activity_monitor_detail">監視設定の詳細</string>
+    <string name="title_activity_host_detail">ホストの詳細</string>
+
+    <string name="alert_detail_close_dialog_title">このアラートを閉じますか？</string>
+    <string name="alert_detail_error_close_dialog_title">アラートのクローズに失敗しました</string>
+    <string name="alert_detail_close_positive_button">アラートを閉じる</string>
+
+    <string name="host_detail_retire_dialog_title">このホストを退役させますか？</string>
+    <string name="host_detail_retire_error_dialog_title">ホストの退役に失敗しました</string>
+    <string name="error_403_dialog_message">権限がありません</string>
+
+    <string name="monitor_detail_delete_dialog_title">この監視設定を削除しますか？</string>
+    <string name="monitor_detail_error_dialog_title">監視設定の削除に失敗しました</string>
+    <string name="monitor_refresh_error_dialog_title">監視設定の更新に失敗しました</string>
+
+    <string name="user_delete_dialog_title">このユーザーを削除しますか？</string>
+    <string name="user_delete_error_dialog_title">ユーザーの削除に失敗しました</string>
+
+    <string name="setting_init_dialog_title">メトリック設定を初期化しますか？</string>
+    <string name="setting_init_dialog_positive_button">初期化</string>
+
+    <string name="nav_bar_sign_out_dialog_title">サインアウトしますか？</string>
+    <string name="nav_bar_sign_out_dialog_positive_button">サインアウト</string>
+
+    <string name="delete_positive_button">削除</string>
+    <string name="retire_positive_button">退役</string>
+    <string name="title_activity_monitor_edit">監視設定の編集</string>
+
+    <string name="progress_dialog_title">処理中…</string>
+
+    <string name="format_roles">%d roles</string>
+    <string name="format_roles_ex">99+ roles</string>
+    <string name="format_role">%d role</string>
+
+    <string name="done">完了</string>
+    <string name="discard">変更を破棄</string>
+    <string name="retry">再試行</string>
+    <string name="detail">詳細</string>
+    <string name="delete">削除</string>
+    <string name="edit">編集</string>
+
+    <string name="setting_license_cell_title">ライセンス情報</string>
+    <string name="title_activity_license">ライセンス情報</string>
+    <string name="setting_version_cell_title">バージョン</string>
+
+    <string name="monitor_edit_warning_hint">0.7</string>
+    <string name="monitor_edit_critical_hint">0.9</string>
+    <string name="monitor_edit_scope_hint">service1, service2, …</string>
+
+    <string name="metrics_edit_label_hint">ラベル (optional)</string>
+    <string name="metrics_edit_metric0_hint">cpu.user.percentage</string>
+    <string name="metrics_edit_metric1_hint">loadavg5 (optional)</string>
+
+    <string name="network_error_message">取得できませんでした</string>
+
+    <string name="anonymous">Anonymous</string>
+
+    <string name="service_metrics_notice_title">メトリックグラフ設定がありません</string>
+    <string name="service_metrics_notice_message">このサービスに紐づくメトリックがある場合は、右上のボタンから追加してください。</string>
+
+    <string name="metrics_notice_title">メトリックグラフ設定がありません</string>
+    <string name="metrics_notice_message">右上のボタンからメトリック設定を追加してください。\nテンプレート設定を追加することも出来ます。</string>
+    <string name="metrics_template_button">テンプレート設定を追加</string>
+
+    <string name="setting_status_select_limit_dialog_message">ステータスは 1 つ以上選択してください</string>
+
+</resources>

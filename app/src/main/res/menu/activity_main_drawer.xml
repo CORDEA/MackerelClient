@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:id="@+id/top" android:checkableBehavior="single">
+        <item
+            android:checked="true"
+            android:id="@+id/nav_alert"
+            android:icon="@drawable/ic_notifications_black_24dp"
+            android:title="@string/nav_alert" />
+        <item
+            android:id="@+id/nav_service"
+            android:icon="@drawable/ic_filter_none_black_24dp"
+            android:title="@string/nav_service" />
+        <item
+            android:id="@+id/nav_host"
+            android:icon="@drawable/ic_crop_din_black_24dp"
+            android:title="@string/nav_host" />
+        <item
+            android:id="@+id/nav_monitor"
+            android:icon="@drawable/ic_announcement_black_24dp"
+            android:title="@string/nav_monitor" />
+        <item
+            android:id="@+id/nav_user"
+            android:icon="@drawable/ic_group_black_24dp"
+            android:title="@string/nav_user" />
+    </group>
+
+    <group android:id="@+id/option" android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/action_settings" />
+        <item
+            android:id="@+id/nav_open_mackerel"
+            android:icon="@drawable/ic_exit_to_app_black_24dp"
+            android:title="@string/nav_mackerel" />
+        <item
+            android:id="@+id/nav_sign_out"
+            android:icon="@drawable/ic_exit_to_app_black_24dp"
+            android:title="@string/nav_sign_out" />
+    </group>
+</menu>

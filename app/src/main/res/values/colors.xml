@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimaryLight">#C5CAE9</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimaryText">#212121</color>
+    <color name="colorSecondaryText">#727272</color>
+    <color name="colorDivider">#B6B6B6</color>
+
+    <color name="statusWorking">#2196F3</color>
+    <color name="statusStandby">#4CAF50</color>
+    <color name="statusMaintenance">#FF9800</color>
+    <color name="statusPoweroff">#B6B6B6</color>
+
+    <color name="statusOk">#4CAF50</color>
+    <color name="statusCritical">#F44336</color>
+    <color name="statusWarning">#FF9800</color>
+    <color name="statusUnknown">#B6B6B6</color>
+
+    <color name="background">#EAEAEA</color>
+</resources>
