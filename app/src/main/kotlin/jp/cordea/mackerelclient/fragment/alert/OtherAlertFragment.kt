@@ -101,9 +101,9 @@ class OtherAlertFragment : Fragment() {
                     it.onOtherAlertFragmentResult
                             .asObservable()
                             .filter { it }
-                            .subscribe {
+                            .subscribe({
                                 refresh()
-                            }
+                            }, {})
         }
     }
 

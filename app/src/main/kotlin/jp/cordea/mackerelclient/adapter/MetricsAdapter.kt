@@ -19,11 +19,20 @@ import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.MetricsEditActivity
 import jp.cordea.mackerelclient.model.MetricsParameter
 import jp.cordea.mackerelclient.model.UserMetric
+import kotlin.concurrent.withLock
 
 /**
  * Created by Yoshihiro Tanaka on 16/01/20.
  */
-class MetricsAdapter (val activity: Activity, val items: MutableList<MetricsParameter>, val type: MetricsType, val id: String) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MetricsAdapter (val activity: Activity, val items: MutableList<MetricsParameter>, val type: MetricsType, val id: String, var visibles: Int = 0, var canRefresh: Boolean = false) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private val lock = java.util.concurrent.locks.ReentrantLock()
+
+    private var drawComplete: Int = 0
+
+    companion object {
+        val CustomEventKey = "Removed the card during refresh"
+    }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         (holder as? ViewHolder)?.let {
@@ -60,6 +69,8 @@ class MetricsAdapter (val activity: Activity, val items: MutableList<MetricsPara
                 chart.visibility = View.VISIBLE
                 it.progress.visibility = View.GONE
                 chart.invalidate()
+                ++visibles
+                canRefresh = visibles == itemCount
             }
 
             it.edit.setOnClickListener {
@@ -71,14 +82,17 @@ class MetricsAdapter (val activity: Activity, val items: MutableList<MetricsPara
                 activity.alert {
                     message(R.string.metrics_card_delete_dialog_title)
                     positiveButton(R.string.button_positive, {
-                        val realm = Realm.getInstance(activity)
-                        realm.executeTransaction {
-                            realm.where(UserMetric::class.java).equalTo("id", items[position].id).findFirst().removeFromRealm()
+                        lock.withLock {
+                            val realm = Realm.getInstance(activity)
+                            realm.executeTransaction {
+                                realm.where(UserMetric::class.java).equalTo("id", items[position].id).findFirst().removeFromRealm()
+                            }
+                            realm.close()
+                            items.removeAt(position)
+                            notifyItemRemoved(position)
+                            notifyItemRangeRemoved(position, items.size)
+                            --drawComplete
                         }
-                        realm.close()
-                        items.removeAt(position)
-                        notifyItemRemoved(position)
-                        notifyItemRangeRemoved(position, items.size)
                     })
                 }.show()
             }
@@ -94,10 +108,17 @@ class MetricsAdapter (val activity: Activity, val items: MutableList<MetricsPara
         return items.size
     }
 
-    public fun refreshRecyclerViewItem(item: Pair<Int, LineData?>) {
-        val idx = items.map { it.id }.indexOf(item.first)
-        items[idx] = MetricsParameter(item.first, item.second, items[idx].label, item.second == null)
-        notifyDataSetChanged()
+    public fun refreshRecyclerViewItem(item: Pair<Int, LineData?>, drawCompleteMetrics: Int): Int {
+        drawComplete = drawCompleteMetrics
+        lock.withLock {
+            val idx = items.map { it.id }.indexOf(item.first)
+            if (idx != -1 && idx < items.size) {
+                items[idx] = MetricsParameter(item.first, item.second, items[idx].label, item.second == null)
+                notifyDataSetChanged()
+                return ++drawComplete
+            }
+        }
+        return drawComplete
     }
 
     private class ViewHolder(val view: View): RecyclerView.ViewHolder(view) {

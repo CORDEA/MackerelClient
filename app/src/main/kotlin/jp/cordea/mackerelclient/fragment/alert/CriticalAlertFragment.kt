@@ -100,9 +100,9 @@ class CriticalAlertFragment : android.support.v4.app.Fragment() {
                     it.onCriticalAlertFragmentResult
                             .asObservable()
                             .filter { it }
-                            .subscribe {
+                            .subscribe({
                                 refresh()
-                            }
+                            }, {})
         }
     }
 

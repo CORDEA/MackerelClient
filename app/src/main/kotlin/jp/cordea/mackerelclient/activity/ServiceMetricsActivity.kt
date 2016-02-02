@@ -95,13 +95,13 @@ class ServiceMetricsActivity : AppCompatActivity() {
                 .onChartDataAlive
                 .asObservable()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { it0 ->
-                    (recyclerView.adapter as MetricsAdapter).refreshRecyclerViewItem(it0)
-                    ++drawCompleteMetrics
-                    if (item.size == drawCompleteMetrics) {
+                .subscribe({ it0 ->
+                    val adapter = recyclerView.adapter as MetricsAdapter
+                    drawCompleteMetrics = adapter.refreshRecyclerViewItem(it0, drawCompleteMetrics)
+                    if (adapter.itemCount == drawCompleteMetrics) {
                         enableRefresh = true
                     }
-                }
+                }, {})
 
         if (metrics.size == 0) {
             noticeView.visibility = View.VISIBLE
