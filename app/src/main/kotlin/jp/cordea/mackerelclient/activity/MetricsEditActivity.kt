@@ -4,13 +4,13 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import butterknife.bindView
-import com.pawegio.kandroid.alert
 import io.realm.Realm
 import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.R
@@ -47,7 +47,7 @@ class MetricsEditActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_metrics_edit)
         setSupportActionBar(toolbar)
-        supportActionBar.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         id = intent.getIntExtra(UserMetricKey, -1)
         type = MetricsType.valueOf(intent.getStringExtra(TypeKey))
@@ -105,9 +105,10 @@ class MetricsEditActivity : AppCompatActivity() {
             if (label.text.toString().isNullOrBlank() && m1.isNullOrBlank()) {
                 return false
             } else {
-                alert {
-                    message(R.string.metrics_edit_dialog_title)
-                }.show()
+                AlertDialog
+                        .Builder(this)
+                        .setMessage(R.string.metrics_edit_dialog_title)
+                        .show()
                 return null
             }
         }

@@ -1,6 +1,7 @@
 package jp.cordea.mackerelclient.activity
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -9,7 +10,6 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import butterknife.bindView
-import com.pawegio.kandroid.alert
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.DetailCommonAdapter
 import jp.cordea.mackerelclient.api.MackerelApiClient
@@ -39,7 +39,7 @@ class MonitorDetailActivity : AppCompatActivity() {
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
-        supportActionBar.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val monitor = intent.getParcelableExtra<Monitor>(MonitorKey)
 
@@ -121,39 +121,38 @@ class MonitorDetailActivity : AppCompatActivity() {
         when (item.itemId) {
             android.R.id.home -> finish()
             R.id.action_delete -> {
-                context.alert {
-                    message(R.string.monitor_detail_delete_dialog_title)
-                    positiveButton(R.string.delete_positive_button, {
-                        val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
-                        dialog.show()
-                        MackerelApiClient
-                                .deleteMonitor(context, monitor!!.id!!)
-                                .enqueue(object : Callback<Monitor> {
-                                    override fun onResponse(response: Response<Monitor>?) {
-                                        dialog.dismiss()
-                                        response?.let {
-                                            val success = DialogUtils.switchDialog(context, it,
-                                                    R.string.monitor_detail_error_dialog_title,
-                                                    R.string.error_403_dialog_message)
-                                            if (success) {
-                                                setResult(Activity.RESULT_OK)
-                                                finish()
+                AlertDialog
+                        .Builder(context)
+                        .setMessage(R.string.monitor_detail_delete_dialog_title)
+                        .setPositiveButton(R.string.delete_positive_button, { dialogInterface, i ->
+                            val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
+                            dialog.show()
+                            MackerelApiClient
+                                    .deleteMonitor(context, monitor!!.id!!)
+                                    .enqueue(object : Callback<Monitor> {
+                                        override fun onResponse(response: Response<Monitor>?) {
+                                            dialog.dismiss()
+                                            response?.let {
+                                                val success = DialogUtils.switchDialog(context, it,
+                                                        R.string.monitor_detail_error_dialog_title,
+                                                        R.string.error_403_dialog_message)
+                                                if (success) {
+                                                    setResult(Activity.RESULT_OK)
+                                                    finish()
+                                                }
+                                                return
                                             }
-                                            return
+                                            DialogUtils.showDialog(context,
+                                                    R.string.monitor_detail_error_dialog_title)
                                         }
-                                        DialogUtils.showDialog(context,
-                                                R.string.monitor_detail_error_dialog_title)
-                                    }
 
-                                    override fun onFailure(t: Throwable?) {
-                                        dialog.dismiss()
-                                        DialogUtils.showDialog(context,
-                                                R.string.monitor_detail_error_dialog_title)
-                                    }
-                                })
-                    })
-                }
-                .show()
+                                        override fun onFailure(t: Throwable?) {
+                                            dialog.dismiss()
+                                            DialogUtils.showDialog(context,
+                                                    R.string.monitor_detail_error_dialog_title)
+                                        }
+                                    })
+                        }).show()
             }
         }
         return super.onOptionsItemSelected(item)

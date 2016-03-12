@@ -1,12 +1,11 @@
 package jp.cordea.mackerelclient.adapter
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import com.pawegio.kandroid.find
-import com.pawegio.kandroid.inflateLayout
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.response.Alert
 import jp.cordea.mackerelclient.view.CharCircleView
@@ -25,15 +24,15 @@ class OtherAlertAdapter(context: Context, val items: List<Alert>) : ArrayAdapter
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
-        val view = convertView ?: context.inflateLayout(R.layout.list_item_other_alart, parent)
+        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.list_item_other_alart, parent)
 
         val item = getItem(position)
 
-        val detail: TextView = view.find(R.id.detail)
+        val detail: TextView = view.findViewById(R.id.detail) as TextView
         detail.text = item.type + " / " + item.status
-        val name: TextView = view.find(R.id.name)
+        val name: TextView = view.findViewById(R.id.name) as TextView
         name.text = item.hostId
-        val status: CharCircleView = view.find(R.id.status)
+        val status: CharCircleView = view.findViewById(R.id.status) as CharCircleView
         status.setChar(item.status!!.first())
 
         return view

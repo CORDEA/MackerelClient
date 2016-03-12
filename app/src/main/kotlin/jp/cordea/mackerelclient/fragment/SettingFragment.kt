@@ -1,14 +1,14 @@
 package jp.cordea.mackerelclient.fragment
 
 import android.app.AlertDialog
+import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import butterknife.bindView
-import com.pawegio.kandroid.alert
-import com.pawegio.kandroid.startActivity
 import io.realm.Realm
 import jp.cordea.mackerelclient.BuildConfig
 import jp.cordea.mackerelclient.R
@@ -38,9 +38,8 @@ class SettingFragment : android.support.v4.app.Fragment() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup,
-                              savedInstanceState: Bundle?): View {
-        val view = inflater.inflate(R.layout.fragment_setting, container, false)
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater?.inflate(R.layout.fragment_setting, container, false)
         return view
     }
 
@@ -77,7 +76,8 @@ class SettingFragment : android.support.v4.app.Fragment() {
                 }, {})
 
         licenseCell.setOnClickListener {
-            context.startActivity<LicenseActivity>()
+            val intent = Intent(context, LicenseActivity::class.java)
+            startActivity(intent)
         }
 
         version.text = BuildConfig.VERSION_NAME
@@ -112,9 +112,10 @@ class SettingFragment : android.support.v4.app.Fragment() {
                         val inRealm = Realm.getInstance(context)
                         val all = inRealm.allObjects(DisplayHostState::class.java)
                         if (all.filter { it.isDisplay!! }.size == 0) {
-                            context.alert {
-                                message(R.string.setting_status_select_limit_dialog_message)
-                            }.show()
+                            AlertDialog
+                                    .Builder(context)
+                                    .setMessage(R.string.setting_status_select_limit_dialog_message)
+                                    .show()
                             val wk = all.filter { it.name.equals(items[lastItem].name) }.first()
                             inRealm.executeTransaction {
                                 wk.isDisplay = true
@@ -126,17 +127,17 @@ class SettingFragment : android.support.v4.app.Fragment() {
         }
 
         initCell.setOnClickListener {
-            context.alert {
-                message(R.string.setting_init_dialog_title)
-                positiveButton(R.string.setting_init_dialog_positive_button, {
-                    realm = Realm.getInstance(context)
-                    realm.executeTransaction {
-                        it.clear(UserMetric::class.java)
-                    }
-                    realm.close()
-                })
-            }
-            .show()
+            AlertDialog
+                    .Builder(context)
+                    .setMessage(R.string.setting_init_dialog_title)
+                    .setPositiveButton(R.string.setting_init_dialog_positive_button, { dialogInterface, i ->
+                        realm = Realm.getInstance(context)
+                        realm.executeTransaction {
+                            it.clear(UserMetric::class.java)
+                        }
+                        realm.close()
+                    })
+                    .show()
         }
     }
 

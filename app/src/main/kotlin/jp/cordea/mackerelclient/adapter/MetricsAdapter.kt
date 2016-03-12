@@ -1,7 +1,9 @@
 package jp.cordea.mackerelclient.adapter
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -10,8 +12,6 @@ import butterknife.bindView
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.LineData
-import com.pawegio.kandroid.alert
-import com.pawegio.kandroid.inflateLayout
 import io.realm.Realm
 import jp.cordea.mackerelclient.MemoryValueFormatter
 import jp.cordea.mackerelclient.MetricsType
@@ -79,28 +79,28 @@ class MetricsAdapter (val activity: Activity, val items: MutableList<MetricsPara
             }
 
             it.delete.setOnClickListener {
-                activity.alert {
-                    message(R.string.metrics_card_delete_dialog_title)
-                    positiveButton(R.string.button_positive, {
-                        lock.withLock {
-                            val realm = Realm.getInstance(activity)
-                            realm.executeTransaction {
-                                realm.where(UserMetric::class.java).equalTo("id", items[position].id).findFirst().removeFromRealm()
+                AlertDialog
+                        .Builder(activity)
+                        .setMessage(R.string.metrics_card_delete_dialog_title)
+                        .setPositiveButton(R.string.button_positive, { dialogInterface, i ->
+                            lock.withLock {
+                                val realm = Realm.getInstance(activity)
+                                realm.executeTransaction {
+                                    realm.where(UserMetric::class.java).equalTo("id", items[position].id).findFirst().removeFromRealm()
+                                }
+                                realm.close()
+                                items.removeAt(position)
+                                notifyItemRemoved(position)
+                                notifyItemRangeRemoved(position, items.size)
+                                --drawComplete
                             }
-                            realm.close()
-                            items.removeAt(position)
-                            notifyItemRemoved(position)
-                            notifyItemRangeRemoved(position, items.size)
-                            --drawComplete
-                        }
-                    })
-                }.show()
+                        }).show()
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder? {
-        val view = activity.inflateLayout(R.layout.list_item_metrics_chart, parent, false)
+        val view = LayoutInflater.from(activity).inflate(R.layout.list_item_metrics_chart, parent, false)
         return ViewHolder(view)
     }
 

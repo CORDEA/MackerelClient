@@ -11,7 +11,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import butterknife.bindView
-import com.pawegio.kandroid.find
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.DetailCommonAdapter
 import jp.cordea.mackerelclient.api.MackerelApiClient
@@ -38,7 +37,7 @@ class AlertDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_detail_common)
         setSupportActionBar(toolbar)
 
-        supportActionBar.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val alert = intent.getParcelableExtra<Alert>(AlertKey)
 
@@ -84,7 +83,7 @@ class AlertDetailActivity : AppCompatActivity() {
             android.R.id.home -> finish()
             R.id.action_close -> {
                 val layout = layoutInflater.inflate(R.layout.dialog_edittext, null)
-                val editText: EditText = layout.find(R.id.reason)
+                val editText: EditText = layout.findViewById(R.id.reason) as EditText
 
                 AlertDialog.Builder(context)
                         .setTitle(R.string.alert_detail_close_dialog_title)

@@ -5,13 +5,12 @@ import android.support.v7.widget.RecyclerView
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.TextAppearanceSpan
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import butterknife.bindView
-import com.pawegio.kandroid.find
-import com.pawegio.kandroid.inflateLayout
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.HostDetailActivity
 import jp.cordea.mackerelclient.activity.MetricsActivity
@@ -52,12 +51,12 @@ class HostAdapter(val fragment: android.support.v4.app.Fragment, val items: List
 
             it.health.setBackgroundColor(StatusUtils.stringToStatusColor(fragment.context, item.status!!))
 
-            val loadavg: TextView = it.loadavg.find(R.id.value)
-            val loadavgTitle: TextView = it.loadavg.find(R.id.title)
-            val cpu: TextView = it.cpu.find(R.id.value)
-            val cpuTitle: TextView = it.cpu.find(R.id.title)
-            val memory: TextView = it.memory.find(R.id.value)
-            val memoryTitle: TextView = it.memory.find(R.id.title)
+            val loadavg: TextView = it.loadavg.findViewById(R.id.value) as TextView
+            val loadavgTitle: TextView = it.loadavg.findViewById(R.id.title) as TextView
+            val cpu: TextView = it.cpu.findViewById(R.id.value) as TextView
+            val cpuTitle: TextView = it.cpu.findViewById(R.id.title) as TextView
+            val memory: TextView = it.memory.findViewById(R.id.value) as TextView
+            val memoryTitle: TextView = it.memory.findViewById(R.id.title) as TextView
 
             loadavgTitle.text = fragment.resources.getString(R.string.host_card_loadavg_title)
             cpuTitle.text = fragment.resources.getString(R.string.host_card_cpu_title)
@@ -93,7 +92,7 @@ class HostAdapter(val fragment: android.support.v4.app.Fragment, val items: List
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder? {
-        var view = fragment.context.inflateLayout(R.layout.list_item_host, parent, false)
+        var view = LayoutInflater.from(fragment.context).inflate(R.layout.list_item_host, parent, false)
         return ViewHolder(view)
     }
 

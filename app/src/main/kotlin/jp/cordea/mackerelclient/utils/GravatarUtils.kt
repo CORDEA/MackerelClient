@@ -1,6 +1,7 @@
 package jp.cordea.mackerelclient.utils
 
 import java.io.UnsupportedEncodingException
+import java.nio.charset.Charset
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
@@ -21,7 +22,7 @@ class GravatarUtils {
         private fun md5Hex (message: String): String? {
             try {
                 val md = MessageDigest.getInstance("MD5")
-                return hex (md.digest(message.toByteArray("CP1252")))
+                return hex (md.digest(message.toByteArray(Charset.forName("CP1252"))))
             } catch (e: NoSuchAlgorithmException) {
                 e.printStackTrace()
             } catch (e: UnsupportedEncodingException) {

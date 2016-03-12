@@ -158,7 +158,7 @@ class MetricsViewModel(val context: Context) {
                     yValues.add(i, Entry(v.value, i))
                 }
 
-                val dataSet = LineDataSet(yValues.toArrayList(), metricName)
+                val dataSet = LineDataSet(yValues.toList(), metricName)
                 dataSet.lineWidth = 2f
                 dataSet.setDrawCircles(false)
                 dataSet.setDrawCircleHole(false)

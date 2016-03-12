@@ -49,7 +49,7 @@ class ServiceMetricsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_service_metrics)
         setSupportActionBar(toolbar)
 
-        supportActionBar.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         var serviceName = intent.getStringExtra(ServiceNameKey)

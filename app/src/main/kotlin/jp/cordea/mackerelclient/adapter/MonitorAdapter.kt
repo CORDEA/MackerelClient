@@ -2,11 +2,11 @@ package jp.cordea.mackerelclient.adapter
 
 import android.content.Intent
 import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import butterknife.bindView
-import com.pawegio.kandroid.inflateLayout
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.MonitorDetailActivity
 import jp.cordea.mackerelclient.api.response.Monitor
@@ -35,9 +35,9 @@ class MonitorAdapter(val fragment: android.support.v4.app.Fragment, val items: L
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder? {
-        var view = fragment.context.inflateLayout(R.layout.list_item_monitor, parent, false)
+        var view = LayoutInflater.from(fragment.context).inflate(R.layout.list_item_monitor, parent, false)
         if (viewType == 1) {
-            view = fragment.context.inflateLayout(R.layout.list_item_monitor_section, parent, false)
+            view = LayoutInflater.from(fragment.context).inflate(R.layout.list_item_monitor_section, parent, false)
         }
         return ViewHolder(view)
     }

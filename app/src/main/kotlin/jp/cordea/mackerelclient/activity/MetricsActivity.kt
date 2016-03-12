@@ -52,7 +52,7 @@ class MetricsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_metrics)
         setSupportActionBar(toolbar)
 
-        supportActionBar.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         val hostId = intent.getStringExtra(HostIdKey)

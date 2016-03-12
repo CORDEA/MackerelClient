@@ -3,6 +3,7 @@ package jp.cordea.mackerelclient.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.text.SpannableStringBuilder
@@ -13,7 +14,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import butterknife.bindView
-import com.pawegio.kandroid.alert
 import io.realm.Realm
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.MackerelApiClient
@@ -87,10 +87,11 @@ class LoginActivity : AppCompatActivity() {
         button.setOnClickListener {
             val t = apiKey.text
             if (t.isEmpty()) {
-                context.alert {
-                    title(R.string.sign_in_error_dialog_title)
-                    message(R.string.sign_in_error_dialog_message_key)
-                }.show()
+                AlertDialog
+                        .Builder(context)
+                        .setTitle(R.string.sign_in_error_dialog_title)
+                        .setMessage(R.string.sign_in_error_dialog_message_key)
+                        .show()
             } else {
                 progress.visibility = View.VISIBLE
                 container.visibility = View.GONE
@@ -112,10 +113,10 @@ class LoginActivity : AppCompatActivity() {
                     }
                 }, {
                     it.printStackTrace()
-                    context.alert {
-                        message(R.string.sign_in_error_dialog_title)
-                    }.show()
-
+                    AlertDialog
+                            .Builder(context)
+                            .setMessage(R.string.sign_in_error_dialog_title)
+                            .show()
                     container.visibility = View.VISIBLE
                     progress.visibility = View.GONE
                 })
@@ -140,11 +141,11 @@ class LoginActivity : AppCompatActivity() {
             if (response.size == 0) {
                 realm.cancelTransaction()
                 realm.close()
-                context.alert {
-                    title(R.string.sign_in_error_dialog_title)
-                    message(R.string.sign_in_error_dialog_message_mail)
-                }.show()
-
+                AlertDialog
+                        .Builder(context)
+                        .setTitle(R.string.sign_in_error_dialog_title)
+                        .setMessage(R.string.sign_in_error_dialog_message_mail)
+                        .show()
                 container.visibility = View.VISIBLE
                 progress.visibility = View.GONE
             } else {

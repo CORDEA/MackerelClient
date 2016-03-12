@@ -1,6 +1,7 @@
 package jp.cordea.mackerelclient.activity
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -9,7 +10,6 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import butterknife.bindView
-import com.pawegio.kandroid.alert
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.DetailCommonAdapter
 import jp.cordea.mackerelclient.api.MackerelApiClient
@@ -42,7 +42,7 @@ class HostDetailActivity : AppCompatActivity() {
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
-        supportActionBar.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val host = intent.getParcelableExtra<Host>(HostKey)
 
@@ -92,36 +92,36 @@ class HostDetailActivity : AppCompatActivity() {
         when (item.itemId) {
             android.R.id.home -> finish()
             R.id.action_retire -> {
-                context.alert {
-                    message(R.string.host_detail_retire_dialog_title)
-                    positiveButton(R.string.retire_positive_button, {
-                        val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
-                        dialog.show()
-                        MackerelApiClient
-                                .retireHost(context, host!!.id!!)
-                                .enqueue(object : Callback<RetireHost> {
-                                    override fun onResponse(response: Response<RetireHost>?) {
-                                        dialog.dismiss()
-                                        response?.let {
-                                            val success = DialogUtils.switchDialog(context, it,
-                                                    R.string.host_detail_retire_error_dialog_title,
-                                                    R.string.error_403_dialog_message)
-                                            if (success) {
-                                                setResult(Activity.RESULT_OK)
-                                                finish()
+                AlertDialog
+                        .Builder(context)
+                        .setMessage(R.string.host_detail_retire_dialog_title)
+                        .setPositiveButton(R.string.retire_positive_button, { dialogInterface, i ->
+                            val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
+                            dialog.show()
+                            MackerelApiClient
+                                    .retireHost(context, host!!.id!!)
+                                    .enqueue(object : Callback<RetireHost> {
+                                        override fun onResponse(response: Response<RetireHost>?) {
+                                            dialog.dismiss()
+                                            response?.let {
+                                                val success = DialogUtils.switchDialog(context, it,
+                                                        R.string.host_detail_retire_error_dialog_title,
+                                                        R.string.error_403_dialog_message)
+                                                if (success) {
+                                                    setResult(Activity.RESULT_OK)
+                                                    finish()
+                                                }
+                                                return
                                             }
-                                            return
+                                            DialogUtils.showDialog(context, R.string.host_detail_retire_error_dialog_title)
                                         }
-                                        DialogUtils.showDialog(context, R.string.host_detail_retire_error_dialog_title)
-                                    }
 
-                                    override fun onFailure(t: Throwable?) {
-                                        dialog.dismiss()
-                                        DialogUtils.showDialog(context, R.string.host_detail_retire_error_dialog_title)
-                                    }
-                                })
-                    })
-                }.show()
+                                        override fun onFailure(t: Throwable?) {
+                                            dialog.dismiss()
+                                            DialogUtils.showDialog(context, R.string.host_detail_retire_error_dialog_title)
+                                        }
+                                    })
+                        }).show()
             }
         }
         return super.onOptionsItemSelected(item)

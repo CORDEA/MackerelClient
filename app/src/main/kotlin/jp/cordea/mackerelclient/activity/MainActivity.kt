@@ -10,6 +10,7 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
@@ -17,8 +18,6 @@ import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
 import butterknife.bindView
-import com.pawegio.kandroid.alert
-import com.pawegio.kandroid.find
 import com.squareup.picasso.Picasso
 import io.realm.Realm
 import jp.cordea.mackerelclient.PicassoCircularTransform
@@ -54,8 +53,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         navigationView.setNavigationItemSelectedListener(this)
         val header = navigationView.getHeaderView(0)
-        val name: TextView = header.find(R.id.name)
-        val email: TextView = header.find(R.id.email)
+        val name: TextView = header.findViewById(R.id.name) as TextView
+        val email: TextView = header.findViewById(R.id.email) as TextView
 
         val userId = PreferenceUtils.readUserId(applicationContext)
         val realm = Realm.getInstance(applicationContext)
@@ -66,18 +65,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         realm.close()
 
         if (user == null) {
-            alert {
-                title(R.string.nav_bar_sign_out_dialog_title)
-                positiveButton(R.string.nav_bar_sign_out_dialog_positive_button, {
-                    val intent = Intent(this as Context, LoginActivity::class.java)
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                })
-            }.show()
+            AlertDialog
+                    .Builder(this)
+                    .setTitle(R.string.nav_bar_sign_out_dialog_title)
+                    .setPositiveButton(R.string.nav_bar_sign_out_dialog_positive_button, { dialogInterface, i ->
+                        val intent = Intent(this as Context, LoginActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
+                    })
+                    .show()
         } else {
             val u = user!!
             if (!u.email.isNullOrBlank() && !u.name.isNullOrBlank()) {
-                val thumbnail: ImageView = header.find(R.id.user_thumbnail)
+                val thumbnail: ImageView = header.findViewById(R.id.user_thumbnail) as ImageView
                 name.text = u.name
                 email.text = u.email
                 GravatarUtils.getGravatarImage(u.email!!,
@@ -173,26 +173,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun signOut(context: Context) {
-        context.alert {
-            title(R.string.nav_bar_sign_out_dialog_title)
-            positiveButton(R.string.nav_bar_sign_out_dialog_positive_button, {
-                val userId = PreferenceUtils.readUserId(context)
-                val realm = Realm.getInstance(context)
-                realm.executeTransaction {
-                    it.where(UserKey::class.java).equalTo("id", userId).findFirst()?.let {
-                        it.removeFromRealm()
+        AlertDialog
+                .Builder(context)
+                .setTitle(R.string.nav_bar_sign_out_dialog_title)
+                .setPositiveButton(R.string.nav_bar_sign_out_dialog_positive_button, { dialogInterface, i ->
+                    val userId = PreferenceUtils.readUserId(context)
+                    val realm = Realm.getInstance(context)
+                    realm.executeTransaction {
+                        it.where(UserKey::class.java).equalTo("id", userId).findFirst()?.let {
+                            it.removeFromRealm()
+                        }
                     }
-                }
-                realm.close()
+                    realm.close()
 
-                PreferenceUtils.removeUserId(context)
+                    PreferenceUtils.removeUserId(context)
 
-                val intent = Intent(context, LoginActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                startActivity(intent)
-                finish()
-            })
-        }
-        .show()
+                    val intent = Intent(context, LoginActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    startActivity(intent)
+                    finish()
+                })
+                .show()
     }
 }

@@ -2,13 +2,12 @@ package jp.cordea.mackerelclient.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import butterknife.bindView
-import com.pawegio.kandroid.find
-import com.pawegio.kandroid.inflateLayout
 import jp.cordea.mackerelclient.R
 
 /**
@@ -20,8 +19,8 @@ class DetailCommonAdapter(val context: Context, val items: List<List<Pair<String
         (holder as? ViewHolder)?.let {
             if (items[position].size > 0) {
                 sections?.let { sections ->
-                    val section = context.inflateLayout(R.layout.list_item_detail_common_section, it.container, false)
-                    val name: TextView = section.find(R.id.title)
+                    val section = LayoutInflater.from(context).inflate(R.layout.list_item_detail_common_section, it.container, false)
+                    val name: TextView = section.findViewById(R.id.title) as TextView
                     it.container.addView(section)
                     name.text = sections[position]
                 }
@@ -31,10 +30,10 @@ class DetailCommonAdapter(val context: Context, val items: List<List<Pair<String
                     if (item.first.isNullOrBlank()) {
                         continue
                     }
-                    val layout = context.inflateLayout(R.layout.list_item_detail_common_content, it.container, false)
-                    val title: TextView = layout.find(R.id.title)
-                    val detail: TextView = layout.find(R.id.detail)
-                    divider = layout.find(R.id.divider)
+                    val layout = LayoutInflater.from(context).inflate(R.layout.list_item_detail_common_content, it.container, false)
+                    val title: TextView = layout.findViewById(R.id.title) as TextView
+                    val detail: TextView = layout.findViewById(R.id.detail) as TextView
+                    divider = layout.findViewById(R.id.divider)
                     title.text = item.first
                     detail.text = context.resources.getString(item.second)
                     it.container.addView(layout)
@@ -47,7 +46,7 @@ class DetailCommonAdapter(val context: Context, val items: List<List<Pair<String
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder? {
-        var view = context.inflateLayout(R.layout.list_item_detail_common_card, parent, false)
+        var view = LayoutInflater.from(context).inflate(R.layout.list_item_detail_common_card, parent, false)
         return ViewHolder(view)
     }
 

@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ListView
 import butterknife.bindView
-import com.pawegio.kandroid.find
 import io.realm.Realm
 import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.R
@@ -39,9 +38,8 @@ class ServiceFragment : android.support.v4.app.Fragment() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup,
-                              savedInstanceState: Bundle?): View {
-        val view = inflater.inflate(R.layout.fragment_service, container, false)
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater?.inflate(R.layout.fragment_service, container, false)
         return view
     }
 
@@ -62,7 +60,7 @@ class ServiceFragment : android.support.v4.app.Fragment() {
             refresh()
         }
 
-        val retry: Button = error.find(R.id.retry)
+        val retry: Button = error.findViewById(R.id.retry) as Button
         retry.setOnClickListener {
             progress.visibility = View.VISIBLE
             error.visibility = View.GONE
