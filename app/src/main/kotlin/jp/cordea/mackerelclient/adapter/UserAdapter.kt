@@ -16,6 +16,7 @@ import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.User
 import jp.cordea.mackerelclient.utils.DialogUtils
 import jp.cordea.mackerelclient.utils.GravatarUtils
+import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
@@ -59,7 +60,7 @@ class UserAdapter(context: Context, val items: List<User>, val own: String?) : A
                             MackerelApiClient
                                     .deleteUser(context, items[position].id)
                                     .enqueue(object : Callback<User> {
-                                        override fun onResponse(response: Response<User>?) {
+                                        override fun onResponse(p0: Call<User>?, response: Response<User>?) {
                                             dialog.dismiss()
                                             response?.let {
                                                 val success = DialogUtils.switchDialog(context, it,
@@ -74,7 +75,7 @@ class UserAdapter(context: Context, val items: List<User>, val own: String?) : A
                                                     R.string.user_delete_error_dialog_title)
                                         }
 
-                                        override fun onFailure(t: Throwable?) {
+                                        override fun onFailure(p0: Call<User>?, p1: Throwable?) {
                                             dialog.dismiss()
                                             DialogUtils.showDialog(context,
                                                     R.string.user_delete_error_dialog_title)

@@ -18,6 +18,7 @@ import jp.cordea.mackerelclient.api.response.RetireHost
 import jp.cordea.mackerelclient.utils.DateUtils
 import jp.cordea.mackerelclient.utils.DialogUtils
 import jp.cordea.mackerelclient.utils.StatusUtils
+import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import rx.Subscription
@@ -101,7 +102,7 @@ class HostDetailActivity : AppCompatActivity() {
                             MackerelApiClient
                                     .retireHost(context, host!!.id!!)
                                     .enqueue(object : Callback<RetireHost> {
-                                        override fun onResponse(response: Response<RetireHost>?) {
+                                        override fun onResponse(p0: Call<RetireHost>?, response: Response<RetireHost>?) {
                                             dialog.dismiss()
                                             response?.let {
                                                 val success = DialogUtils.switchDialog(context, it,
@@ -116,7 +117,7 @@ class HostDetailActivity : AppCompatActivity() {
                                             DialogUtils.showDialog(context, R.string.host_detail_retire_error_dialog_title)
                                         }
 
-                                        override fun onFailure(t: Throwable?) {
+                                        override fun onFailure(p0: Call<RetireHost>?, p1: Throwable?) {
                                             dialog.dismiss()
                                             DialogUtils.showDialog(context, R.string.host_detail_retire_error_dialog_title)
                                         }

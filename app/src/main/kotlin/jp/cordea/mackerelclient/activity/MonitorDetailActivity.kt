@@ -15,6 +15,7 @@ import jp.cordea.mackerelclient.adapter.DetailCommonAdapter
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Monitor
 import jp.cordea.mackerelclient.utils.DialogUtils
+import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import rx.Subscription
@@ -130,7 +131,7 @@ class MonitorDetailActivity : AppCompatActivity() {
                             MackerelApiClient
                                     .deleteMonitor(context, monitor!!.id!!)
                                     .enqueue(object : Callback<Monitor> {
-                                        override fun onResponse(response: Response<Monitor>?) {
+                                        override fun onResponse(p0: Call<Monitor>?, response: Response<Monitor>?) {
                                             dialog.dismiss()
                                             response?.let {
                                                 val success = DialogUtils.switchDialog(context, it,
@@ -146,7 +147,7 @@ class MonitorDetailActivity : AppCompatActivity() {
                                                     R.string.monitor_detail_error_dialog_title)
                                         }
 
-                                        override fun onFailure(t: Throwable?) {
+                                        override fun onFailure(p0: Call<Monitor>?, p1: Throwable?) {
                                             dialog.dismiss()
                                             DialogUtils.showDialog(context,
                                                     R.string.monitor_detail_error_dialog_title)

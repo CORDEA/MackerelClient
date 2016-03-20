@@ -18,6 +18,7 @@ import jp.cordea.mackerelclient.api.response.Alert
 import jp.cordea.mackerelclient.api.response.CloseAlert
 import jp.cordea.mackerelclient.utils.DateUtils
 import jp.cordea.mackerelclient.utils.DialogUtils
+import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
@@ -94,7 +95,7 @@ class AlertDetailActivity : AppCompatActivity() {
                             MackerelApiClient
                                     .closeAlert(context, alert!!.id!!, CloseAlert(editText.text.toString()))
                                     .enqueue(object : Callback<Alert> {
-                                        override fun onResponse(response: Response<Alert>?) {
+                                        override fun onResponse(p0: Call<Alert>?, response: Response<Alert>?) {
                                             dialog.dismiss()
                                             response?.let {
                                                 val success = DialogUtils.switchDialog(context, it,
@@ -110,7 +111,7 @@ class AlertDetailActivity : AppCompatActivity() {
                                                     R.string.alert_detail_error_close_dialog_title)
                                         }
 
-                                        override fun onFailure(t: Throwable?) {
+                                        override fun onFailure(p0: Call<Alert>?, p1: Throwable?) {
                                             dialog.dismiss()
                                             DialogUtils.showDialog(context,
                                                     R.string.alert_detail_error_close_dialog_title)

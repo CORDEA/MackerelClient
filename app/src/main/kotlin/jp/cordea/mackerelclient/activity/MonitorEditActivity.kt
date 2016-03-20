@@ -13,6 +13,7 @@ import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Monitor
 import jp.cordea.mackerelclient.api.response.RefreshMonitor
 import jp.cordea.mackerelclient.utils.DialogUtils
+import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
@@ -81,7 +82,7 @@ class MonitorEditActivity : AppCompatActivity() {
             MackerelApiClient
                     .refreshMonitor(applicationContext, ref.id!!, ref)
                     .enqueue(object : Callback<RefreshMonitor> {
-                        override fun onResponse(response: Response<RefreshMonitor>?) {
+                        override fun onResponse(p0: Call<RefreshMonitor>?, response: Response<RefreshMonitor>?) {
                             dialog.dismiss()
                             response?.let {
                                 if (it.isSuccess) {
@@ -97,7 +98,7 @@ class MonitorEditActivity : AppCompatActivity() {
                                     R.string.monitor_refresh_error_dialog_title)
                         }
 
-                        override fun onFailure(t: Throwable?) {
+                        override fun onFailure(p0: Call<RefreshMonitor>?, p1: Throwable?) {
                             dialog.dismiss()
                             DialogUtils.showDialog(context,
                                     R.string.monitor_refresh_error_dialog_title)
