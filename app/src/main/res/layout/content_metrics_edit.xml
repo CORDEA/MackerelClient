@@ -10,7 +10,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MetricsEditActivity"
+    tools:context=".activity.MetricsEditActivity"
     tools:showIn="@layout/activity_metrics_edit">
 
     <LinearLayout
@@ -23,15 +23,15 @@
         <ImageView
             android:src="@drawable/ic_label_black_24dp"
             style="@style/IconActive"
-            android:layout_marginRight="16dp"
-            android:layout_width="24dp"
-            android:layout_height="24dp" />
+            android:layout_marginRight="@dimen/metrics_edit_icon_margin_right"
+            android:layout_width="@dimen/common_icon_size"
+            android:layout_height="@dimen/common_icon_size" />
 
         <EditText
             android:id="@+id/label"
             android:hint="@string/metrics_edit_label_hint"
             android:layout_width="match_parent"
-            android:layout_height="48dp" />
+            android:layout_height="@dimen/metrics_edit_label_height" />
 
     </LinearLayout>
 
@@ -44,23 +44,23 @@
         <ImageView
             android:src="@drawable/ic_timeline_black_24dp"
             style="@style/IconActive"
-            android:layout_marginRight="16dp"
-            android:layout_width="24dp"
-            android:layout_height="24dp" />
+            android:layout_marginRight="@dimen/metrics_edit_icon_margin_right"
+            android:layout_width="@dimen/common_icon_size"
+            android:layout_height="@dimen/common_icon_size" />
 
         <EditText
             android:id="@+id/metric_0"
             android:hint="@string/metrics_edit_metric0_hint"
             android:layout_width="match_parent"
-            android:layout_height="48dp" />
+            android:layout_height="@dimen/metrics_edit_label_height" />
 
     </LinearLayout>
 
     <EditText
         android:id="@+id/metric_1"
         android:hint="@string/metrics_edit_metric1_hint"
-        android:layout_marginLeft="40dp"
+        android:layout_marginLeft="@dimen/metrics_edit_label_margin_left"
         android:layout_width="match_parent"
-        android:layout_height="48dp" />
+        android:layout_height="@dimen/metrics_edit_label_height" />
 
 </LinearLayout>

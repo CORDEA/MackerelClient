@@ -8,14 +8,14 @@
 
         <ImageView
             style="@style/IconActive"
-            android:layout_marginRight="16dp"
-            android:layout_width="24dp"
-            android:layout_height="24dp" />
+            android:layout_marginRight="@dimen/list_item_edit_icon_margin_right"
+            android:layout_width="@dimen/common_icon_size"
+            android:layout_height="@dimen/common_icon_size" />
 
         <EditText
             android:id="@+id/label"
             android:hint="test"
             android:layout_width="match_parent"
-            android:layout_height="48dp" />
+            android:layout_height="@dimen/list_item_edit_label_height" />
 
 </LinearLayout>

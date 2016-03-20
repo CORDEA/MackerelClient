@@ -30,12 +30,12 @@
         android:layout_alignParentBottom="true"
         android:background="@color/background"
         android:layout_width="match_parent"
-        android:layout_height="48dp">
+        android:layout_height="@dimen/monitor_edit_bar_height">
         <View
             style="@style/DividerDefault"
             android:layout_gravity="top"
             android:layout_width="match_parent"
-            android:layout_height="1dp" />
+            android:layout_height="@dimen/common_divider_height" />
         <LinearLayout
             android:orientation="horizontal"
             android:layout_gravity="right|center_vertical"
@@ -46,19 +46,19 @@
             style="@style/Widget.AppCompat.Button.Colored"
             android:text="@string/discard"
             android:id="@+id/discard"
-            android:layout_marginRight="8dp"
+            android:layout_marginRight="@dimen/monitor_edit_button_margin_right"
             android:layout_width="wrap_content"
-            android:minWidth="64dp"
+            android:minWidth="@dimen/monitor_edit_button_min_width"
             android:layout_height="match_parent" />
+
         <Button
             style="@style/Widget.AppCompat.Button.Colored"
             android:text="@string/done"
             android:id="@+id/done"
-            android:layout_marginRight="8dp"
+            android:layout_marginRight="@dimen/monitor_edit_button_margin_right"
             android:layout_width="wrap_content"
-            android:minWidth="64dp"
+            android:minWidth="@dimen/monitor_edit_button_min_width"
             android:layout_height="match_parent" />
         </LinearLayout>
     </FrameLayout>
-
 </RelativeLayout>

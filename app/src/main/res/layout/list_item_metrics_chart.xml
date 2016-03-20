@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp">
+            android:layout_height="@dimen/card_metrics_chart_height">
             <FrameLayout
                 android:id="@+id/progress"
                 android:orientation="vertical"
@@ -45,24 +45,24 @@
 
             <View
                 style="@style/DividerDefault"
-                android:layout_marginRight="16dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginRight="@dimen/card_metrics_content_margin"
+                android:layout_marginLeft="@dimen/card_metrics_content_margin"
                 android:layout_width="match_parent"
-                android:layout_height="1dp" />
+                android:layout_height="@dimen/common_divider_height" />
 
             <TextView
                 android:id="@+id/title"
                 android:textSize="24sp"
                 android:textColor="@color/colorPrimaryText"
-                android:layout_marginTop="24dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginTop="@dimen/card_metrics_title_margin_top"
+                android:layout_marginRight="@dimen/card_metrics_content_margin"
+                android:layout_marginLeft="@dimen/card_metrics_content_margin"
+                android:layout_marginBottom="@dimen/card_metrics_content_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <LinearLayout
-                android:layout_marginBottom="2dp"
+                android:layout_marginBottom="@dimen/card_metrics_button_bar_margin_bottom"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -71,8 +71,8 @@
                     style="?attr/buttonBarButtonStyle"
                     android:id="@+id/edit"
                     android:text="@string/edit"
-                    android:layout_marginLeft="4dp"
-                    android:minWidth="72dp"
+                    android:layout_marginLeft="@dimen/card_metrics_button_bar_button_margin_left"
+                    android:minWidth="@dimen/card_metrics_button_bar_button_min_width"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
@@ -80,7 +80,7 @@
                     style="?attr/buttonBarButtonStyle"
                     android:id="@+id/delete"
                     android:text="@string/delete"
-                    android:minWidth="72dp"
+                    android:minWidth="@dimen/card_metrics_button_bar_button_min_width"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 

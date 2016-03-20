@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="72dp">
+    android:layout_height="@dimen/common_cell_height">
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginRight="@dimen/list_item_user_margin_side"
+        android:layout_marginLeft="@dimen/list_item_user_margin_side"
         android:layout_gravity="center_vertical"
         android:layout_height="wrap_content"
         android:layout_width="match_parent" >
@@ -14,8 +14,8 @@
         <ImageView
             android:id="@+id/user_thumbnail"
             android:layout_centerVertical="true"
-            android:layout_width="40dp"
-            android:layout_height="40dp" />
+            android:layout_width="@dimen/user_thumbnail_size_small"
+            android:layout_height="@dimen/user_thumbnail_size_small" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -23,8 +23,8 @@
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="36dp"
+                android:layout_marginLeft="@dimen/list_item_user_text_margin_left"
+                android:layout_marginRight="@dimen/list_item_user_text_margin_right"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
@@ -48,8 +48,8 @@
                 style="@style/IconActive"
                 android:src="@drawable/ic_delete_black_24dp"
                 android:layout_gravity="right|center_vertical"
-                android:layout_width="24dp"
-                android:layout_height="24dp" />
+                android:layout_width="@dimen/common_icon_size"
+                android:layout_height="@dimen/common_icon_size" />
         </FrameLayout>
     </LinearLayout>
 </FrameLayout>

@@ -83,7 +83,7 @@ class AlertDetailActivity : AppCompatActivity() {
         when (item.itemId) {
             android.R.id.home -> finish()
             R.id.action_close -> {
-                val layout = layoutInflater.inflate(R.layout.dialog_edittext, null)
+                val layout = layoutInflater.inflate(R.layout.dialog_edit_text, null)
                 val editText: EditText = layout.findViewById(R.id.reason) as EditText
 
                 AlertDialog.Builder(context)

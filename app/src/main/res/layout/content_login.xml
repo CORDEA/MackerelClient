@@ -36,7 +36,7 @@
                 android:imeOptions="actionNext"
                 android:layout_width="match_parent"
                 android:singleLine="true"
-                android:layout_height="50dp" />
+                android:layout_height="@dimen/login_edit_text_height" />
 
             <EditText
                 android:id="@+id/email"
@@ -44,16 +44,16 @@
                 android:imeOptions="actionDone"
                 android:layout_width="match_parent"
                 android:singleLine="true"
-                android:layout_height="50dp" />
+                android:layout_height="@dimen/login_edit_text_height" />
 
             <Button
                 android:id="@+id/button"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:text="@string/action_sign_in_short"
-                android:minWidth="64dp"
-                android:layout_marginTop="50dp"
+                android:minWidth="@dimen/login_button_min_width"
+                android:layout_marginTop="@dimen/login_edit_text_height"
                 android:layout_width="match_parent"
-                android:layout_height="48dp" />
+                android:layout_height="@dimen/login_button_height" />
         </LinearLayout>
     </FrameLayout>
 </RelativeLayout>

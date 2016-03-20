@@ -21,7 +21,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="@dimen/monitor_edit_item_margin"
             android:orientation="vertical"
             android:gravity="center_vertical"
             android:layout_width="match_parent"
@@ -38,7 +38,7 @@
                 android:textSize="17sp"
                 android:id="@+id/type"
                 android:layout_width="match_parent"
-                android:layout_height="48dp" />
+                android:layout_height="@dimen/monitor_edit_text_height" />
 
         </LinearLayout>
 
@@ -56,13 +56,13 @@
 
                 <TextView
                     android:text="@string/monitor_detail_name"
-                    android:layout_width="80dp"
+                    android:layout_width="@dimen/monitor_edit_text_width"
                     android:layout_height="wrap_content" />
 
                 <EditText
                     android:id="@+id/name"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp" />
+                    android:layout_height="@dimen/monitor_edit_text_height" />
 
             </LinearLayout>
 
@@ -74,13 +74,13 @@
 
                 <TextView
                     android:text="@string/monitor_detail_service"
-                    android:layout_width="80dp"
+                    android:layout_width="@dimen/monitor_edit_text_width"
                     android:layout_height="wrap_content" />
 
                 <EditText
                     android:id="@+id/service"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp" />
+                    android:layout_height="@dimen/monitor_edit_text_height" />
 
             </LinearLayout>
 
@@ -92,14 +92,14 @@
 
                 <TextView
                     android:text="@string/monitor_detail_duration"
-                    android:layout_width="80dp"
+                    android:layout_width="@dimen/monitor_edit_text_width"
                     android:layout_height="wrap_content" />
 
                 <EditText
                     android:id="@+id/duration"
                     android:inputType="number"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp" />
+                    android:layout_height="@dimen/monitor_edit_text_height" />
 
             </LinearLayout>
 
@@ -111,18 +111,18 @@
 
                 <TextView
                     android:text="@string/monitor_detail_metric"
-                    android:layout_width="80dp"
+                    android:layout_width="@dimen/monitor_edit_text_width"
                     android:layout_height="wrap_content" />
 
                 <EditText
                     android:id="@+id/metric"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp" />
+                    android:layout_height="@dimen/monitor_edit_text_height" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="@dimen/monitor_edit_item_margin"
                 android:orientation="vertical"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
@@ -136,11 +136,11 @@
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp">
+                    android:layout_height="@dimen/monitor_edit_text_height">
 
                     <Spinner
                         android:id="@+id/operator"
-                        android:layout_width="60dp"
+                        android:layout_width="@dimen/monitor_edit_spinner_width"
                         android:layout_height="match_parent" />
 
                     <EditText
@@ -167,11 +167,11 @@
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp">
+                    android:layout_height="@dimen/monitor_edit_text_height">
 
                     <Spinner
                         android:id="@+id/operator_pair"
-                        android:layout_width="60dp"
+                        android:layout_width="@dimen/monitor_edit_spinner_width"
                         android:layout_height="match_parent" />
 
                     <EditText
@@ -199,7 +199,7 @@
                     android:id="@+id/notification_interval"
                     android:inputType="number"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp" />
+                    android:layout_height="@dimen/monitor_edit_text_height" />
 
             </LinearLayout>
 
@@ -220,7 +220,7 @@
                 android:id="@+id/scopes"
                 android:hint="@string/monitor_edit_scope_hint"
                 android:layout_width="match_parent"
-                android:layout_height="48dp" />
+                android:layout_height="@dimen/monitor_edit_text_height" />
 
         </LinearLayout>
 
@@ -239,7 +239,7 @@
                 android:id="@+id/exclude_scopes"
                 android:hint="@string/monitor_edit_scope_hint"
                 android:layout_width="match_parent"
-                android:layout_height="48dp" />
+                android:layout_height="@dimen/monitor_edit_text_height" />
 
         </LinearLayout>
     </LinearLayout>

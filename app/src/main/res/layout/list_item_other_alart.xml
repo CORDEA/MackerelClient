@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="72dp"
+    android:layout_height="@dimen/common_cell_height"
     android:layout_width="match_parent" >
 
     <RelativeLayout
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginLeft="@dimen/list_item_alert_margin_side"
+        android:layout_marginRight="@dimen/list_item_alert_margin_side"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -19,9 +19,9 @@
             <jp.cordea.mackerelclient.view.CharCircleView
                 android:id="@+id/status"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="16dp"
-                android:layout_width="40dp"
-                android:layout_height="40dp" />
+                android:layout_marginRight="@dimen/list_item_alert_char_circle_margin_right"
+                android:layout_width="@dimen/list_item_alert_char_circle_size"
+                android:layout_height="@dimen/list_item_alert_char_circle_size" />
 
             <LinearLayout
                 android:gravity="center_vertical"

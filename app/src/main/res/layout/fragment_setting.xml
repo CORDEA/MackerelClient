@@ -7,12 +7,12 @@
     <FrameLayout
         android:id="@+id/host_cell"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="@dimen/common_cell_height"
         android:foreground="?android:attr/selectableItemBackground">
         <LinearLayout
             android:orientation="vertical"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginLeft="@dimen/setting_cell_padding_side"
+            android:layout_marginRight="@dimen/setting_cell_padding_side"
             android:layout_gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -34,18 +34,18 @@
             style="@style/DividerDefault"
             android:layout_gravity="bottom"
             android:layout_width="match_parent"
-            android:layout_height="1dp" />
+            android:layout_height="@dimen/common_divider_height" />
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/init_cell"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="@dimen/common_cell_height"
         android:foreground="?android:attr/selectableItemBackground">
         <LinearLayout
             android:orientation="vertical"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginLeft="@dimen/setting_cell_padding_side"
+            android:layout_marginRight="@dimen/setting_cell_padding_side"
             android:layout_gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -74,12 +74,12 @@
     <FrameLayout
         android:id="@+id/license_cell"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/common_one_line_cell_height"
         android:foreground="?android:attr/selectableItemBackground">
         <LinearLayout
             android:orientation="vertical"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginLeft="@dimen/setting_cell_padding_side"
+            android:layout_marginRight="@dimen/setting_cell_padding_side"
             android:layout_gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -99,12 +99,12 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="@dimen/common_cell_height"
         android:foreground="?android:attr/selectableItemBackground">
         <LinearLayout
             android:orientation="vertical"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginLeft="@dimen/setting_cell_padding_side"
+            android:layout_marginRight="@dimen/setting_cell_padding_side"
             android:layout_gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

@@ -3,14 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="50dp" >
+    android:layout_height="@dimen/list_item_detail_section_height" >
 
     <TextView
         android:id="@+id/title"
         style="@style/ListText.Detail"
         android:text="@string/na_text"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginLeft="@dimen/list_item_detail_section_margin_side"
+        android:layout_marginRight="@dimen/list_item_detail_section_margin_side"
         android:textStyle="bold"
         android:gravity="center_vertical"
         android:layout_width="match_parent"

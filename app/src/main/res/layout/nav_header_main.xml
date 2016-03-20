@@ -13,8 +13,8 @@
 
     <ImageView
         android:id="@+id/user_thumbnail"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="@dimen/user_thumbnail_size"
+        android:layout_height="@dimen/user_thumbnail_size"
         android:paddingTop="@dimen/nav_header_vertical_spacing" />
 
     <TextView

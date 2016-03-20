@@ -7,7 +7,7 @@
     style="@style/CardDefault"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:layout_marginBottom="8dp"
+    android:layout_marginBottom="@dimen/list_item_host_margin_bottom"
     android:foreground="?android:attr/selectableItemBackground">
 
     <LinearLayout
@@ -18,25 +18,25 @@
         <View
             android:id="@+id/health"
             android:background="@color/statusPoweroff"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="@dimen/list_item_host_status_margin_bottom"
             android:layout_width="match_parent"
-            android:layout_height="10dp" />
+            android:layout_height="@dimen/list_item_host_status_height" />
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_marginTop="9dp"
+            android:layout_marginTop="@dimen/list_item_host_content_margin_top"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <RelativeLayout
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginLeft="@dimen/list_item_host_content_margin_side"
+                android:layout_marginRight="@dimen/list_item_host_content_margin_side"
                 android:layout_width="match_parent"
-                android:layout_height="100dp">
+                android:layout_height="@dimen/list_item_host_metrics_height">
 
                 <LinearLayout
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="@dimen/list_item_host_detail_margin_side"
+                    android:layout_marginRight="@dimen/list_item_host_detail_margin_side"
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -53,7 +53,7 @@
                             android:gravity="left"
                             android:maxLines="1"
                             android:ellipsize="end"
-                            android:layout_marginRight="70dp"
+                            android:layout_marginRight="@dimen/list_item_host_detail_role_max_width"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 
@@ -64,7 +64,7 @@
                             android:gravity="right|center_vertical"
                             android:textColor="@color/colorSecondaryText"
                             android:layout_width="wrap_content"
-                            android:maxWidth="70dp"
+                            android:maxWidth="@dimen/list_item_host_detail_role_max_width"
                             android:layout_height="match_parent" />
 
                     </FrameLayout>
@@ -72,8 +72,8 @@
                     <TextView
                         android:id="@+id/detail"
                         android:text="@string/na_text"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="@dimen/list_item_host_detail_margin_left"
+                        android:layout_marginTop="@dimen/list_item_host_detail_margin_top"
                         android:textSize="14sp"
                         android:textColor="@color/colorSecondaryText"
                         android:layout_width="wrap_content"
@@ -82,11 +82,11 @@
             </RelativeLayout>
 
             <LinearLayout
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginLeft="@dimen/list_item_host_content_margin_side"
+                android:layout_marginRight="@dimen/list_item_host_content_margin_side"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="100dp">
+                android:layout_height="@dimen/list_item_host_metrics_height" >
                 <include
                     android:id="@+id/loadavg"
                     layout="@layout/list_item_host_metric" />
@@ -99,7 +99,7 @@
             </LinearLayout>
 
             <FrameLayout
-                android:layout_marginBottom="2dp"
+                android:layout_marginBottom="@dimen/list_item_host_bottom_bar_margin_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -107,9 +107,9 @@
                     style="?attr/buttonBarButtonStyle"
                     android:id="@+id/detail_button"
                     android:text="@string/detail"
-                    android:layout_marginLeft="4dp"
+                    android:layout_marginLeft="@dimen/list_item_host_bottom_bar_button_margin_left"
                     android:layout_gravity="left"
-                    android:minWidth="72dp"
+                    android:minWidth="@dimen/list_item_host_bottom_bar_button_min_width"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 

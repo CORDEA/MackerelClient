@@ -11,7 +11,7 @@
         android:gravity="center"
         android:text="test"
         android:layout_width="match_parent"
-        android:layout_height="30dp" />
+        android:layout_height="@dimen/list_item_host_metric_title_height" />
     <TextView
         android:id="@+id/value"
         android:textSize="25sp"
@@ -19,5 +19,5 @@
         android:textColor="@color/colorPrimaryText"
         android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="70dp" />
+        android:layout_height="@dimen/list_item_host_metric_value_height" />
 </LinearLayout>
