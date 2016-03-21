@@ -1,6 +1,7 @@
 package jp.cordea.mackerelclient.adapter
 
 import android.content.Intent
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -49,7 +50,8 @@ class HostAdapter(val fragment: android.support.v4.app.Fragment, val items: List
                             else fragment.resources.getString(R.string.format_roles).format(it)
                     }
 
-            it.health.setBackgroundColor(StatusUtils.stringToStatusColor(fragment.context, item.status!!))
+            it.health.setBackgroundColor(
+                    ContextCompat.getColor(fragment.context, StatusUtils.stringToStatusColor(item.status!!)))
 
             val loadavg: TextView = it.loadavg.findViewById(R.id.value) as TextView
             val loadavgTitle: TextView = it.loadavg.findViewById(R.id.title) as TextView
@@ -69,7 +71,8 @@ class HostAdapter(val fragment: android.support.v4.app.Fragment, val items: List
             metric["cpu.user.percentage"]?.let {
                 val sp = SpannableStringBuilder()
                 sp.append("%.1f %%".format(it.metricValue))
-                sp.setSpan(TextAppearanceSpan(fragment.context, R.style.HostMetricUnit), sp.length - 1, sp.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                sp.setSpan(TextAppearanceSpan(fragment.context, R.style.HostMetricUnit),
+                        sp.length - 1, sp.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 cpu.text = sp
             }
             metric["memory.used"]?.let {
@@ -85,7 +88,8 @@ class HostAdapter(val fragment: android.support.v4.app.Fragment, val items: List
                 } else {
                     sp.append("%.0f %s".format(mem, unit))
                 }
-                sp.setSpan(TextAppearanceSpan(fragment.context, R.style.HostMetricUnit), sp.length - 2, sp.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                sp.setSpan(TextAppearanceSpan(fragment.context, R.style.HostMetricUnit),
+                        sp.length - 2, sp.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 memory.text = sp
             }
         }

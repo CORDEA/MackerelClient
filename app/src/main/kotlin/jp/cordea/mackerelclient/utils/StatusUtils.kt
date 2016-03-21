@@ -26,13 +26,13 @@ class StatusUtils {
             }
         }
 
-        public fun stringToStatusColor(context: Context, status: String): Int {
+        public fun stringToStatusColor(status: String): Int {
             when (status) {
-                "working" -> return ContextCompat.getColor(context, R.color.statusWorking)
-                "standby" -> return ContextCompat.getColor(context, R.color.statusStandby)
-                "maintenance" -> return ContextCompat.getColor(context, R.color.statusMaintenance)
-                "poweroff" -> return ContextCompat.getColor(context, R.color.statusPoweroff)
-                else -> return ContextCompat.getColor(context, R.color.statusPoweroff)
+                "working" -> return R.color.statusWorking
+                "standby" -> return R.color.statusStandby
+                "maintenance" -> return R.color.statusMaintenance
+                "poweroff" -> return R.color.statusPoweroff
+                else -> return R.color.statusPoweroff
             }
         }
     }
