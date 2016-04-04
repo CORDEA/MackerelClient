@@ -12,8 +12,8 @@ import rx.android.schedulers.AndroidSchedulers
  */
 class DialogUtils {
     companion object {
-        public fun <T> switchDialog(context: Context, response: Response<T>, title: Int, m403: Int) : Boolean {
-            if (!response.isSuccess) {
+        public fun <T> switchDialog(context: Context, response: Response<T>, title: Int, m403: Int): Boolean {
+            if (!response.isSuccessful) {
                 when (response.code()) {
                     403 ->
                         DialogUtils.showDialog(context, title, m403)
