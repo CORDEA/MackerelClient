@@ -7,12 +7,11 @@ import jp.cordea.mackerelclient.BuildConfig
 import jp.cordea.mackerelclient.api.response.*
 import jp.cordea.mackerelclient.model.UserKey
 import jp.cordea.mackerelclient.utils.PreferenceUtils
-import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import retrofit2.Call
-import retrofit2.GsonConverterFactory
 import retrofit2.Retrofit
-import retrofit2.RxJavaCallAdapterFactory
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 import rx.Observable
 import rx.schedulers.Schedulers
 
@@ -28,7 +27,7 @@ class MackerelApiClient {
                 .create()
 
         private val builder = Retrofit.Builder()
-                .baseUrl { HttpUrl.parse(baseUrl) }
+                .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
 
@@ -112,7 +111,7 @@ class MackerelApiClient {
                     .subscribeOn(Schedulers.newThread())
         }
 
-        public fun deleteUser(context: Context, userId: String) : Call<User> {
+        public fun deleteUser(context: Context, userId: String): Call<User> {
             return getService(MackerelApi::class.java, context)
                     .deleteUser(userId)
         }

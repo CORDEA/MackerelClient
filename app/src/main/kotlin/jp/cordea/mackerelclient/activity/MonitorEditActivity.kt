@@ -85,7 +85,7 @@ class MonitorEditActivity : AppCompatActivity() {
                         override fun onResponse(p0: Call<RefreshMonitor>?, response: Response<RefreshMonitor>?) {
                             dialog.dismiss()
                             response?.let {
-                                if (it.isSuccess) {
+                                if (it.isSuccessful) {
                                     finish()
                                 } else {
                                     DialogUtils.switchDialog(context, it,
@@ -137,20 +137,24 @@ class MonitorEditActivity : AppCompatActivity() {
         refresh.service = checkValue(monitor.service, service.text.toString())
         try {
             refresh.duration = checkValue(monitor.duration, duration.text.toString().toInt())
-        } catch (_: NumberFormatException) { }
+        } catch (_: NumberFormatException) {
+        }
 
         refresh.metric = checkValue(monitor.metric, metric.text.toString())
         refresh.operator = checkValue(monitor.operator, operator.selectedItem as String)
 
         try {
             refresh.warning = checkValue(monitor.warning, warning.text.toString().toFloat())
-        } catch (_: NumberFormatException) { }
+        } catch (_: NumberFormatException) {
+        }
         try {
             refresh.critical = checkValue(monitor.critical, critical.text.toString().toFloat())
-        } catch (_: NumberFormatException) { }
+        } catch (_: NumberFormatException) {
+        }
         try {
             refresh.notificationInterval = checkValue(monitor.notificationInterval, notInterval.text.toString().toInt())
-        } catch (_: NumberFormatException) { }
+        } catch (_: NumberFormatException) {
+        }
 
         refresh.scopes = scopes.text.toString().split(",").map { it.trim() }.toTypedArray()
         refresh.excludeScopes = exScopes.text.toString().split(",").map { it.trim() }.toTypedArray()
