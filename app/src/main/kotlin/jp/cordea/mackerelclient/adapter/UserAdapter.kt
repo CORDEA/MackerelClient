@@ -28,7 +28,7 @@ class UserAdapter(context: Context, val items: List<User>, val own: String?) : A
     public val onUserDeleteSucceed = RxEvent.create<Boolean>()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
-        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.list_item_user, parent)
+        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.list_item_user, parent, false)
         val name: TextView = view.findViewById(R.id.name) as TextView
         val email: TextView = view.findViewById(R.id.email) as TextView
         val delete: ImageView = view.findViewById(R.id.delete_button) as ImageView

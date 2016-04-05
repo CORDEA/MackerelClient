@@ -24,7 +24,7 @@ class OtherAlertAdapter(context: Context, val items: List<Alert>) : ArrayAdapter
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
-        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.list_item_other_alart, parent)
+        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.list_item_other_alart, parent, false)
 
         val item = getItem(position)
 
