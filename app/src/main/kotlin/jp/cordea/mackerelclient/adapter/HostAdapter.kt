@@ -22,7 +22,7 @@ import jp.cordea.mackerelclient.utils.StatusUtils
 /**
  * Created by Yoshihiro Tanaka on 16/01/12.
  */
-class HostAdapter(val fragment: android.support.v4.app.Fragment, val items: List<Host>, val metrics: Map<String, Map<String, Tsdb>>) : RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
+class HostAdapter(val fragment: android.support.v4.app.Fragment, val items: List<Host>, val metrics: Map<String, Map<String, Tsdb>>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         val item = items[position]
@@ -40,7 +40,14 @@ class HostAdapter(val fragment: android.support.v4.app.Fragment, val items: List
             }
 
             val metric = metrics[item.id]
-            it.name.text = item.id
+
+            var name = item.name
+            if (item.displayName != null) {
+                name = item.displayName
+            }
+
+            it.name.text = name
+            it.hostId.text = item.id
             it.detail.text = item.memo
             it.role.text =
                     item.roles.size.let {
@@ -104,10 +111,11 @@ class HostAdapter(val fragment: android.support.v4.app.Fragment, val items: List
         return items.size
     }
 
-    private class ViewHolder(val view: View): RecyclerView.ViewHolder(view) {
+    private class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val cardView: View by bindView(R.id.card_view)
 
         val name: TextView by bindView(R.id.name)
+        val hostId: TextView by bindView(R.id.host_id)
         val detail: TextView by bindView(R.id.detail)
         val role: TextView by bindView(R.id.role)
 

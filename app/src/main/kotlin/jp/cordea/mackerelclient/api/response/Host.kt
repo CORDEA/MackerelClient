@@ -14,6 +14,8 @@ class Host : Parcelable {
 
     var createdAt: Long? = null
     var id: String? = null
+    var name: String? = null
+    var displayName: String? = null
     var status: String? = null
     var memo: String? = null
     var roles: Map<String, Array<String>> = mapOf()
@@ -26,7 +28,7 @@ class Host : Parcelable {
             }
 
             override fun newArray(p0: Int): Array<out Host>? {
-                return Array(p0, {i -> Host()})
+                return Array(p0, { i -> Host() })
             }
 
             private fun Host(pin: Parcel): Host {
@@ -34,6 +36,8 @@ class Host : Parcelable {
 
                 host.createdAt = pin.readLong()
                 host.id = pin.readString()
+                host.name = pin.readString()
+                host.displayName = pin.readValue(String.javaClass.classLoader) as String?
                 host.status = pin.readString()
                 host.memo = pin.readString()
 
@@ -52,6 +56,8 @@ class Host : Parcelable {
     override fun writeToParcel(p0: Parcel, p1: Int) {
         p0.writeLong(createdAt!!)
         p0.writeString(id!!)
+        p0.writeString(name!!)
+        p0.writeValue(displayName)
         p0.writeString(status!!)
         p0.writeString(memo!!)
         p0.writeInt(roles.size)
