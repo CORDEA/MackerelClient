@@ -27,6 +27,7 @@ class Monitor : Parcelable {
     var excludeScopes: Array<String> = arrayOf()
 
     companion object {
+        @JvmField
         public val CREATOR: Parcelable.Creator<Monitor> = object : Parcelable.Creator<Monitor> {
             override fun createFromParcel(p0: Parcel): Monitor? {
                 return Monitor(p0)

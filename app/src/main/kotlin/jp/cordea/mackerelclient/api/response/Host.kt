@@ -19,6 +19,7 @@ class Host : Parcelable {
     var roles: Map<String, Array<String>> = mapOf()
 
     companion object {
+        @JvmField
         public val CREATOR: Parcelable.Creator<Host> = object : Parcelable.Creator<Host> {
             override fun createFromParcel(p0: Parcel): Host? {
                 return Host(p0)

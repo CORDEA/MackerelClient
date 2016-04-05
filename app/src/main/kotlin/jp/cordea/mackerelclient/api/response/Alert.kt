@@ -24,6 +24,7 @@ class Alert : Parcelable {
     var closedAt: Long? = null
 
     companion object {
+        @JvmField
         public val CREATOR: Parcelable.Creator<Alert> = object : Parcelable.Creator<Alert> {
             override fun createFromParcel(p0: Parcel): Alert? {
                 return Alert(p0)
