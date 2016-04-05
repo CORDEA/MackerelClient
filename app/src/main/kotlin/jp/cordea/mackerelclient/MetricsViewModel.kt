@@ -53,7 +53,7 @@ class MetricsViewModel(val context: Context) {
         metric.type = MetricsType.HOST.name
         metric.id = maxId + 2
         metric.parentId = id
-        metric.label = "cpu parcentage"
+        metric.label = "cpu percentage"
         metric.metric0 = "cpu.system.percentage"
         metric.metric1 = "cpu.user.percentage"
         metrics.add(metric)
