@@ -23,7 +23,7 @@ class ServiceAdapter(context: Context, val items: List<Service>) : ArrayAdapter<
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
-        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.list_item_service, parent)
+        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.list_item_service, parent, false)
 
         val item = getItem(position)
         item ?: return convertView
