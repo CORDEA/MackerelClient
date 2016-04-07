@@ -37,7 +37,7 @@ class Host : Parcelable {
                 host.createdAt = pin.readLong()
                 host.id = pin.readString()
                 host.name = pin.readString()
-                host.displayName = pin.readValue(String.javaClass.classLoader) as String?
+                host.displayName = pin.readString()
                 host.status = pin.readString()
                 host.memo = pin.readString()
 
