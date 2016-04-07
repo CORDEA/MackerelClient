@@ -41,12 +41,11 @@ class HostAdapter(val fragment: android.support.v4.app.Fragment, val items: List
 
             val metric = metrics[item.id]
 
-            var name = item.name
-            if (item.displayName != null) {
-                name = item.displayName
+            it.name.text = item.name
+            item.displayName?.let { dn ->
+                it.name.text = dn
             }
 
-            it.name.text = name
             it.hostId.text = item.id
             it.detail.text = item.memo
             it.role.text =
