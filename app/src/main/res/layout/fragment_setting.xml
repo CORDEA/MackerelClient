@@ -98,6 +98,32 @@
     </FrameLayout>
 
     <FrameLayout
+        android:id="@+id/contributor_cell"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_one_line_cell_height"
+        android:foreground="?android:attr/selectableItemBackground">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginLeft="@dimen/setting_cell_padding_side"
+            android:layout_marginRight="@dimen/setting_cell_padding_side"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="@string/setting_contributor_cell_title"
+                style="@style/ListText.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <View
+            android:layout_gravity="bottom"
+            style="@style/DividerDefault"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+    </FrameLayout>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/common_cell_height"
         android:foreground="?android:attr/selectableItemBackground">

@@ -1,8 +1,8 @@
 package jp.cordea.mackerelclient.fragment
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,6 +30,7 @@ class SettingFragment : android.support.v4.app.Fragment() {
     val hostCellDetail: TextView by bindView(R.id.host_cell_detail)
     val initCell: View by bindView(R.id.init_cell)
     val licenseCell: View by bindView(R.id.license_cell)
+    val contributorCell: View by bindView(R.id.contributor_cell)
     val version: TextView by bindView(R.id.version)
 
     var subscription: Subscription? = null
@@ -77,6 +78,11 @@ class SettingFragment : android.support.v4.app.Fragment() {
 
         licenseCell.setOnClickListener {
             val intent = Intent(context, LicenseActivity::class.java)
+            startActivity(intent)
+        }
+
+        contributorCell.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(contributorUrl))
             startActivity(intent)
         }
 
@@ -168,6 +174,8 @@ class SettingFragment : android.support.v4.app.Fragment() {
     }
 
     companion object {
+        private val contributorUrl = "https://github.com/CORDEA/MackerelClient/graphs/contributors"
+
         fun newInstance(): SettingFragment {
             val fragment = SettingFragment()
             return fragment
