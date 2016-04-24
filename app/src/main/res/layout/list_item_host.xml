@@ -71,14 +71,6 @@
                     </FrameLayout>
 
                     <TextView
-                        android:id="@+id/host_id"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:maxWidth="@dimen/list_item_host_detail_role_max_width"
-                        android:text="@string/na_text"
-                        android:textColor="@color/colorSecondaryText" />
-
-                    <TextView
                         android:id="@+id/detail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

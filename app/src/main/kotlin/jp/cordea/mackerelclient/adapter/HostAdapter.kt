@@ -41,12 +41,12 @@ class HostAdapter(val fragment: android.support.v4.app.Fragment, val items: List
 
             val metric = metrics[item.id]
 
-            it.name.text = item.name
-            item.displayName?.let { dn ->
-                it.name.text = dn
+            if (item.displayName.isNullOrBlank()) {
+                it.name.text = item.name
+            } else {
+                it.name.text = item.displayName
             }
 
-            it.hostId.text = item.id
             it.detail.text = item.memo
             it.role.text =
                     item.roles.size.let {
@@ -114,7 +114,6 @@ class HostAdapter(val fragment: android.support.v4.app.Fragment, val items: List
         val cardView: View by bindView(R.id.card_view)
 
         val name: TextView by bindView(R.id.name)
-        val hostId: TextView by bindView(R.id.host_id)
         val detail: TextView by bindView(R.id.detail)
         val role: TextView by bindView(R.id.role)
 
