@@ -57,7 +57,7 @@ class Host : Parcelable {
         p0.writeLong(createdAt!!)
         p0.writeString(id!!)
         p0.writeString(name!!)
-        p0.writeValue(displayName)
+        p0.writeString(displayName)
         p0.writeString(status!!)
         p0.writeString(memo!!)
         p0.writeInt(roles.size)
