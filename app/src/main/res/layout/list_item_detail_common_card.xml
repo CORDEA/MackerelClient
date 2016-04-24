@@ -3,14 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="wrap_content" >
 
     <android.support.v7.widget.CardView
         style="@style/CardDefault"
         app:cardUseCompatPadding="true"
+        app:cardBackgroundColor="@android:color/white"
         android:layout_marginTop="@dimen/card_detail_margin_top"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/container"
