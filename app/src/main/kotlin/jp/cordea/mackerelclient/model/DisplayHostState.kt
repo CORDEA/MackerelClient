@@ -9,7 +9,7 @@ import io.realm.annotations.Required
  */
 public open class DisplayHostState : RealmObject() {
     @PrimaryKey
-    public open var name: String? = null
+    public open var name: String = ""
 
     @Required
     public open var isDisplay: Boolean? = null
