@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val toggle = ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        drawer.setDrawerListener(toggle)
+        drawer.addDrawerListener(toggle)
         toggle.syncState()
 
         navigationView.setNavigationItemSelectedListener(this)
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val email: TextView = header.findViewById(R.id.email) as TextView
 
         val userId = PreferenceUtils.readUserId(applicationContext)
-        val realm = Realm.getInstance(applicationContext)
+        val realm = Realm.getDefaultInstance()
         var user: UserKey? = null
         realm.where(UserKey::class.java).equalTo("id", userId).findFirst()?.let {
             user = realm.copyFromRealm(it)
@@ -178,10 +178,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .setTitle(R.string.nav_bar_sign_out_dialog_title)
                 .setPositiveButton(R.string.nav_bar_sign_out_dialog_positive_button, { dialogInterface, i ->
                     val userId = PreferenceUtils.readUserId(context)
-                    val realm = Realm.getInstance(context)
+                    val realm = Realm.getDefaultInstance()
                     realm.executeTransaction {
                         it.where(UserKey::class.java).equalTo("id", userId).findFirst()?.let {
-                            it.removeFromRealm()
+                            it.deleteFromRealm()
                         }
                     }
                     realm.close()

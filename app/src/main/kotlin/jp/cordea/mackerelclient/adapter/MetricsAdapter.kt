@@ -84,9 +84,9 @@ class MetricsAdapter (val activity: Activity, val items: MutableList<MetricsPara
                         .setMessage(R.string.metrics_card_delete_dialog_title)
                         .setPositiveButton(R.string.button_positive, { dialogInterface, i ->
                             lock.withLock {
-                                val realm = Realm.getInstance(activity)
+                                val realm = Realm.getDefaultInstance()
                                 realm.executeTransaction {
-                                    realm.where(UserMetric::class.java).equalTo("id", items[position].id).findFirst().removeFromRealm()
+                                    realm.where(UserMetric::class.java).equalTo("id", items[position].id).findFirst().deleteFromRealm()
                                 }
                                 realm.close()
                                 items.removeAt(position)

@@ -54,10 +54,10 @@ class SettingFragment : android.support.v4.app.Fragment() {
                 .just(Unit)
                 .subscribeOn(Schedulers.newThread())
                 .map {
-                    Realm.getInstance(context)
+                    Realm.getDefaultInstance()
                 }
                 .map {
-                    if (it.allObjects(DisplayHostState::class.java).size == 0) {
+                    if (it.where(DisplayHostState::class.java).findAll().size == 0) {
                         it.executeTransaction {
                             for (key in resources.getStringArray(R.array.setting_host_cell_arr)) {
                                 val item = it.createObject(DisplayHostState::class.java)
@@ -92,8 +92,8 @@ class SettingFragment : android.support.v4.app.Fragment() {
     private fun addEvents() {
         var realm: Realm
         hostCell.setOnClickListener {
-            realm = Realm.getInstance(context)
-            val items = realm.copyFromRealm(realm.allObjects(DisplayHostState::class.java))
+            realm = Realm.getDefaultInstance()
+            val items = realm.copyFromRealm(realm.where(DisplayHostState::class.java).findAll())
             realm.close()
             var lastItem = 0
             AlertDialog.Builder(context)
@@ -103,7 +103,7 @@ class SettingFragment : android.support.v4.app.Fragment() {
                             .toTypedArray(),
                             BooleanArray(items.size, {i -> items[i].isDisplay!!}),
                             { dialog, which, flag ->
-                                val inRealm = Realm.getInstance(context)
+                                val inRealm = Realm.getDefaultInstance()
                                 val item = items[which]
                                 item.isDisplay = flag
                                 inRealm.executeTransaction {
@@ -115,8 +115,8 @@ class SettingFragment : android.support.v4.app.Fragment() {
                                 inRealm.close()
                             })
                     .setOnDismissListener {
-                        val inRealm = Realm.getInstance(context)
-                        val all = inRealm.allObjects(DisplayHostState::class.java)
+                        val inRealm = Realm.getDefaultInstance()
+                        val all = inRealm.where(DisplayHostState::class.java).findAll()
                         if (all.filter { it.isDisplay!! }.size == 0) {
                             AlertDialog
                                     .Builder(context)
@@ -137,9 +137,9 @@ class SettingFragment : android.support.v4.app.Fragment() {
                     .Builder(context)
                     .setMessage(R.string.setting_init_dialog_title)
                     .setPositiveButton(R.string.setting_init_dialog_positive_button, { dialogInterface, i ->
-                        realm = Realm.getInstance(context)
+                        realm = Realm.getDefaultInstance()
                         realm.executeTransaction {
-                            it.clear(UserMetric::class.java)
+                            it.delete(UserMetric::class.java)
                         }
                         realm.close()
                     })
@@ -149,14 +149,14 @@ class SettingFragment : android.support.v4.app.Fragment() {
 
     private fun updateStatus(r: Realm? = null) {
         var needClose = false
-        var realm: Realm
+        val realm: Realm
         if (r == null) {
-            realm = Realm.getInstance(context)
+            realm = Realm.getDefaultInstance()
             needClose = true
         } else {
             realm = r
         }
-        hostCellDetail.text = realm.allObjects(DisplayHostState::class.java)
+        hostCellDetail.text = realm.where(DisplayHostState::class.java).findAll()
                 .filter { it.isDisplay!! }
                 .map { it.name }
                 .map { StatusUtils.requestNameToString(it!!) }

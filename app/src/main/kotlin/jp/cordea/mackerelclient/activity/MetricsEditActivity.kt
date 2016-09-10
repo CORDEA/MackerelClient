@@ -52,7 +52,7 @@ class MetricsEditActivity : AppCompatActivity() {
         id = intent.getIntExtra(UserMetricKey, -1)
         type = MetricsType.valueOf(intent.getStringExtra(TypeKey))
         if (id != -1) {
-            val realm = Realm.getInstance(applicationContext)
+            val realm = Realm.getDefaultInstance()
             val metric = realm.copyFromRealm(realm.where(UserMetric::class.java).equalTo("id", id).findFirst())
             realm.close()
 
@@ -113,7 +113,7 @@ class MetricsEditActivity : AppCompatActivity() {
             }
         }
 
-        val realm = Realm.getInstance(applicationContext)
+        val realm = Realm.getDefaultInstance()
         val maxId = realm.where(UserMetric::class.java).max("id")
         val item = UserMetric()
         item.id = if (id != -1) id else if (maxId == null) 0 else (maxId.toInt() + 1)

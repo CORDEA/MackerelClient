@@ -67,9 +67,9 @@ class HostFragment : android.support.v4.app.Fragment() {
 
     private fun refresh() {
         swipeRefresh.isRefreshing = true
-        val realm = Realm.getInstance(context)
+        val realm = Realm.getDefaultInstance()
         initDisplayHostState(realm)
-        var items = realm.copyFromRealm(realm.allObjects(DisplayHostState::class.java))
+        var items = realm.copyFromRealm(realm.where(DisplayHostState::class.java).findAll())
         realm.close()
         items = items.filter { it.isDisplay!! }
 
@@ -80,7 +80,7 @@ class HostFragment : android.support.v4.app.Fragment() {
     }
 
     private fun initDisplayHostState(realm: Realm) {
-        if (realm.allObjects(DisplayHostState::class.java).size == 0) {
+        if (realm.where(DisplayHostState::class.java).findAll().size == 0) {
             realm.executeTransaction {
                 for (key in resources.getStringArray(R.array.setting_host_cell_arr)) {
                     val item = it.createObject(DisplayHostState::class.java)
@@ -119,7 +119,7 @@ class HostFragment : android.support.v4.app.Fragment() {
     }
 
     private fun deleteOldMetricData(hosts: List<String>) {
-        val realm = Realm.getInstance(context)
+        val realm = Realm.getDefaultInstance()
         val results = realm.where(UserMetric::class.java)
                         .equalTo("type", MetricsType.HOST.name).findAll()
         val olds = results.map { it.parentId }.distinct().filter { !hosts.contains(it) }
@@ -127,7 +127,8 @@ class HostFragment : android.support.v4.app.Fragment() {
             for (old in olds) {
                 realm.where(UserMetric::class.java)
                         .equalTo("parentId", old)
-                        .findAll().clear()
+                        .findAll()
+                        .deleteAllFromRealm()
             }
         }
         realm.close()

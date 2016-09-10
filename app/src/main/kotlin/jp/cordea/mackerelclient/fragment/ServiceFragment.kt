@@ -98,7 +98,7 @@ class ServiceFragment : android.support.v4.app.Fragment() {
     }
 
     private fun deleteOldMetricData(hosts: List<String>) {
-        val realm = Realm.getInstance(context)
+        val realm = Realm.getDefaultInstance()
         val results = realm.where(UserMetric::class.java)
                         .equalTo("type", MetricsType.SERVICE.name).findAll()
         realm.executeTransaction {
@@ -106,7 +106,8 @@ class ServiceFragment : android.support.v4.app.Fragment() {
             for (old in olds) {
                 realm.where(UserMetric::class.java)
                         .equalTo("parentId", old)
-                        .findAll().clear()
+                        .findAll()
+                        .deleteAllFromRealm()
             }
         }
         realm.close()

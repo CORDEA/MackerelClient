@@ -31,7 +31,7 @@ class MetricsViewModel(val context: Context) {
     public var subscription : Subscription? = null
 
     public fun initializeUserMetrics(id: String) {
-        val realm = Realm.getInstance(context)
+        val realm = Realm.getDefaultInstance()
         val c = realm.where(UserMetric::class.java)
                 .equalTo("type", MetricsType.HOST.name)
                 .equalTo("parentId", id).findAll().size
@@ -40,7 +40,7 @@ class MetricsViewModel(val context: Context) {
             return
         }
 
-        var maxId = (realm.allObjects(UserMetric::class.java).max("id") ?: 0).toInt()
+        val maxId = (realm.where(UserMetric::class.java).max("id") ?: 0).toInt()
         val metrics: MutableList<UserMetric> = arrayListOf()
         var metric = UserMetric()
         metric.type = MetricsType.HOST.name

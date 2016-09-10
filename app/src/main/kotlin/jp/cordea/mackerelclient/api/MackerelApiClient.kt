@@ -35,7 +35,7 @@ class MackerelApiClient {
             var key = k
             if (key == null) {
                 val userId = PreferenceUtils.readUserId(context)
-                val realm = Realm.getInstance(context)
+                val realm = Realm.getDefaultInstance()
                 key = realm.copyFromRealm(realm.where(UserKey::class.java).equalTo("id", userId).findFirst()).key
                 realm.close()
             }

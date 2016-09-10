@@ -15,6 +15,7 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import butterknife.bindView
 import io.realm.Realm
+import io.realm.RealmConfiguration
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Users
@@ -45,7 +46,7 @@ class LoginActivity : AppCompatActivity() {
 
         var userKey: UserKey? = null
         val userId = PreferenceUtils.readUserId(applicationContext)
-        val realm = Realm.getInstance(applicationContext)
+        val realm = Realm.getDefaultInstance()
         realm.where(UserKey::class.java).equalTo("id", userId).findFirst()?.let {
             userKey = realm.copyFromRealm(it)
         }
@@ -123,9 +124,9 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun signIn(context: Context, it: Users, key: String, email: String?) {
-        val realm = Realm.getInstance(context)
+        val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
-        val maxId: Number? = realm.allObjects(UserKey::class.java).max("id")
+        val maxId: Number? = realm.where(UserKey::class.java).max("id")
         val user = UserKey()
         val id = (maxId?.toInt() ?: -1) + 1
         user.id = id

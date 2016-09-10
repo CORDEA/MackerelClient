@@ -80,7 +80,7 @@ class MetricsActivity : AppCompatActivity() {
 
     private fun refresh(hostId: String) {
         enableRefresh = false
-        val realm = Realm.getInstance(applicationContext)
+        val realm = Realm.getDefaultInstance()
         val metrics = realm.copyFromRealm(
                 realm.where(UserMetric::class.java)
                         .equalTo("type", MetricsType.HOST.name)

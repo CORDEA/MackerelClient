@@ -61,7 +61,7 @@ class UserFragment : Fragment() {
                 .subscribe({
                     swipeRefresh.isRefreshing = false
                     val userId = PreferenceUtils.readUserId(context)
-                    val realm = Realm.getInstance(context)
+                    val realm = Realm.getDefaultInstance()
                     val user = realm.copyFromRealm(realm.where(UserKey::class.java).equalTo("id", userId).findFirst())
                     realm.close()
 
