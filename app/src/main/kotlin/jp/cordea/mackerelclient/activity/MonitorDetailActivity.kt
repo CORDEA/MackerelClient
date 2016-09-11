@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import butterknife.bindView
+import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.DetailCommonAdapter
 import jp.cordea.mackerelclient.api.MackerelApiClient
@@ -46,6 +47,7 @@ class MonitorDetailActivity : AppCompatActivity() {
 
         recyclerView.layoutManager = LinearLayoutManager(applicationContext)
         recyclerView.adapter = DetailCommonAdapter(applicationContext, createData(monitor))
+        recyclerView.addItemDecoration(ListItemDecoration(this))
 
         this.monitor = monitor
     }

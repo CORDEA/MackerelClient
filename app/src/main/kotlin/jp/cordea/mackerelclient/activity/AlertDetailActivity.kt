@@ -11,6 +11,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import butterknife.bindView
+import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.DetailCommonAdapter
 import jp.cordea.mackerelclient.api.MackerelApiClient
@@ -44,6 +45,7 @@ class AlertDetailActivity : AppCompatActivity() {
 
         recyclerView.layoutManager = LinearLayoutManager(applicationContext)
         recyclerView.adapter = DetailCommonAdapter(applicationContext, insertInfo(alert))
+        recyclerView.addItemDecoration(ListItemDecoration(this))
 
         this.alert = alert
     }

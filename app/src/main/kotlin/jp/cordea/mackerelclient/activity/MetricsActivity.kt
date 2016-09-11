@@ -14,6 +14,7 @@ import android.view.View
 import android.widget.Button
 import butterknife.bindView
 import io.realm.Realm
+import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.MetricsViewModel
 import jp.cordea.mackerelclient.R
@@ -89,6 +90,7 @@ class MetricsActivity : AppCompatActivity() {
         realm.close()
 
         recyclerView.adapter = MetricsAdapter(this, item as MutableList, MetricsType.HOST, hostId)
+        recyclerView.addItemDecoration(ListItemDecoration(this))
 
         drawCompleteMetrics = 0
         subscription?.let {

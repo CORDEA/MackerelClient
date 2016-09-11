@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import butterknife.bindView
 import io.realm.Realm
+import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.HostDetailActivity
@@ -105,6 +106,7 @@ class HostFragment : android.support.v4.app.Fragment() {
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({ it2 ->
                                 recyclerView.adapter = HostAdapter(this, it.hosts, it2.tsdbs)
+                                recyclerView.addItemDecoration(ListItemDecoration(context))
                                 progress.visibility = View.GONE
                                 swipeRefresh.visibility = View.VISIBLE
                                 swipeRefresh.isRefreshing = false

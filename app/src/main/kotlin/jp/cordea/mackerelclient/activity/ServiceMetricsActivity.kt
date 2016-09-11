@@ -13,6 +13,7 @@ import android.view.MenuItem
 import android.view.View
 import butterknife.bindView
 import io.realm.Realm
+import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.MetricsViewModel
 import jp.cordea.mackerelclient.R
@@ -86,6 +87,7 @@ class ServiceMetricsActivity : AppCompatActivity() {
 
         val item = metrics.map { MetricsParameter(it.id, null, it.label!!) }
         recyclerView.adapter = MetricsAdapter(this, item as MutableList, MetricsType.SERVICE, serviceName)
+        recyclerView.addItemDecoration(ListItemDecoration(this))
 
         drawCompleteMetrics = 0
         subscription?.let {
