@@ -25,6 +25,7 @@
         android:layout_height="match_parent">
         <ListView
             android:id="@+id/list"
+            android:paddingTop="@dimen/common_cell_margin_top"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </android.support.v4.widget.SwipeRefreshLayout>
