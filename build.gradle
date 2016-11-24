@@ -11,7 +11,7 @@ buildscript {
             url "https://jitpack.io"
         }
     }
-    ext.kotlin_version = '1.0.3'
+    ext.kotlin_version = '1.0.5'
     dependencies {
         classpath 'com.android.tools.build:gradle:2+'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
