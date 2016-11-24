@@ -1,16 +1,8 @@
-.gradle
-/local.properties
-/.idea/workspace.xml
-/.idea/libraries
-.DS_Store
-/build
-### https://raw.github.com/github/gitignore/be3333655bffe9507d66cc864aee95ed6052b4ed/android.gitignore
-
 # Built application files
 *.apk
 *.ap_
 
-# Files for the Dalvik VM
+# Files for the ART/Dalvik VM
 *.dex
 
 # Java class files
@@ -19,6 +11,7 @@
 # Generated files
 bin/
 gen/
+out/
 
 # Gradle files
 .gradle/
@@ -39,6 +32,9 @@ proguard/
 # Android Studio captures folder
 captures/
 
-*.key
+# Intellij
+*.iml
+.idea/workspace.xml
 
-
+# Keystore files
+*.jks
