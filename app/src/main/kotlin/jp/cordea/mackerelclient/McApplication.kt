@@ -12,9 +12,11 @@ class McApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        Realm.setDefaultConfiguration(RealmConfiguration.Builder(this)
+        Realm.init(this)
+
+        Realm.setDefaultConfiguration(RealmConfiguration.Builder()
                 .schemaVersion(SchemaVersion)
-                .migration { dynamicRealm, old, new ->
+                .migration { dynamicRealm, old, _ ->
                     val scheme = dynamicRealm.schema
                     var oldVersion = old
                     if (old == 0L) {
