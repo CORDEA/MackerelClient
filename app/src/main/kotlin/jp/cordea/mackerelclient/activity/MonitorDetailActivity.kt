@@ -1,7 +1,6 @@
 package jp.cordea.mackerelclient.activity
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -13,12 +12,8 @@ import butterknife.bindView
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.DetailCommonAdapter
-import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Monitor
-import jp.cordea.mackerelclient.utils.DialogUtils
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import jp.cordea.mackerelclient.fragment.MonitorSettingDeleteDialogFragment
 import rx.Subscription
 
 class MonitorDetailActivity : AppCompatActivity() {
@@ -120,42 +115,18 @@ class MonitorDetailActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val context = this
         when (item.itemId) {
             android.R.id.home -> finish()
             R.id.action_delete -> {
-                AlertDialog
-                        .Builder(context)
-                        .setMessage(R.string.monitor_detail_delete_dialog_title)
-                        .setPositiveButton(R.string.delete_positive_button, { dialogInterface, i ->
-                            val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
-                            dialog.show()
-                            MackerelApiClient
-                                    .deleteMonitor(context, monitor!!.id!!)
-                                    .enqueue(object : Callback<Monitor> {
-                                        override fun onResponse(p0: Call<Monitor>?, response: Response<Monitor>?) {
-                                            dialog.dismiss()
-                                            response?.let {
-                                                val success = DialogUtils.switchDialog(context, it,
-                                                        R.string.monitor_detail_error_dialog_title,
-                                                        R.string.error_403_dialog_message)
-                                                if (success) {
-                                                    setResult(Activity.RESULT_OK)
-                                                    finish()
-                                                }
-                                                return
-                                            }
-                                            DialogUtils.showDialog(context,
-                                                    R.string.monitor_detail_error_dialog_title)
-                                        }
-
-                                        override fun onFailure(p0: Call<Monitor>?, p1: Throwable?) {
-                                            dialog.dismiss()
-                                            DialogUtils.showDialog(context,
-                                                    R.string.monitor_detail_error_dialog_title)
-                                        }
-                                    })
-                        }).show()
+                MonitorSettingDeleteDialogFragment
+                        .newInstance(monitor!!)
+                        .apply {
+                            onSuccess = {
+                                setResult(Activity.RESULT_OK)
+                                finish()
+                            }
+                        }
+                        .show(supportFragmentManager, "")
             }
         }
         return super.onOptionsItemSelected(item)

@@ -2,26 +2,19 @@ package jp.cordea.mackerelclient.activity
 
 import android.app.Activity
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.EditText
 import butterknife.bindView
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.DetailCommonAdapter
-import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Alert
-import jp.cordea.mackerelclient.api.response.CloseAlert
+import jp.cordea.mackerelclient.fragment.AlertCloseDialogFragment
 import jp.cordea.mackerelclient.utils.DateUtils
-import jp.cordea.mackerelclient.utils.DialogUtils
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class AlertDetailActivity : AppCompatActivity() {
     companion object {
@@ -81,46 +74,18 @@ class AlertDetailActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val context = this
         when (item.itemId) {
             android.R.id.home -> finish()
             R.id.action_close -> {
-                val layout = layoutInflater.inflate(R.layout.dialog_edit_text, null)
-                val editText: EditText = layout.findViewById(R.id.reason) as EditText
-
-                AlertDialog.Builder(context)
-                        .setTitle(R.string.alert_detail_close_dialog_title)
-                        .setView(layout)
-                        .setPositiveButton(R.string.alert_detail_close_positive_button, { d, w ->
-                            val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
-                            dialog.show()
-                            MackerelApiClient
-                                    .closeAlert(context, alert!!.id!!, CloseAlert(editText.text.toString()))
-                                    .enqueue(object : Callback<Alert> {
-                                        override fun onResponse(p0: Call<Alert>?, response: Response<Alert>?) {
-                                            dialog.dismiss()
-                                            response?.let {
-                                                val success = DialogUtils.switchDialog(context, it,
-                                                        R.string.alert_detail_error_close_dialog_title,
-                                                        R.string.error_403_dialog_message)
-                                                if (success) {
-                                                    setResult(Activity.RESULT_OK)
-                                                    finish()
-                                                }
-                                                return
-                                            }
-                                            DialogUtils.showDialog(context,
-                                                    R.string.alert_detail_error_close_dialog_title)
-                                        }
-
-                                        override fun onFailure(p0: Call<Alert>?, p1: Throwable?) {
-                                            dialog.dismiss()
-                                            DialogUtils.showDialog(context,
-                                                    R.string.alert_detail_error_close_dialog_title)
-                                        }
-                                    })
-                        })
-                        .show()
+                AlertCloseDialogFragment
+                        .newInstance(alert!!)
+                        .apply {
+                            onSuccess = {
+                                setResult(Activity.RESULT_OK)
+                                finish()
+                            }
+                        }
+                        .show(supportFragmentManager, "")
             }
         }
         return super.onOptionsItemSelected(item)

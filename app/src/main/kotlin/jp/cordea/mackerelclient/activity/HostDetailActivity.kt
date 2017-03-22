@@ -1,7 +1,6 @@
 package jp.cordea.mackerelclient.activity
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -13,15 +12,10 @@ import butterknife.bindView
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.DetailCommonAdapter
-import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Host
-import jp.cordea.mackerelclient.api.response.RetireHost
+import jp.cordea.mackerelclient.fragment.HostRetireDialogFragment
 import jp.cordea.mackerelclient.utils.DateUtils
-import jp.cordea.mackerelclient.utils.DialogUtils
 import jp.cordea.mackerelclient.utils.StatusUtils
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import rx.Subscription
 
 class HostDetailActivity : AppCompatActivity() {
@@ -91,40 +85,18 @@ class HostDetailActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val context = this
         when (item.itemId) {
             android.R.id.home -> finish()
             R.id.action_retire -> {
-                AlertDialog
-                        .Builder(context)
-                        .setMessage(R.string.host_detail_retire_dialog_title)
-                        .setPositiveButton(R.string.retire_positive_button, { dialogInterface, i ->
-                            val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
-                            dialog.show()
-                            MackerelApiClient
-                                    .retireHost(context, host!!.id!!)
-                                    .enqueue(object : Callback<RetireHost> {
-                                        override fun onResponse(p0: Call<RetireHost>?, response: Response<RetireHost>?) {
-                                            dialog.dismiss()
-                                            response?.let {
-                                                val success = DialogUtils.switchDialog(context, it,
-                                                        R.string.host_detail_retire_error_dialog_title,
-                                                        R.string.error_403_dialog_message)
-                                                if (success) {
-                                                    setResult(Activity.RESULT_OK)
-                                                    finish()
-                                                }
-                                                return
-                                            }
-                                            DialogUtils.showDialog(context, R.string.host_detail_retire_error_dialog_title)
-                                        }
-
-                                        override fun onFailure(p0: Call<RetireHost>?, p1: Throwable?) {
-                                            dialog.dismiss()
-                                            DialogUtils.showDialog(context, R.string.host_detail_retire_error_dialog_title)
-                                        }
-                                    })
-                        }).show()
+                HostRetireDialogFragment
+                        .newInstance(host!!)
+                        .apply {
+                            onSuccess = {
+                                setResult(Activity.RESULT_OK)
+                                finish()
+                            }
+                        }
+                        .show(supportFragmentManager, "")
             }
         }
         return super.onOptionsItemSelected(item)
