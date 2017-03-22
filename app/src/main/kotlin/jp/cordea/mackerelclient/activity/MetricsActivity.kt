@@ -93,9 +93,7 @@ class MetricsActivity : AppCompatActivity() {
         recyclerView.addItemDecoration(ListItemDecoration(this))
 
         drawCompleteMetrics = 0
-        subscription?.let {
-            it.unsubscribe()
-        }
+        subscription?.let(Subscription::unsubscribe)
         subscription = viewModel!!
                 .onChartDataAlive
                 .asObservable()
@@ -126,12 +124,8 @@ class MetricsActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel!!.subscription?.let {
-            it.unsubscribe()
-        }
-        subscription?.let {
-            it.unsubscribe()
-        }
+        viewModel!!.subscription?.let(Subscription::unsubscribe)
+        subscription?.let(Subscription::unsubscribe)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

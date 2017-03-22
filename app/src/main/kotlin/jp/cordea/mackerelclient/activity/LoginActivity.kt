@@ -16,6 +16,7 @@ import android.widget.ProgressBar
 import butterknife.bindView
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import jp.cordea.mackerelclient.LoginViewModel
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Users
@@ -35,6 +36,10 @@ class LoginActivity : AppCompatActivity() {
     val button: Button by bindView(R.id.button)
     val apiKey: EditText by bindView(R.id.api_key)
     val email: EditText by bindView(R.id.email)
+
+    private val viewModel by lazy {
+        LoginViewModel(this)
+    }
 
     private val compositeSubscription = CompositeSubscription()
 
@@ -60,26 +65,33 @@ class LoginActivity : AppCompatActivity() {
                 email.text = with(it, { SpannableStringBuilder(this) })
             }
 
-            compositeSubscription.add(apiRequest(it0.key!!, it0.email, true))
+            compositeSubscription.add(
+                    viewModel.logIn(it0.key!!, it0.email, true,
+                            onSuccess = {
+                                onLoginSucceeded(it)
+                            },
+                            onFailure = {
+                                onLoginFailure()
+                            }
+                    )
+            )
         }
 
         setEvents()
     }
 
     private fun setEvents() {
-        apiKey.setOnEditorActionListener({ v, actionId, event ->
+        apiKey.setOnEditorActionListener({ _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
                 email.requestFocus()
             }
             true
         })
 
-        email.setOnEditorActionListener({ v, actionId, event ->
+        email.setOnEditorActionListener({ _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val im = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-                im?.let {
-                    it.hideSoftInputFromWindow(this.currentFocus.windowToken, 0)
-                }
+                im?.hideSoftInputFromWindow(this.currentFocus.windowToken, 0)
             }
             true
         })
@@ -96,76 +108,36 @@ class LoginActivity : AppCompatActivity() {
             } else {
                 progress.visibility = View.VISIBLE
                 container.visibility = View.GONE
-                compositeSubscription.add(apiRequest(t.toString().trim(), email.text.toString(), false))
+                compositeSubscription.add(
+                        viewModel.logIn(t.toString().trim(), email.text.toString(), false,
+                                onSuccess = {
+                                    onLoginSucceeded(it)
+                                },
+                                onFailure = {
+                                    onLoginFailure()
+                                }
+                        )
+                )
             }
         }
     }
 
-    private fun apiRequest(key: String, email: String?, autoLogin: Boolean): Subscription {
-        val context: Context = this
-        return MackerelApiClient
-                .getUsers(context, key)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    if (autoLogin) {
-                        onSignInSucceed(context)
-                    } else {
-                        signIn(context, it, key, email)
-                    }
-                }, {
-                    it.printStackTrace()
-                    AlertDialog
-                            .Builder(context)
-                            .setMessage(R.string.sign_in_error_dialog_title)
-                            .show()
-                    container.visibility = View.VISIBLE
-                    progress.visibility = View.GONE
-                })
-    }
-
-    private fun signIn(context: Context, it: Users, key: String, email: String?) {
-        val realm = Realm.getDefaultInstance()
-        realm.beginTransaction()
-        val maxId: Number? = realm.where(UserKey::class.java).max("id")
-        val user = UserKey()
-        val id = (maxId?.toInt() ?: -1) + 1
-        user.id = id
-        user.key = key
-
-        if (email.isNullOrBlank()) {
-            realm.copyToRealm(user)
-            realm.commitTransaction()
-            realm.close()
-            onSignInSucceed(context, id)
-        } else {
-            val response = it.users.filter { it.email.equals(email) }
-            if (response.size == 0) {
-                realm.cancelTransaction()
-                realm.close()
-                AlertDialog
-                        .Builder(context)
-                        .setTitle(R.string.sign_in_error_dialog_title)
-                        .setMessage(R.string.sign_in_error_dialog_message_mail)
-                        .show()
-                container.visibility = View.VISIBLE
-                progress.visibility = View.GONE
-            } else {
-                user.email = response.first().email
-                user.name = response.first().screenName
-                realm.copyToRealm(user)
-                realm.commitTransaction()
-                realm.close()
-                onSignInSucceed(context, id)
-            }
-        }
-    }
-
-    private fun onSignInSucceed(context: Context, id: Int? = null) {
+    private fun onLoginSucceeded(id: Int? = null) {
         id?.let {
             PreferenceUtils.writeUserId(applicationContext, it)
         }
-        val intent = Intent(context, MainActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
+    }
+
+    private fun onLoginFailure() {
+        AlertDialog
+                .Builder(this)
+                .setTitle(R.string.sign_in_error_dialog_title)
+                .setMessage(R.string.sign_in_error_dialog_message_mail)
+                .show()
+        container.visibility = View.VISIBLE
+        progress.visibility = View.GONE
     }
 
     override fun onDestroy() {

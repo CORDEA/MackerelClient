@@ -11,37 +11,27 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import butterknife.bindView
-import io.realm.Realm
+import jp.cordea.mackerelclient.MetricsEditViewModel
 import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.R
-import jp.cordea.mackerelclient.model.UserMetric
 
 class MetricsEditActivity : AppCompatActivity() {
-    companion object {
-        public val RequestCode = 0
-        private val IdKey = "IdKey"
-        private val UserMetricKey = "UserMetricKey"
-        private val TypeKey = "TypeKey"
 
-        fun newInstance(context: Context, type: MetricsType, id: String, metricId: Int? = null): Intent {
-            val intent = Intent(context, MetricsEditActivity::class.java)
-            metricId?.let {
-                intent.putExtra(UserMetricKey, metricId)
-            }
-            intent.putExtra(IdKey, id)
-            intent.putExtra(TypeKey, type.name)
-            return intent
-        }
+    private val viewModel: MetricsEditViewModel by lazy {
+        MetricsEditViewModel(this)
     }
 
     val toolbar: Toolbar by bindView(R.id.toolbar)
 
     val label: TextView by bindView(R.id.label)
+
     val metric0: TextView by bindView(R.id.metric_0)
+
     val metric1: TextView by bindView(R.id.metric_1)
 
-    var id: Int = -1
-    var type: MetricsType? = null
+    private var id: Int = -1
+
+    private var type: MetricsType? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,10 +42,7 @@ class MetricsEditActivity : AppCompatActivity() {
         id = intent.getIntExtra(UserMetricKey, -1)
         type = MetricsType.valueOf(intent.getStringExtra(TypeKey))
         if (id != -1) {
-            val realm = Realm.getDefaultInstance()
-            val metric = realm.copyFromRealm(realm.where(UserMetric::class.java).equalTo("id", id).findFirst())
-            realm.close()
-
+            val metric = viewModel.getMetric(id)
             label.text = metric.label
             metric0.text = metric.metric0
             metric1.text = metric.metric1
@@ -113,24 +100,29 @@ class MetricsEditActivity : AppCompatActivity() {
             }
         }
 
-        val realm = Realm.getDefaultInstance()
-        val maxId = realm.where(UserMetric::class.java).max("id")
-        val item = UserMetric()
-        item.id = if (id != -1) id else if (maxId == null) 0 else (maxId.toInt() + 1)
-        item.parentId = intent.getStringExtra(IdKey)
-        item.type = type!!.name
-        item.label = label.text.toString()
-        item.metric0 = metric0.text.toString()
-        if (!m1.isNullOrBlank()) {
-            item.metric1 = metric1.text.toString()
-        }
-
-        realm.executeTransaction {
-            realm.copyToRealmOrUpdate(item)
-        }
-        realm.close()
+        viewModel.storeMetric(id, intent.getStringExtra(IdKey), type!!.name,
+                label.text.toString(), m0, m1)
         return true
     }
 
+    companion object {
 
+        public val RequestCode = 0
+
+        private val IdKey = "IdKey"
+
+        private val UserMetricKey = "UserMetricKey"
+
+        private val TypeKey = "TypeKey"
+
+        fun newInstance(context: Context, type: MetricsType, id: String, metricId: Int? = null): Intent {
+            val intent = Intent(context, MetricsEditActivity::class.java)
+            metricId?.let {
+                intent.putExtra(UserMetricKey, metricId)
+            }
+            intent.putExtra(IdKey, id)
+            intent.putExtra(TypeKey, type.name)
+            return intent
+        }
+    }
 }
