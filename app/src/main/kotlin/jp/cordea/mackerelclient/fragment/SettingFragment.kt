@@ -27,10 +27,15 @@ import rx.schedulers.Schedulers
 class SettingFragment : android.support.v4.app.Fragment() {
 
     val hostCell: View by bindView(R.id.host_cell)
+
     val hostCellDetail: TextView by bindView(R.id.host_cell_detail)
+
     val initCell: View by bindView(R.id.init_cell)
+
     val licenseCell: View by bindView(R.id.license_cell)
+
     val contributorCell: View by bindView(R.id.contributor_cell)
+
     val version: TextView by bindView(R.id.version)
 
     var subscription: Subscription? = null
@@ -47,9 +52,7 @@ class SettingFragment : android.support.v4.app.Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        subscription?.let {
-            it.unsubscribe()
-        }
+        subscription?.let(Subscription::unsubscribe)
         subscription = Observable
                 .just(Unit)
                 .subscribeOn(Schedulers.newThread())
@@ -62,7 +65,7 @@ class SettingFragment : android.support.v4.app.Fragment() {
                             for (key in resources.getStringArray(R.array.setting_host_cell_arr)) {
                                 val item = it.createObject(DisplayHostState::class.java)
                                 item.name = key
-                                item.isDisplay = (key.equals("standby") || key.equals("working"))
+                                item.isDisplay = (key == "standby" || key == "working")
                             }
                         }
                     }
@@ -98,11 +101,11 @@ class SettingFragment : android.support.v4.app.Fragment() {
             var lastItem = 0
             AlertDialog.Builder(context)
                     .setMultiChoiceItems(items
-                            .map { it.name!! }
+                            .map { it.name }
                             .map { StatusUtils.requestNameToString(it) }
                             .toTypedArray(),
                             BooleanArray(items.size, {i -> items[i].isDisplay!!}),
-                            { dialog, which, flag ->
+                            { _, which, flag ->
                                 val inRealm = Realm.getDefaultInstance()
                                 val item = items[which]
                                 item.isDisplay = flag
@@ -117,12 +120,12 @@ class SettingFragment : android.support.v4.app.Fragment() {
                     .setOnDismissListener {
                         val inRealm = Realm.getDefaultInstance()
                         val all = inRealm.where(DisplayHostState::class.java).findAll()
-                        if (all.filter { it.isDisplay!! }.size == 0) {
+                        if (all.filter { it.isDisplay!! }.isEmpty()) {
                             AlertDialog
                                     .Builder(context)
                                     .setMessage(R.string.setting_status_select_limit_dialog_message)
                                     .show()
-                            val wk = all.filter { it.name.equals(items[lastItem].name) }.first()
+                            val wk = all.filter { it.name == items[lastItem].name }.first()
                             inRealm.executeTransaction {
                                 wk.isDisplay = true
                             }
@@ -136,7 +139,7 @@ class SettingFragment : android.support.v4.app.Fragment() {
             AlertDialog
                     .Builder(context)
                     .setMessage(R.string.setting_init_dialog_title)
-                    .setPositiveButton(R.string.setting_init_dialog_positive_button, { dialogInterface, i ->
+                    .setPositiveButton(R.string.setting_init_dialog_positive_button, { _, _ ->
                         realm = Realm.getDefaultInstance()
                         realm.executeTransaction {
                             it.delete(UserMetric::class.java)
@@ -159,7 +162,7 @@ class SettingFragment : android.support.v4.app.Fragment() {
         hostCellDetail.text = realm.where(DisplayHostState::class.java).findAll()
                 .filter { it.isDisplay!! }
                 .map { it.name }
-                .map { StatusUtils.requestNameToString(it!!) }
+                .map { StatusUtils.requestNameToString(it) }
                 .joinToString(", ")
         if (needClose) {
             realm.close()
@@ -167,9 +170,7 @@ class SettingFragment : android.support.v4.app.Fragment() {
     }
 
     override fun onDestroy() {
-        subscription?.let {
-            it.unsubscribe()
-        }
+        subscription?.let(Subscription::unsubscribe)
         super.onDestroy()
     }
 

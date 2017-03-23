@@ -79,9 +79,7 @@ class HostDetailActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        subscription?.let {
-            it.unsubscribe()
-        }
+        subscription?.let(Subscription::unsubscribe)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

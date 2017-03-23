@@ -42,14 +42,10 @@ class UserFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        subscription?.let {
-            it.unsubscribe()
-        }
+        subscription?.let(Subscription::unsubscribe)
         subscription = refresh()
         swipeRefresh.setOnRefreshListener {
-            subscription?.let {
-                it.unsubscribe()
-            }
+            subscription?.let(Subscription::unsubscribe)
             subscription = refresh()
         }
     }
@@ -86,9 +82,7 @@ class UserFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        subscription?.let {
-            it.unsubscribe()
-        }
+        subscription?.let(Subscription::unsubscribe)
     }
 
     companion object {

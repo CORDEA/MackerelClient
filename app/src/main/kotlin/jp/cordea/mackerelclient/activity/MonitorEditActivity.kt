@@ -109,7 +109,7 @@ class MonitorEditActivity : AppCompatActivity() {
 
     private fun initValues(monitor: Monitor) {
         type.text = monitor.type
-        if (monitor.type!!.equals("connectivity")) {
+        if (monitor.type!! == "connectivity") {
             optionContainer.visibility = View.GONE
         } else {
             name.text = with(monitor.name ?: "", { SpannableStringBuilder(this) })
@@ -120,7 +120,7 @@ class MonitorEditActivity : AppCompatActivity() {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             operator.adapter = adapter
             operatorPair.adapter = adapter
-            operator.setSelection(if ("<".equals(monitor.operator)) 0 else 1)
+            operator.setSelection(if ("<" == monitor.operator) 0 else 1)
             operatorPair.setSelection(operator.selectedItemPosition)
             warning.text = with(monitor.warning ?: "", { SpannableStringBuilder(this.toString()) })
             critical.text = with(monitor.critical ?: "", { SpannableStringBuilder(this.toString()) })

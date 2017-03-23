@@ -34,7 +34,7 @@ class Monitor : Parcelable {
             }
 
             override fun newArray(p0: Int): Array<out Monitor>? {
-                return Array(p0, {i -> Monitor()})
+                return Array(p0, { Monitor() })
             }
 
             private fun Monitor(pin: Parcel): Monitor {

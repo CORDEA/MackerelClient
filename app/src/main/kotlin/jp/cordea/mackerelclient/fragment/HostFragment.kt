@@ -74,9 +74,7 @@ class HostFragment : android.support.v4.app.Fragment() {
         realm.close()
         items = items.filter { it.isDisplay!! }
 
-        subscription?.let {
-            it.unsubscribe()
-        }
+        subscription?.unsubscribe()
         subscription = requestApi(items)
     }
 
@@ -86,7 +84,7 @@ class HostFragment : android.support.v4.app.Fragment() {
                 for (key in resources.getStringArray(R.array.setting_host_cell_arr)) {
                     val item = it.createObject(DisplayHostState::class.java)
                     item.name = key
-                    item.isDisplay = (key.equals("standby") || key.equals("working"))
+                    item.isDisplay = (key == "standby" || key == "working")
                 }
             }
         }
@@ -94,7 +92,7 @@ class HostFragment : android.support.v4.app.Fragment() {
 
     private fun requestApi(items: List<DisplayHostState>): Subscription {
         return MackerelApiClient
-                .getHosts(context, items.map { it.name!! })
+                .getHosts(context, items.map { it.name })
                 .filter {
                     deleteOldMetricData(it.hosts.map { it.id!! })
                     true
@@ -146,9 +144,7 @@ class HostFragment : android.support.v4.app.Fragment() {
     }
 
     override fun onDestroyView() {
-        subscription?.let {
-            it.unsubscribe()
-        }
+        subscription?.let(Subscription::unsubscribe)
         super.onDestroyView()
     }
 

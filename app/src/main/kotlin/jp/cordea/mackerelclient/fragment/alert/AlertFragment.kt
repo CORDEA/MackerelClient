@@ -24,11 +24,14 @@ import java.util.concurrent.TimeUnit
  */
 class AlertFragment : Fragment() {
 
-    public val onOtherAlertFragmentResult = RxEvent.create<Boolean>()
-    public val onCriticalAlertFragmentResult = RxEvent.create<Boolean>()
-    public val onAlertItemChanged = RxEvent.create<Alerts?>()
+    val onOtherAlertFragmentResult: RxEvent<Boolean> = RxEvent.create<Boolean>()
+
+    val onCriticalAlertFragmentResult: RxEvent<Boolean> = RxEvent.create<Boolean>()
+
+    val onAlertItemChanged: RxEvent<Alerts?> = RxEvent.create<Alerts?>()
 
     val viewPager: ViewPager by bindView(R.id.viewpager)
+
     val tabLayout: TabLayout by bindView(R.id.tab_layout)
 
     private var subscription: Subscription? = null
@@ -49,9 +52,7 @@ class AlertFragment : Fragment() {
         viewPager.adapter = adapter
         tabLayout.setupWithViewPager(viewPager)
 
-        subscription?.let {
-            it.unsubscribe()
-        }
+        subscription?.unsubscribe()
         subscription = requestApi()
     }
 
@@ -84,9 +85,7 @@ class AlertFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        subscription?.let {
-            it.unsubscribe()
-        }
+        subscription?.let(Subscription::unsubscribe)
         super.onDestroyView()
     }
 

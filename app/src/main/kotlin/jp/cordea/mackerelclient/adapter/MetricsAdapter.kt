@@ -30,10 +30,6 @@ class MetricsAdapter (val activity: Activity, val items: MutableList<MetricsPara
 
     private var drawComplete: Int = 0
 
-    companion object {
-        val CustomEventKey = "Removed the card during refresh"
-    }
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         (holder as? ViewHolder)?.let {
             if (items[position].label.isNullOrEmpty()) {
@@ -82,7 +78,7 @@ class MetricsAdapter (val activity: Activity, val items: MutableList<MetricsPara
                 AlertDialog
                         .Builder(activity)
                         .setMessage(R.string.metrics_card_delete_dialog_title)
-                        .setPositiveButton(R.string.button_positive, { dialogInterface, i ->
+                        .setPositiveButton(R.string.button_positive, { _, _ ->
                             lock.withLock {
                                 val realm = Realm.getDefaultInstance()
                                 realm.executeTransaction {
@@ -108,7 +104,7 @@ class MetricsAdapter (val activity: Activity, val items: MutableList<MetricsPara
         return items.size
     }
 
-    public fun refreshRecyclerViewItem(item: Pair<Int, LineData?>, drawCompleteMetrics: Int): Int {
+    fun refreshRecyclerViewItem(item: Pair<Int, LineData?>, drawCompleteMetrics: Int): Int {
         drawComplete = drawCompleteMetrics
         lock.withLock {
             val idx = items.map { it.id }.indexOf(item.first)
@@ -121,7 +117,7 @@ class MetricsAdapter (val activity: Activity, val items: MutableList<MetricsPara
         return drawComplete
     }
 
-    private class ViewHolder(val view: View): RecyclerView.ViewHolder(view) {
+    private class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val progress: View by bindView(R.id.progress)
         val chart: LineChart by bindView(R.id.chart)
         val title: TextView by bindView(R.id.title)

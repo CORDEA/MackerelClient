@@ -28,7 +28,7 @@ class Host : Parcelable {
             }
 
             override fun newArray(p0: Int): Array<out Host>? {
-                return Array(p0, { i -> Host() })
+                return Array(p0, { Host() })
             }
 
             private fun Host(pin: Parcel): Host {

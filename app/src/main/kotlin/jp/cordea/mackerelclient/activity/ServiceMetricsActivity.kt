@@ -53,7 +53,7 @@ class ServiceMetricsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
-        var serviceName = intent.getStringExtra(ServiceNameKey)
+        val serviceName = intent.getStringExtra(ServiceNameKey)
 
         swipeRefresh.setOnRefreshListener {
             if (enableRefresh) {
@@ -90,9 +90,7 @@ class ServiceMetricsActivity : AppCompatActivity() {
         recyclerView.addItemDecoration(ListItemDecoration(this))
 
         drawCompleteMetrics = 0
-        subscription?.let {
-            it.unsubscribe()
-        }
+        subscription?.let(Subscription::unsubscribe)
         subscription = viewModel!!
                 .onChartDataAlive
                 .asObservable()
@@ -117,12 +115,8 @@ class ServiceMetricsActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel!!.subscription?.let {
-            it.unsubscribe()
-        }
-        subscription?.let {
-            it.unsubscribe()
-        }
+        viewModel!!.subscription?.let(Subscription::unsubscribe)
+        subscription?.let(Subscription::unsubscribe)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

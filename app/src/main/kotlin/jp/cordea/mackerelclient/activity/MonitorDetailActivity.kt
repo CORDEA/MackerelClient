@@ -81,10 +81,10 @@ class MonitorDetailActivity : AppCompatActivity() {
         list.add(inner)
 
         inner = arrayListOf()
-        if (monitor.scopes.size > 0) {
+        if (monitor.scopes.isNotEmpty()) {
             inner.add(Pair(monitor.scopes.joinToString(", "), R.string.monitor_detail_scope))
         }
-        if (monitor.excludeScopes.size > 0) {
+        if (monitor.excludeScopes.isNotEmpty()) {
             inner.add(Pair(monitor.excludeScopes.joinToString(", "), R.string.monitor_detail_ex_scope))
         }
         list.add(inner)
@@ -100,8 +100,8 @@ class MonitorDetailActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.monitor_detail, menu)
         monitor?.let {
-            if ("connectivity".equals(it.type)) {
-                menu.findItem(R.id.action_delete).setVisible(false)
+            if ("connectivity" == it.type) {
+                menu.findItem(R.id.action_delete).isVisible = false
             }
         }
         return super.onCreateOptionsMenu(menu)
@@ -109,9 +109,7 @@ class MonitorDetailActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        subscription?.let {
-            it.unsubscribe()
-        }
+        subscription?.unsubscribe()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

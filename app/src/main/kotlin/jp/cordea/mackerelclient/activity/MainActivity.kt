@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             AlertDialog
                     .Builder(this)
                     .setTitle(R.string.nav_bar_sign_out_dialog_title)
-                    .setPositiveButton(R.string.nav_bar_sign_out_dialog_positive_button, { dialogInterface, i ->
+                    .setPositiveButton(R.string.nav_bar_sign_out_dialog_positive_button, { _, _ ->
                         val intent = Intent(this as Context, LoginActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                         startActivity(intent)
@@ -132,7 +132,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
         val transaction = supportFragmentManager.beginTransaction()
-        var fragment: android.support.v4.app.Fragment
+        val fragment: android.support.v4.app.Fragment
         when (id) {
             R.id.nav_alert -> {
                 fragment = AlertFragment.newInstance()
@@ -176,13 +176,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         AlertDialog
                 .Builder(context)
                 .setTitle(R.string.nav_bar_sign_out_dialog_title)
-                .setPositiveButton(R.string.nav_bar_sign_out_dialog_positive_button, { dialogInterface, i ->
+                .setPositiveButton(R.string.nav_bar_sign_out_dialog_positive_button, { _, _ ->
                     val userId = PreferenceUtils.readUserId(context)
                     val realm = Realm.getDefaultInstance()
                     realm.executeTransaction {
-                        it.where(UserKey::class.java).equalTo("id", userId).findFirst()?.let {
-                            it.deleteFromRealm()
-                        }
+                        it.where(UserKey::class.java).equalTo("id", userId).findFirst()?.deleteFromRealm()
                     }
                     realm.close()
 

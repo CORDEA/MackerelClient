@@ -102,7 +102,7 @@ class HostAdapter(val fragment: android.support.v4.app.Fragment, val items: List
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder? {
-        var view = LayoutInflater.from(fragment.context).inflate(R.layout.list_item_host, parent, false)
+        val view = LayoutInflater.from(fragment.context).inflate(R.layout.list_item_host, parent, false)
         return ViewHolder(view)
     }
 

@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import butterknife.bindView
-import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.MonitorDetailActivity
 import jp.cordea.mackerelclient.adapter.MonitorAdapter
@@ -65,9 +64,7 @@ class MonitorFragment : android.support.v4.app.Fragment() {
 
     private fun refresh() {
         swipeRefresh.isRefreshing = true
-        subscription?.let {
-            it.unsubscribe()
-        }
+        subscription?.unsubscribe()
         subscription = requestApi()
     }
 
@@ -78,7 +75,7 @@ class MonitorFragment : android.support.v4.app.Fragment() {
                     val sections = it.monitors.map { it.type }.distinct().sortedBy { it }
                     val monitors: MutableList<Pair<String, Monitor?>> = arrayListOf()
                     for (section in sections) {
-                        val items = it.monitors.filter { section!!.equals(it.type) }
+                        val items = it.monitors.filter { section!! == it.type }
                         val type = items[0].type!!
                         monitors.add(Pair(type, null))
                         items.map { monitors.add(Pair(type, it)) }
@@ -108,9 +105,7 @@ class MonitorFragment : android.support.v4.app.Fragment() {
     }
 
     override fun onDestroyView() {
-        subscription?.let {
-            it.unsubscribe()
-        }
+        subscription?.let(Subscription::unsubscribe)
         super.onDestroyView()
     }
 

@@ -17,7 +17,7 @@ class DetailCommonAdapter(val context: Context, val items: List<List<Pair<String
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         (holder as? ViewHolder)?.let {
-            if (items[position].size > 0) {
+            if (items[position].isNotEmpty()) {
                 sections?.let { sections ->
                     val section = LayoutInflater.from(context).inflate(R.layout.list_item_detail_common_section, it.container, false)
                     val name: TextView = section.findViewById(R.id.title) as TextView
@@ -46,15 +46,15 @@ class DetailCommonAdapter(val context: Context, val items: List<List<Pair<String
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder? {
-        var view = LayoutInflater.from(context).inflate(R.layout.list_item_detail_common_card, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.list_item_detail_common_card, parent, false)
         return ViewHolder(view)
     }
 
     override fun getItemCount(): Int {
-        return items.filter { it.size > 0 }.size
+        return items.filter { it.isNotEmpty() }.size
     }
 
-    private class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    private class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val container: LinearLayout by bindView(R.id.container)
     }
 }

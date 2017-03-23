@@ -48,7 +48,7 @@ class ServiceFragment : android.support.v4.app.Fragment() {
 
         refresh()
 
-        listView.setOnItemClickListener { adapterView, view, i, l ->
+        listView.setOnItemClickListener { _, _, i, _ ->
             services?.let {
                 val intent = Intent(context, ServiceMetricsActivity::class.java)
                 intent.putExtra(ServiceMetricsActivity.ServiceNameKey, it[i].name)
@@ -69,9 +69,7 @@ class ServiceFragment : android.support.v4.app.Fragment() {
     }
 
     private fun refresh() {
-        subscription?.let {
-            it.unsubscribe()
-        }
+        subscription?.let(Subscription::unsubscribe)
         subscription = requestApi()
     }
 
@@ -114,9 +112,7 @@ class ServiceFragment : android.support.v4.app.Fragment() {
     }
 
     override fun onDestroyView() {
-        subscription?.let {
-            it.unsubscribe()
-        }
+        subscription?.let(Subscription::unsubscribe)
         super.onDestroyView()
     }
 

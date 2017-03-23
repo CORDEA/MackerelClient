@@ -31,7 +31,7 @@ class Alert : Parcelable {
             }
 
             override fun newArray(p0: Int): Array<out Alert>? {
-                return Array(p0, {i -> Alert()})
+                return Array(p0, { Alert() })
             }
 
             private fun Alert(pin: Parcel): Alert {

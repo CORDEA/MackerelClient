@@ -85,15 +85,13 @@ class OtherAlertFragment : Fragment() {
             refresh()
         }
 
-        listView.setOnItemClickListener { adapterView, view, i, l ->
+        listView.setOnItemClickListener { _, _, i, _ ->
             val intent = Intent(context, AlertDetailActivity::class.java)
             intent.putExtra(AlertDetailActivity.AlertKey, listView.adapter.getItem(i) as Alert)
             parentFragment.startActivityForResult(intent, OtherAlertFragment.RequestCode)
         }
 
-        resultSubscription?.let {
-            it.unsubscribe()
-        }
+        resultSubscription?.unsubscribe()
         (parentFragment as? AlertFragment)?.let {
             resultSubscription =
                     it.onOtherAlertFragmentResult
@@ -107,13 +105,11 @@ class OtherAlertFragment : Fragment() {
 
     private fun refresh() {
         swipeRefresh.isRefreshing = true
-        subscription?.let {
-            it.unsubscribe()
-        }
+        subscription?.unsubscribe()
         subscription = requestApi()
     }
     private fun requestApi(): Subscription {
-        var observable: Observable<Alert>
+        val observable: Observable<Alert>
         if (alerts == null) {
             observable = MackerelApiClient
                     .getAlerts(context)
@@ -142,15 +138,9 @@ class OtherAlertFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        subscription?.let {
-            it.unsubscribe()
-        }
-        resultSubscription?.let {
-            it.unsubscribe()
-        }
-        itemSubscription?.let {
-            it.unsubscribe()
-        }
+        subscription?.unsubscribe()
+        resultSubscription?.let(Subscription::unsubscribe)
+        itemSubscription?.let(Subscription::unsubscribe)
         super.onDestroyView()
     }
 }

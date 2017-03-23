@@ -25,7 +25,7 @@ import retrofit2.Response
  */
 class UserAdapter(context: Context, val items: List<User>, val own: String?) : ArrayAdapter<User>(context, R.layout.list_item_user) {
 
-    public val onUserDeleteSucceed = RxEvent.create<Boolean>()
+    val onUserDeleteSucceed: RxEvent<Boolean> = RxEvent.create<Boolean>()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.list_item_user, parent, false)
@@ -44,7 +44,7 @@ class UserAdapter(context: Context, val items: List<User>, val own: String?) : A
         email.text = items[position].email
         var isOwn = false
         own?.let {
-            if (it.equals(items[position].email)) {
+            if (it == items[position].email) {
                 isOwn = true
                 delete.visibility = View.GONE
             }
@@ -54,7 +54,7 @@ class UserAdapter(context: Context, val items: List<User>, val own: String?) : A
                 AlertDialog
                         .Builder(context)
                         .setMessage(R.string.user_delete_dialog_title)
-                        .setPositiveButton(R.string.delete_positive_button, { dialogInterface, i ->
+                        .setPositiveButton(R.string.delete_positive_button, { _, _ ->
                             val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
                             dialog.show()
                             MackerelApiClient

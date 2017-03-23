@@ -84,15 +84,13 @@ class CriticalAlertFragment : android.support.v4.app.Fragment() {
             refresh()
         }
 
-        listView.setOnItemClickListener { adapterView, view, i, l ->
+        listView.setOnItemClickListener { _, _, i, _ ->
             val intent = Intent(context, AlertDetailActivity::class.java)
             intent.putExtra(AlertDetailActivity.AlertKey, listView.adapter.getItem(i) as Alert)
             parentFragment.startActivityForResult(intent, CriticalAlertFragment.RequestCode)
         }
 
-        resultSubscription?.let {
-            it.unsubscribe()
-        }
+        resultSubscription?.let(Subscription::unsubscribe)
         (parentFragment as? AlertFragment)?.let {
             resultSubscription =
                     it.onCriticalAlertFragmentResult
@@ -106,14 +104,12 @@ class CriticalAlertFragment : android.support.v4.app.Fragment() {
 
     private fun refresh() {
         swipeRefresh.isRefreshing = true
-        subscription?.let {
-            it.unsubscribe()
-        }
+        subscription?.let(Subscription::unsubscribe)
         subscription = requestApi()
     }
 
     private fun requestApi(): Subscription {
-        var observable: Observable<Alert>
+        val observable: Observable<Alert>
         if (alerts == null) {
             observable = MackerelApiClient
                     .getAlerts(context)
@@ -142,15 +138,9 @@ class CriticalAlertFragment : android.support.v4.app.Fragment() {
     }
 
     override fun onDestroyView() {
-        subscription?.let {
-            it.unsubscribe()
-        }
-        resultSubscription?.let {
-            it.unsubscribe()
-        }
-        itemSubscription?.let {
-            it.unsubscribe()
-        }
+        subscription?.let(Subscription::unsubscribe)
+        resultSubscription?.let(Subscription::unsubscribe)
+        itemSubscription?.let(Subscription::unsubscribe)
         super.onDestroyView()
     }
 }
