@@ -15,7 +15,7 @@ import butterknife.bindView
 import io.realm.Realm
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.MetricsType
-import jp.cordea.mackerelclient.MetricsViewModel
+import jp.cordea.mackerelclient.viewmodel.MetricsViewModel
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.MetricsAdapter
 import jp.cordea.mackerelclient.model.MetricsParameter

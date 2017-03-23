@@ -16,7 +16,7 @@ import android.widget.ProgressBar
 import butterknife.bindView
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import jp.cordea.mackerelclient.LoginViewModel
+import jp.cordea.mackerelclient.viewmodel.LoginViewModel
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Users

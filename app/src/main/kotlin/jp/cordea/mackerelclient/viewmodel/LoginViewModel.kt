@@ -1,4 +1,4 @@
-package jp.cordea.mackerelclient
+package jp.cordea.mackerelclient.viewmodel
 
 import android.content.Context
 import io.realm.Realm

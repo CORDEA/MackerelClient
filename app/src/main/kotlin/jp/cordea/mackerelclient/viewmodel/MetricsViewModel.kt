@@ -1,4 +1,4 @@
-package jp.cordea.mackerelclient
+package jp.cordea.mackerelclient.viewmodel
 
 import android.content.Context
 import com.github.mikephil.charting.data.Entry
@@ -7,6 +7,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.ogaclejapan.rx.binding.RxEvent
 import io.realm.Realm
+import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Metrics
 import jp.cordea.mackerelclient.model.MetricsApiRequestParameter

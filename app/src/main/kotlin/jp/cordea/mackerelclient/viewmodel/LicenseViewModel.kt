@@ -1,9 +1,10 @@
-package jp.cordea.mackerelclient
+package jp.cordea.mackerelclient.viewmodel
 
 import android.content.Context
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.TextAppearanceSpan
+import jp.cordea.mackerelclient.R
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
