@@ -15,6 +15,7 @@ import jp.cordea.mackerelclient.activity.AlertDetailActivity
 import jp.cordea.mackerelclient.adapter.OtherAlertAdapter
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Alert
+import jp.cordea.mackerelclient.viewmodel.AlertViewModel
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -26,10 +27,15 @@ class OtherAlertFragment : Fragment() {
 
     companion object {
         public val RequestCode = 0
+
         fun newInstance(): OtherAlertFragment {
             val fragment = OtherAlertFragment()
             return fragment
         }
+    }
+
+    private val viewModel by lazy {
+        AlertViewModel(context)
     }
 
     val listView: ListView by bindView(R.id.list)
@@ -60,9 +66,7 @@ class OtherAlertFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        itemSubscription?.let {
-            it.unsubscribe()
-        }
+        itemSubscription?.let(Subscription::unsubscribe)
         itemSubscription = (parentFragment as AlertFragment)
                 .onAlertItemChanged
                 .asObservable()
@@ -106,24 +110,12 @@ class OtherAlertFragment : Fragment() {
     private fun refresh() {
         swipeRefresh.isRefreshing = true
         subscription?.unsubscribe()
-        subscription = requestApi()
+        subscription = getAlert()
     }
-    private fun requestApi(): Subscription {
-        val observable: Observable<Alert>
-        if (alerts == null) {
-            observable = MackerelApiClient
-                    .getAlerts(context)
-                    .flatMap {
-                        Observable.from(it.alerts)
-                                .filter { !it.status.equals("CRITICAL") }
-                    }
-        } else {
-            observable = Observable.from(alerts)
-            alerts = null
-        }
-        return observable
-                .toList()
-                .observeOn(AndroidSchedulers.mainThread())
+
+    private fun getAlert(): Subscription {
+        return viewModel
+                .getAlerts(alerts, { !it.status.equals("CRITICAL") })
                 .subscribe({
                     listView.adapter = OtherAlertAdapter(context, it)
                     swipeRefresh.isRefreshing = false
