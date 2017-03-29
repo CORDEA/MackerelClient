@@ -20,17 +20,19 @@ class CharCircleView(context: Context, attrs: AttributeSet?) : View(context, att
             Pair('W', R.color.statusWarning),
             Pair('U', R.color.statusUnknown)
     )
-    private var char: Char = 'U'
 
-    public fun setChar(char: Char) {
-        this.char = char
-        invalidate()
-    }
+    var char: Char = 'U'
+        set(value) {
+            field = value
+            invalidate()
+        }
+
+    private val paint = Paint()
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        val paint = Paint()
+        paint.reset()
         paint.color = ContextCompat.getColor(context, colorSet[char] ?: R.color.statusUnknown)
         paint.isAntiAlias = true
 
@@ -39,9 +41,12 @@ class CharCircleView(context: Context, attrs: AttributeSet?) : View(context, att
 
         paint.textSize = resources.getDimension(R.dimen.char_circle_font_size)
         paint.textAlign = Paint.Align.CENTER
+
         val type = Typeface.create("sans-serif-light", Typeface.NORMAL)
-        paint.setTypeface(type)
+        paint.typeface = type
+
         paint.color = ContextCompat.getColor(context, android.R.color.white)
+
         canvas.drawText(char.toString(), size, size - ((paint.ascent() + paint.descent()) / 2.0f), paint)
     }
 }

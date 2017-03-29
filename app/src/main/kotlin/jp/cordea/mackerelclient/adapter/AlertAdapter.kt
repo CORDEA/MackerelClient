@@ -35,17 +35,19 @@ class AlertAdapter(context: Context, val items: List<Alert>) : ArrayAdapter<Aler
 
         val item = getItem(position)
 
-        if (!item.type.isNullOrBlank() || !item.status.isNullOrBlank()) {
-            if (item.type.isNullOrBlank()) {
-                viewHolder.detailTextView.text = item.status
-            } else if (item.status.isNullOrBlank()) {
-                viewHolder.detailTextView.text = item.type
-            } else {
-                viewHolder.detailTextView.text = item.type + " / " + item.status
+        viewHolder.apply {
+            if (!item.type.isNullOrBlank() || !item.status.isNullOrBlank()) {
+                if (item.type.isNullOrBlank()) {
+                    detailTextView.text = item.status
+                } else if (item.status.isNullOrBlank()) {
+                    detailTextView.text = item.type
+                } else {
+                    detailTextView.text = item.type + " / " + item.status
+                }
             }
-        }
 
-        viewHolder.nameTextView.text = item.hostId
+            nameTextView.text = item.hostId
+        }
 
         return view
     }

@@ -19,7 +19,8 @@ class DetailCommonAdapter(val context: Context, val items: List<List<Pair<String
         (holder as? ViewHolder)?.let {
             if (items[position].isNotEmpty()) {
                 sections?.let { sections ->
-                    val section = LayoutInflater.from(context).inflate(R.layout.list_item_detail_common_section, it.container, false)
+                    val section = LayoutInflater.from(context)
+                            .inflate(R.layout.list_item_detail_common_section, it.container, false)
                     val name: TextView = section.findViewById(R.id.title) as TextView
                     it.container.addView(section)
                     name.text = sections[position]
@@ -30,7 +31,8 @@ class DetailCommonAdapter(val context: Context, val items: List<List<Pair<String
                     if (item.first.isNullOrBlank()) {
                         continue
                     }
-                    val layout = LayoutInflater.from(context).inflate(R.layout.list_item_detail_common_content, it.container, false)
+                    val layout = LayoutInflater.from(context)
+                            .inflate(R.layout.list_item_detail_common_content, it.container, false)
                     val title: TextView = layout.findViewById(R.id.title) as TextView
                     val detail: TextView = layout.findViewById(R.id.detail) as TextView
                     divider = layout.findViewById(R.id.divider)
@@ -46,7 +48,8 @@ class DetailCommonAdapter(val context: Context, val items: List<List<Pair<String
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder? {
-        val view = LayoutInflater.from(context).inflate(R.layout.list_item_detail_common_card, parent, false)
+        val view = LayoutInflater.from(context)
+                .inflate(R.layout.list_item_detail_common_card, parent, false)
         return ViewHolder(view)
     }
 

@@ -14,8 +14,8 @@ import rx.android.schedulers.AndroidSchedulers
 class LoginViewModel(private val context: Context) {
 
     fun logIn(key: String, email: String?, autoLogin: Boolean,
-                      onSuccess: (id: Int?) -> Unit,
-                      onFailure: () -> Unit): Subscription {
+              onSuccess: (id: Int?) -> Unit,
+              onFailure: () -> Unit): Subscription {
         return MackerelApiClient
                 .getUsers(context, key)
                 .observeOn(AndroidSchedulers.mainThread())

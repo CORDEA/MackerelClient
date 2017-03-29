@@ -63,7 +63,7 @@ class UserFragment : Fragment() {
 
                     val adapter = UserAdapter(context, it.users, user.email)
                     listView.adapter = adapter
-                    adapter.onUserDeleteSucceed
+                    adapter.onUserDeleteSucceeded
                             .asObservable()
                             .filter { it }
                             .doOnNext {

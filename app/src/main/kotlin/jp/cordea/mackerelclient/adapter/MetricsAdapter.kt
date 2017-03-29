@@ -37,34 +37,35 @@ class MetricsAdapter (val activity: Activity, val items: MutableList<MetricsPara
             } else {
                 it.title.text = items[position].label
             }
-            val data = items[position].data
-            if (data == null) {
+            val lineData = items[position].data
+            if (lineData == null) {
                 if (items[position].isError) {
                     it.progress.visibility = View.GONE
                     it.error.visibility = View.VISIBLE
                 }
             } else {
-                val chart = it.chart
-                chart.data = data
-                chart.setDescription("")
-                chart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+                it.chart.apply {
+                    data = lineData
+                    setDescription("")
+                    xAxis.position = XAxis.XAxisPosition.BOTTOM
 
-                val needFormat = data.dataSets
-                        .filter { "memory" == it.label.split(".")[0] }.size == data.dataSets.size
-                if (needFormat) {
-                    chart.data.dataSets[0].label = chart.data.dataSets[0].label + " (GB)"
-                    if (chart.data.dataSets.size > 1) {
-                        chart.data.dataSets[1].label = chart.data.dataSets[1].label + " (GB)"
+                    val needFormat = lineData.dataSets
+                            .filter { "memory" == it.label.split(".")[0] }.size == lineData.dataSets.size
+                    if (needFormat) {
+                        data.dataSets[0].label = data.dataSets[0].label + " (GB)"
+                        if (data.dataSets.size > 1) {
+                            data.dataSets[1].label = data.dataSets[1].label + " (GB)"
+                        }
+                        axisRight.valueFormatter = MemoryValueFormatter()
+                        axisLeft.valueFormatter = MemoryValueFormatter()
                     }
-                    chart.axisRight.valueFormatter = MemoryValueFormatter()
-                    chart.axisLeft.valueFormatter = MemoryValueFormatter()
-                }
 
-                chart.axisRight.setLabelCount(3, false)
-                chart.axisLeft.setLabelCount(3, false)
-                chart.visibility = View.VISIBLE
-                it.progress.visibility = View.GONE
-                chart.invalidate()
+                    axisRight.setLabelCount(3, false)
+                    axisLeft.setLabelCount(3, false)
+                    visibility = View.VISIBLE
+                    it.progress.visibility = View.GONE
+                    invalidate()
+                }
                 ++visibles
                 canRefresh = visibles == itemCount
             }
@@ -118,11 +119,18 @@ class MetricsAdapter (val activity: Activity, val items: MutableList<MetricsPara
     }
 
     private class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
+
         val progress: View by bindView(R.id.progress)
+
         val chart: LineChart by bindView(R.id.chart)
+
         val title: TextView by bindView(R.id.title)
+
         val delete: Button by bindView(R.id.delete)
+
         val edit: Button by bindView(R.id.edit)
+
         val error: View by bindView(R.id.error)
+
     }
 }

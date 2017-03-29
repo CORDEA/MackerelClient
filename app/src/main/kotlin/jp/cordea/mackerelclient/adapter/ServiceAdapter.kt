@@ -35,15 +35,17 @@ class ServiceAdapter(context: Context, val items: List<Service>) : ArrayAdapter<
 
         val item = getItem(position)
         item ?: return convertView
-        viewHolder.nameTextView.text = item.name
-        viewHolder.roleTextView.text =
-                item.roles.size.let {
-                    if (it <= 1) context.resources.getString(R.string.format_role).format(it)
-                    else
-                        if (it > 99) context.resources.getString(R.string.format_roles_ex)
-                        else context.resources.getString(R.string.format_roles).format(it)
-                }
-        viewHolder.detailTextView.text = item.memo
+        viewHolder.apply {
+            nameTextView.text = item.name
+            roleTextView.text =
+                    item.roles.size.let {
+                        if (it <= 1) context.resources.getString(R.string.format_role).format(it)
+                        else
+                            if (it > 99) context.resources.getString(R.string.format_roles_ex)
+                            else context.resources.getString(R.string.format_roles).format(it)
+                    }
+            detailTextView.text = item.memo
+        }
 
         return view
     }

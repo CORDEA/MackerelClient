@@ -24,48 +24,50 @@ import java.util.concurrent.TimeUnit
  */
 class MetricsViewModel(val context: Context) {
 
-    public final val onChartDataAlive: RxEvent<Pair<Int, LineData?>> = RxEvent.create()
+    val onChartDataAlive: RxEvent<Pair<Int, LineData?>> = RxEvent.create()
 
     private val apiResponses: MutableList<MetricsApiRequestParameter> = arrayListOf()
+
     private var nofMetrics: MutableList<Int> = arrayListOf()
 
-    public var subscription : Subscription? = null
+    var subscription: Subscription? = null
 
-    public fun initializeUserMetrics(id: String) {
+    fun initUserMetrics(parentId: String) {
         val realm = Realm.getDefaultInstance()
         val c = realm.where(UserMetric::class.java)
                 .equalTo("type", MetricsType.HOST.name)
-                .equalTo("parentId", id).findAll().size
+                .equalTo("parentId", parentId).findAll().size
         if (c > 0) {
             realm.close()
             return
         }
 
         val maxId = (realm.where(UserMetric::class.java).max("id") ?: 0).toInt()
-        val metrics: MutableList<UserMetric> = arrayListOf()
-        var metric = UserMetric()
-        metric.type = MetricsType.HOST.name
-        metric.id = maxId + 1
-        metric.parentId = id
-        metric.label = "loadavg5"
-        metric.metric0 = "loadavg5"
-        metrics.add(metric)
-        metric = UserMetric()
-        metric.type = MetricsType.HOST.name
-        metric.id = maxId + 2
-        metric.parentId = id
-        metric.label = "cpu percentage"
-        metric.metric0 = "cpu.system.percentage"
-        metric.metric1 = "cpu.user.percentage"
-        metrics.add(metric)
-        metric = UserMetric()
-        metric.type = MetricsType.HOST.name
-        metric.id = maxId + 3
-        metric.parentId = id
-        metric.label = "memory"
-        metric.metric0 = "memory.used"
-        metric.metric1 = "memory.free"
-        metrics.add(metric)
+        val metrics = arrayListOf<UserMetric>().apply {
+            add(UserMetric().apply {
+                type = MetricsType.HOST.name
+                id = maxId + 1
+                this.parentId = parentId
+                label = "loadavg5"
+                metric0 = "loadavg5"
+            })
+            add(UserMetric().apply {
+                type = MetricsType.HOST.name
+                id = maxId + 2
+                this.parentId = parentId
+                label = "cpu percentage"
+                metric0 = "cpu.system.percentage"
+                metric1 = "cpu.user.percentage"
+            })
+            add(UserMetric().apply {
+                type = MetricsType.HOST.name
+                id = maxId + 3
+                this.parentId = parentId
+                label = "memory"
+                metric0 = "memory.used"
+                metric1 = "memory.free"
+            })
+        }
 
         realm.beginTransaction()
         realm.copyToRealm(metrics)
@@ -75,15 +77,15 @@ class MetricsViewModel(val context: Context) {
 
     private fun hostMetrics(hostId: String, param: MetricsApiRequestParameter): Observable<Metrics> {
         return MackerelApiClient
-                    .getMetrics(context, hostId, param.metricsName, DateUtils.getEpochSec(1), DateUtils.getEpochSec(0))
+                .getMetrics(context, hostId, param.metricsName, DateUtils.getEpochSec(1), DateUtils.getEpochSec(0))
     }
 
     private fun serviceMetrics(serviceName: String, param: MetricsApiRequestParameter): Observable<Metrics> {
         return MackerelApiClient
-                    .getServiceMetrics(context, serviceName, param.metricsName, DateUtils.getEpochSec(1), DateUtils.getEpochSec(0))
+                .getServiceMetrics(context, serviceName, param.metricsName, DateUtils.getEpochSec(1), DateUtils.getEpochSec(0))
     }
 
-    public fun requestMetricsApi(metrics: List<UserMetric>, id: String, idType: MetricsType) {
+    fun requestMetricsApi(metrics: List<UserMetric>, id: String, idType: MetricsType) {
         val requests: MutableList<MetricsApiRequestParameter> = arrayListOf()
         val nofMetrics: MutableList<Int> = arrayListOf()
         for (metric in metrics) {
@@ -99,7 +101,7 @@ class MetricsViewModel(val context: Context) {
         runMetricsApiWithDelay(id, idType, requests)
     }
 
-    public fun runMetricsApiWithDelay(id: String, idType: MetricsType, metricsApiRequestParameters: List<MetricsApiRequestParameter>, idx: Int = 0) {
+    fun runMetricsApiWithDelay(id: String, idType: MetricsType, metricsApiRequestParameters: List<MetricsApiRequestParameter>, idx: Int = 0) {
         if (metricsApiRequestParameters.size <= idx) {
             return
         }
@@ -145,7 +147,7 @@ class MetricsViewModel(val context: Context) {
         val color = ColorTemplate.COLORFUL_COLORS
         var data: LineData? = null
 
-        if (metricsApiRequestParameters.filter { it.response != null }.size == 0) {
+        if (metricsApiRequestParameters.filter { it.response != null }.isEmpty()) {
             onChartDataAlive.post(Pair(metricsApiRequestParameters.first().id, null))
         } else {
             for ((j, param) in metricsApiRequestParameters.withIndex()) {
@@ -159,12 +161,13 @@ class MetricsViewModel(val context: Context) {
                     yValues.add(i, Entry(v.value, i))
                 }
 
-                val dataSet = LineDataSet(yValues.toList(), metricName)
-                dataSet.lineWidth = 2f
-                dataSet.setDrawCircles(false)
-                dataSet.setDrawCircleHole(false)
-                dataSet.setDrawValues(false)
-                dataSet.color = color[j]
+                val dataSet = LineDataSet(yValues.toList(), metricName).apply {
+                    lineWidth = 2f
+                    setDrawCircles(false)
+                    setDrawCircleHole(false)
+                    setDrawValues(false)
+                    this.color = color[j]
+                }
 
                 if (data == null) {
                     data = LineData(xValues, dataSet)

@@ -36,9 +36,13 @@ class OtherAlertAdapter(context: Context, val items: List<Alert>) : ArrayAdapter
 
         val item = getItem(position)
 
-        viewHolder.detailTextView.text = item.type + " / " + item.status
-        viewHolder.nameTextView.text = item.hostId
-        viewHolder.statusCircleView.setChar(item.status!!.first())
+        viewHolder.apply {
+            detailTextView.text = item.type + " / " + item.status
+            nameTextView.text = item.hostId
+            item.status?.let {
+                statusCircleView.char = it.first()
+            }
+        }
 
         return view
     }
