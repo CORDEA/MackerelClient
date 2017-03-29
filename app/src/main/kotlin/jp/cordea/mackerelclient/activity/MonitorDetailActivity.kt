@@ -1,6 +1,8 @@
 package jp.cordea.mackerelclient.activity
 
 import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -14,6 +16,7 @@ import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.DetailCommonAdapter
 import jp.cordea.mackerelclient.api.response.Monitor
 import jp.cordea.mackerelclient.fragment.MonitorSettingDeleteDialogFragment
+import jp.cordea.mackerelclient.viewmodel.MonitorDetailViewModel
 import rx.Subscription
 
 class MonitorDetailActivity : AppCompatActivity() {
@@ -30,6 +33,10 @@ class MonitorDetailActivity : AppCompatActivity() {
 
     private var subscription: Subscription? = null
 
+    private val viewModel by lazy {
+        MonitorDetailViewModel()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_common)
@@ -41,60 +48,10 @@ class MonitorDetailActivity : AppCompatActivity() {
         val monitor = intent.getParcelableExtra<Monitor>(MonitorKey)
 
         recyclerView.layoutManager = LinearLayoutManager(applicationContext)
-        recyclerView.adapter = DetailCommonAdapter(applicationContext, createData(monitor))
+        recyclerView.adapter = DetailCommonAdapter(applicationContext, viewModel.getDisplayData(monitor))
         recyclerView.addItemDecoration(ListItemDecoration(this))
 
         this.monitor = monitor
-    }
-
-    private fun createData(monitor: Monitor) : List<List<Pair<String, Int>>> {
-        val list: MutableList<MutableList<Pair<String, Int>>> = arrayListOf()
-        var inner: MutableList<Pair<String, Int>> = arrayListOf()
-        monitor.name?.let {
-            inner.add(Pair(it, R.string.monitor_detail_name))
-        }
-        monitor.service?.let {
-            inner.add(Pair(it, R.string.monitor_detail_service))
-        }
-        inner.add(Pair(monitor.type!!, R.string.monitor_detail_type))
-
-        monitor.duration?.let {
-            inner.add(Pair(it.toString(), R.string.monitor_detail_duration))
-        }
-        monitor.notificationInterval?.let {
-            inner.add(Pair(it.toString(), R.string.monitor_detail_not_interval))
-        }
-        list.add(inner)
-
-        inner = arrayListOf()
-        monitor.metric?.let {
-            inner.add(Pair(it, R.string.monitor_detail_metric))
-        }
-        monitor.operator?.let { op ->
-            monitor.critical?.let {
-                inner.add(Pair("%s %s".format(op, it.toString()), R.string.monitor_detail_critical))
-            }
-            monitor.warning?.let {
-                inner.add(Pair("%s %s".format(op, it.toString()), R.string.monitor_detail_warning))
-            }
-        }
-        list.add(inner)
-
-        inner = arrayListOf()
-        if (monitor.scopes.isNotEmpty()) {
-            inner.add(Pair(monitor.scopes.joinToString(", "), R.string.monitor_detail_scope))
-        }
-        if (monitor.excludeScopes.isNotEmpty()) {
-            inner.add(Pair(monitor.excludeScopes.joinToString(", "), R.string.monitor_detail_ex_scope))
-        }
-        list.add(inner)
-
-        inner = arrayListOf()
-        monitor.url?.let {
-            inner.add(Pair(it, R.string.monitor_detail_url))
-        }
-        list.add(inner)
-        return list
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

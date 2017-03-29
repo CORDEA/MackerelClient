@@ -1,6 +1,5 @@
 package jp.cordea.mackerelclient.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
@@ -9,16 +8,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ListView
 import butterknife.bindView
-import io.realm.Realm
-import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.ServiceMetricsActivity
 import jp.cordea.mackerelclient.adapter.ServiceAdapter
-import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Service
-import jp.cordea.mackerelclient.model.UserMetric
+import jp.cordea.mackerelclient.viewmodel.ServiceViewModel
 import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
 
 class ServiceFragment : android.support.v4.app.Fragment() {
 
@@ -33,6 +28,10 @@ class ServiceFragment : android.support.v4.app.Fragment() {
     private var services: List<Service>? = null
 
     private var subscription: Subscription? = null
+
+    private val viewModel by lazy {
+        ServiceViewModel(context)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,9 +49,7 @@ class ServiceFragment : android.support.v4.app.Fragment() {
 
         listView.setOnItemClickListener { _, _, i, _ ->
             services?.let {
-                val intent = Intent(context, ServiceMetricsActivity::class.java)
-                intent.putExtra(ServiceMetricsActivity.ServiceNameKey, it[i].name)
-                startActivity(intent)
+                startActivity(ServiceMetricsActivity.createIntent(context, it[i].name))
             }
         }
 
@@ -70,17 +67,12 @@ class ServiceFragment : android.support.v4.app.Fragment() {
 
     private fun refresh() {
         subscription?.let(Subscription::unsubscribe)
-        subscription = requestApi()
+        subscription = getServices()
     }
 
-    private fun requestApi(): Subscription {
-        return MackerelApiClient
-                .getServices(context)
-                .filter {
-                    deleteOldMetricData(it.services.map { it.name })
-                    true
-                }
-                .observeOn(AndroidSchedulers.mainThread())
+    private fun getServices(): Subscription {
+        return viewModel
+                .getServices()
                 .subscribe({
                     swipeRefresh.isRefreshing = false
                     listView.adapter = ServiceAdapter(context, it.services)
@@ -93,22 +85,6 @@ class ServiceFragment : android.support.v4.app.Fragment() {
                     error.visibility = View.VISIBLE
                     progress.visibility = View.GONE
                 })
-    }
-
-    private fun deleteOldMetricData(hosts: List<String>) {
-        val realm = Realm.getDefaultInstance()
-        val results = realm.where(UserMetric::class.java)
-                        .equalTo("type", MetricsType.SERVICE.name).findAll()
-        realm.executeTransaction {
-            val olds = results.map { it.parentId }.distinct().filter { !hosts.contains(it) }
-            for (old in olds) {
-                realm.where(UserMetric::class.java)
-                        .equalTo("parentId", old)
-                        .findAll()
-                        .deleteAllFromRealm()
-            }
-        }
-        realm.close()
     }
 
     override fun onDestroyView() {

@@ -11,17 +11,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import butterknife.bindView
-import io.realm.Realm
 import jp.cordea.mackerelclient.ListItemDecoration
-import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.HostDetailActivity
 import jp.cordea.mackerelclient.adapter.HostAdapter
-import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.model.DisplayHostState
-import jp.cordea.mackerelclient.model.UserMetric
+import jp.cordea.mackerelclient.viewmodel.HostViewModel
 import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
 
 /**
  * Created by Yoshihiro Tanaka on 16/01/12.
@@ -37,6 +33,10 @@ class HostFragment : android.support.v4.app.Fragment() {
     val error: View by bindView(R.id.error)
 
     private var subscription: Subscription? = null
+
+    private val viewModel by lazy {
+        HostViewModel(context)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,40 +68,16 @@ class HostFragment : android.support.v4.app.Fragment() {
 
     private fun refresh() {
         swipeRefresh.isRefreshing = true
-        val realm = Realm.getDefaultInstance()
-        initDisplayHostState(realm)
-        var items = realm.copyFromRealm(realm.where(DisplayHostState::class.java).findAll())
-        realm.close()
-        items = items.filter { it.isDisplay!! }
-
         subscription?.unsubscribe()
-        subscription = requestApi(items)
+        subscription = getHosts(viewModel.displayHostState)
     }
 
-    private fun initDisplayHostState(realm: Realm) {
-        if (realm.where(DisplayHostState::class.java).findAll().size == 0) {
-            realm.executeTransaction {
-                for (key in resources.getStringArray(R.array.setting_host_cell_arr)) {
-                    val item = it.createObject(DisplayHostState::class.java)
-                    item.name = key
-                    item.isDisplay = (key == "standby" || key == "working")
-                }
-            }
-        }
-    }
-
-    private fun requestApi(items: List<DisplayHostState>): Subscription {
-        return MackerelApiClient
-                .getHosts(context, items.map { it.name })
-                .filter {
-                    deleteOldMetricData(it.hosts.map { it.id!! })
-                    true
-                }
-                .observeOn(AndroidSchedulers.mainThread())
+    private fun getHosts(items: List<DisplayHostState>): Subscription {
+        return viewModel
+                .getHosts(items)
                 .subscribe({
-                    MackerelApiClient
-                            .getLatestMetrics(context, it.hosts.map { it.id!! }, arrayListOf("loadavg5", "cpu.user.percentage", "memory.used"))
-                            .observeOn(AndroidSchedulers.mainThread())
+                    viewModel
+                            .getLatestMetrics(it)
                             .subscribe({ it2 ->
                                 recyclerView.adapter = HostAdapter(this, it.hosts, it2.tsdbs)
                                 recyclerView.addItemDecoration(ListItemDecoration(context))
@@ -118,22 +94,6 @@ class HostFragment : android.support.v4.app.Fragment() {
                 })
     }
 
-    private fun deleteOldMetricData(hosts: List<String>) {
-        val realm = Realm.getDefaultInstance()
-        val results = realm.where(UserMetric::class.java)
-                        .equalTo("type", MetricsType.HOST.name).findAll()
-        val olds = results.map { it.parentId }.distinct().filter { !hosts.contains(it) }
-        realm.executeTransaction {
-            for (old in olds) {
-                realm.where(UserMetric::class.java)
-                        .equalTo("parentId", old)
-                        .findAll()
-                        .deleteAllFromRealm()
-            }
-        }
-        realm.close()
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == HostDetailActivity.RequestCode) {
@@ -144,7 +104,7 @@ class HostFragment : android.support.v4.app.Fragment() {
     }
 
     override fun onDestroyView() {
-        subscription?.let(Subscription::unsubscribe)
+        subscription?.unsubscribe()
         super.onDestroyView()
     }
 
