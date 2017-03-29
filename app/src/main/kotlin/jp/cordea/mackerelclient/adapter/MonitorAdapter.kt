@@ -1,6 +1,5 @@
 package jp.cordea.mackerelclient.adapter
 
-import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -17,20 +16,19 @@ import jp.cordea.mackerelclient.api.response.Monitor
 class MonitorAdapter(val fragment: android.support.v4.app.Fragment, val items: List<Pair<String, Monitor?>>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
-        (holder as? ViewHolder)?.let {
+        (holder as? ViewHolder)?.apply {
             items[position].second?.let { item ->
-                it.cell.setOnClickListener {
-                    val intent = Intent(fragment.context, MonitorDetailActivity::class.java)
-                    intent.putExtra(MonitorDetailActivity.MonitorKey, item)
+                cell.setOnClickListener {
+                    val intent = MonitorDetailActivity.createIntent(fragment.context, item)
                     fragment.startActivityForResult(intent, MonitorDetailActivity.RequestCode)
                 }
                 if (!item.name.isNullOrBlank()) {
-                    it.name.text = item.name
+                    name.text = item.name
                 }
-                it.id.text = item.id
+                id.text = item.id
                 return
             }
-            it.title.text = items[position].first
+            title.text = items[position].first
         }
     }
 

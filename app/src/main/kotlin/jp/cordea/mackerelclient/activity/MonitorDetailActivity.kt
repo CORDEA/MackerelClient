@@ -20,10 +20,6 @@ import jp.cordea.mackerelclient.viewmodel.MonitorDetailViewModel
 import rx.Subscription
 
 class MonitorDetailActivity : AppCompatActivity() {
-    companion object {
-        public val MonitorKey = "MonitorKey"
-        public val RequestCode = 0
-    }
 
     val toolbar: Toolbar by bindView(R.id.toolbar)
 
@@ -85,5 +81,18 @@ class MonitorDetailActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    companion object {
+
+        public val RequestCode = 0
+
+        private val MonitorKey = "MonitorKey"
+
+        fun createIntent(context: Context, monitor: Monitor): Intent {
+            return Intent(context, MonitorDetailActivity::class.java).apply {
+                putExtra(MonitorKey, monitor)
+            }
+        }
     }
 }

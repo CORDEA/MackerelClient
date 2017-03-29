@@ -90,8 +90,7 @@ class OtherAlertFragment : Fragment() {
         }
 
         listView.setOnItemClickListener { _, _, i, _ ->
-            val intent = Intent(context, AlertDetailActivity::class.java)
-            intent.putExtra(AlertDetailActivity.AlertKey, listView.adapter.getItem(i) as Alert)
+            val intent = AlertDetailActivity.createIntent(context, listView.adapter.getItem(i) as Alert)
             parentFragment.startActivityForResult(intent, OtherAlertFragment.RequestCode)
         }
 

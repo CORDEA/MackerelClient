@@ -3,7 +3,6 @@ package jp.cordea.mackerelclient.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.preference.Preference
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -16,15 +15,10 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import butterknife.bindView
 import io.realm.Realm
-import io.realm.RealmConfiguration
-import jp.cordea.mackerelclient.viewmodel.LoginViewModel
 import jp.cordea.mackerelclient.R
-import jp.cordea.mackerelclient.api.MackerelApiClient
-import jp.cordea.mackerelclient.api.response.Users
-import jp.cordea.mackerelclient.model.UserKey
 import jp.cordea.mackerelclient.model.Preferences
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
+import jp.cordea.mackerelclient.model.UserKey
+import jp.cordea.mackerelclient.viewmodel.LoginViewModel
 import rx.subscriptions.CompositeSubscription
 
 class LoginActivity : AppCompatActivity() {
@@ -32,10 +26,13 @@ class LoginActivity : AppCompatActivity() {
     val toolbar: Toolbar by bindView(R.id.toolbar)
 
     val progress: ProgressBar by bindView(R.id.progress)
+
     val container: View by bindView(R.id.container)
 
     val button: Button by bindView(R.id.button)
+
     val apiKey: EditText by bindView(R.id.api_key)
+
     val email: EditText by bindView(R.id.email)
 
     private val viewModel by lazy {

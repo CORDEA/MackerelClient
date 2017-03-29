@@ -1,6 +1,7 @@
 package jp.cordea.mackerelclient.activity
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
@@ -16,11 +17,11 @@ import butterknife.bindView
 import io.realm.Realm
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.MetricsType
-import jp.cordea.mackerelclient.viewmodel.MetricsViewModel
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.MetricsAdapter
 import jp.cordea.mackerelclient.model.MetricsParameter
 import jp.cordea.mackerelclient.model.UserMetric
+import jp.cordea.mackerelclient.viewmodel.MetricsViewModel
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 
@@ -36,7 +37,9 @@ class MetricsActivity : AppCompatActivity() {
 
     val swipeRefresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
 
-    private var viewModel: MetricsViewModel? = null
+    private val viewModel by lazy {
+        MetricsViewModel(this)
+    }
 
     private var subscription: Subscription? = null
 
@@ -57,8 +60,6 @@ class MetricsActivity : AppCompatActivity() {
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         val hostId = intent.getStringExtra(HostIdKey)
-
-        viewModel = MetricsViewModel(this)
 
         swipeRefresh.setOnRefreshListener {
             if (enableRefresh) {
@@ -94,11 +95,11 @@ class MetricsActivity : AppCompatActivity() {
 
         drawCompleteMetrics = 0
         subscription?.let(Subscription::unsubscribe)
-        subscription = viewModel!!
+        subscription = viewModel
                 .onChartDataAlive
                 .asObservable()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({it0 ->
+                .subscribe({ it0 ->
                     val adapter = recyclerView.adapter as MetricsAdapter
                     drawCompleteMetrics = adapter.refreshRecyclerViewItem(it0, drawCompleteMetrics)
                     if (adapter.itemCount == drawCompleteMetrics) {
@@ -110,22 +111,22 @@ class MetricsActivity : AppCompatActivity() {
             noticeView.visibility = View.VISIBLE
             templateButton.setOnClickListener {
                 templateButton.isClickable = false
-                viewModel = MetricsViewModel(applicationContext)
-                viewModel!!.initializeUserMetrics(hostId)
+                viewModel.initUserMetrics(hostId)
                 refresh(hostId)
             }
             swipeRefresh.visibility = View.GONE
         } else {
             swipeRefresh.visibility = View.VISIBLE
             noticeView.visibility = View.GONE
-            viewModel!!.requestMetricsApi(metrics, hostId, MetricsType.HOST)
+            viewModel.requestMetricsApi(metrics, hostId, MetricsType.HOST)
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel!!.subscription?.let(Subscription::unsubscribe)
-        subscription?.let(Subscription::unsubscribe)
+
+        viewModel.subscription?.unsubscribe()
+        subscription?.unsubscribe()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -147,7 +148,7 @@ class MetricsActivity : AppCompatActivity() {
         when (item.itemId) {
             android.R.id.home -> finish()
             R.id.action_add -> {
-                val intent = MetricsEditActivity.newInstance(applicationContext, MetricsType.HOST, hostId!!)
+                val intent = MetricsEditActivity.createIntent(applicationContext, MetricsType.HOST, hostId!!)
                 startActivityForResult(intent, MetricsEditActivity.RequestCode)
             }
         }
@@ -155,6 +156,13 @@ class MetricsActivity : AppCompatActivity() {
     }
 
     companion object {
-        public val HostIdKey = "HostIdKey"
+
+        private val HostIdKey = "HostIdKey"
+
+        fun createIntent(context: Context, hostId: String?): Intent {
+            return Intent(context, MetricsActivity::class.java).apply {
+                putExtra(HostIdKey, hostId)
+            }
+        }
     }
 }

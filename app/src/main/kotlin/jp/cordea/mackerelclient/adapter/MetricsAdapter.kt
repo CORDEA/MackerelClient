@@ -70,7 +70,7 @@ class MetricsAdapter (val activity: Activity, val items: MutableList<MetricsPara
             }
 
             it.edit.setOnClickListener {
-                val intent = MetricsEditActivity.newInstance(activity, type, id, items[position].id)
+                val intent = MetricsEditActivity.createIntent(activity, type, id, items[position].id)
                 activity.startActivityForResult(intent, MetricsEditActivity.RequestCode)
             }
 

@@ -11,9 +11,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import butterknife.bindView
-import jp.cordea.mackerelclient.viewmodel.MetricsEditViewModel
 import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.R
+import jp.cordea.mackerelclient.viewmodel.MetricsEditViewModel
 
 class MetricsEditActivity : AppCompatActivity() {
 
@@ -115,7 +115,7 @@ class MetricsEditActivity : AppCompatActivity() {
 
         private val TypeKey = "TypeKey"
 
-        fun newInstance(context: Context, type: MetricsType, id: String, metricId: Int? = null): Intent {
+        fun createIntent(context: Context, type: MetricsType, id: String, metricId: Int? = null): Intent {
             val intent = Intent(context, MetricsEditActivity::class.java)
             metricId?.let {
                 intent.putExtra(UserMetricKey, metricId)

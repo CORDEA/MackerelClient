@@ -1,6 +1,7 @@
 package jp.cordea.mackerelclient.activity
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
@@ -15,11 +16,11 @@ import butterknife.bindView
 import io.realm.Realm
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.MetricsType
-import jp.cordea.mackerelclient.viewmodel.MetricsViewModel
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.MetricsAdapter
 import jp.cordea.mackerelclient.model.MetricsParameter
 import jp.cordea.mackerelclient.model.UserMetric
+import jp.cordea.mackerelclient.viewmodel.MetricsViewModel
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 
@@ -138,7 +139,7 @@ class ServiceMetricsActivity : AppCompatActivity() {
         when (item.itemId) {
             android.R.id.home -> finish()
             R.id.action_add -> {
-                val intent = MetricsEditActivity.newInstance(applicationContext, MetricsType.SERVICE, serviceName!!)
+                val intent = MetricsEditActivity.createIntent(applicationContext, MetricsType.SERVICE, serviceName!!)
                 startActivityForResult(intent, MetricsEditActivity.RequestCode)
             }
         }
@@ -146,7 +147,14 @@ class ServiceMetricsActivity : AppCompatActivity() {
     }
 
     companion object {
-        public val ServiceNameKey = "ServiceNameKey"
+
+        private val ServiceNameKey = "ServiceNameKey"
+
+        fun createIntent(context: Context, name: String): Intent {
+            return Intent(context, ServiceMetricsActivity::class.java).apply {
+                putExtra(ServiceMetricsActivity.ServiceNameKey, name)
+            }
+        }
     }
 
 }

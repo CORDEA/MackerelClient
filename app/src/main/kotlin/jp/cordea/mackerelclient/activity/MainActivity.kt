@@ -24,9 +24,9 @@ import jp.cordea.mackerelclient.PicassoCircularTransform
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.fragment.*
 import jp.cordea.mackerelclient.fragment.alert.AlertFragment
+import jp.cordea.mackerelclient.model.Preferences
 import jp.cordea.mackerelclient.model.UserKey
 import jp.cordea.mackerelclient.utils.GravatarUtils
-import jp.cordea.mackerelclient.model.Preferences
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 

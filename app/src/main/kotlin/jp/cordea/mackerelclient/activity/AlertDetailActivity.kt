@@ -1,6 +1,8 @@
 package jp.cordea.mackerelclient.activity
 
 import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -17,9 +19,6 @@ import jp.cordea.mackerelclient.fragment.AlertCloseDialogFragment
 import jp.cordea.mackerelclient.utils.DateUtils
 
 class AlertDetailActivity : AppCompatActivity() {
-    companion object {
-        public val AlertKey = "AlertKey"
-    }
 
     val toolbar: Toolbar by bindView(R.id.toolbar)
 
@@ -89,5 +88,16 @@ class AlertDetailActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    companion object {
+
+        private val AlertKey = "AlertKey"
+
+        fun createIntent(context: Context, alert: Alert): Intent {
+            return Intent(context, AlertDetailActivity::class.java).apply {
+                putExtra(AlertKey, alert)
+            }
+        }
     }
 }

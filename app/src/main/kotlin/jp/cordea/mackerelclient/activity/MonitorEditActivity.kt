@@ -1,6 +1,7 @@
 package jp.cordea.mackerelclient.activity
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -18,9 +19,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MonitorEditActivity : AppCompatActivity() {
-    companion object {
-        public val MonitorKey = "MonitorKey"
-    }
+
 
     val toolbar: Toolbar by bindView(R.id.toolbar)
 
@@ -169,4 +168,14 @@ class MonitorEditActivity : AppCompatActivity() {
         return null
     }
 
+    companion object {
+
+        private val MonitorKey = "MonitorKey"
+
+        fun createIntent(context: Context, monitor: Monitor): Intent {
+            return Intent(context, MonitorEditActivity::class.java).apply {
+                putExtra(MonitorKey, monitor)
+            }
+        }
+    }
 }

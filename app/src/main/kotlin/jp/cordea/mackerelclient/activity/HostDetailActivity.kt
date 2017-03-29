@@ -1,6 +1,8 @@
 package jp.cordea.mackerelclient.activity
 
 import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -19,10 +21,6 @@ import jp.cordea.mackerelclient.utils.StatusUtils
 import rx.Subscription
 
 class HostDetailActivity : AppCompatActivity() {
-    companion object {
-        public val RequestCode = 0
-        public val HostKey = "HostKey"
-    }
 
     val toolbar: Toolbar by bindView(R.id.toolbar)
 
@@ -49,7 +47,7 @@ class HostDetailActivity : AppCompatActivity() {
         this.host = host
     }
 
-    private fun createData(host: Host) : List<List<Pair<String, Int>>> {
+    private fun createData(host: Host): List<List<Pair<String, Int>>> {
         val list: MutableList<MutableList<Pair<String, Int>>> = arrayListOf()
         var inner: MutableList<Pair<String, Int>> = arrayListOf()
 
@@ -98,5 +96,18 @@ class HostDetailActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    companion object {
+
+        public val RequestCode = 0
+
+        private val HostKey = "HostKey"
+
+        fun createIntent(context: Context, host: Host): Intent {
+            return Intent(context, HostDetailActivity::class.java).apply {
+                putExtra(HostKey, host)
+            }
+        }
     }
 }
