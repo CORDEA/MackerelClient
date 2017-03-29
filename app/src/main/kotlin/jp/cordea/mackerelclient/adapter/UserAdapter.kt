@@ -28,29 +28,35 @@ class UserAdapter(context: Context, val items: List<User>, val own: String?) : A
     val onUserDeleteSucceed: RxEvent<Boolean> = RxEvent.create<Boolean>()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
-        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.list_item_user, parent, false)
-        val name: TextView = view.findViewById(R.id.name) as TextView
-        val email: TextView = view.findViewById(R.id.email) as TextView
-        val delete: ImageView = view.findViewById(R.id.delete_button) as ImageView
-        val thumbnail: ImageView = view.findViewById(R.id.user_thumbnail) as ImageView
+        var view = convertView
+        val viewHolder: ViewHolder
+        if (view == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.list_item_user, parent, false)
+            viewHolder = ViewHolder(view)
+            view.tag = viewHolder
+        } else {
+            viewHolder = view.tag as ViewHolder
+        }
+
         GravatarUtils.getGravatarImage(items[position].email,
                 context.resources.getDimensionPixelSize(R.dimen.user_thumbnail_size_small))?.let { url ->
             Picasso.with(context)
                     .load(url)
                     .transform(PicassoCircularTransform())
-                    .into(thumbnail)
+                    .into(viewHolder.thumbnailImageView)
         }
-        name.text = items[position].screenName
-        email.text = items[position].email
+        viewHolder.nameTextView.text = items[position].screenName
+        viewHolder.emailTextView.text = items[position].email
+
         var isOwn = false
         own?.let {
             if (it == items[position].email) {
                 isOwn = true
-                delete.visibility = View.GONE
+                viewHolder.deleteImageView.visibility = View.GONE
             }
         }
         if (!isOwn) {
-            delete.setOnClickListener {
+            viewHolder.deleteImageView.setOnClickListener {
                 AlertDialog
                         .Builder(context)
                         .setMessage(R.string.user_delete_dialog_title)
@@ -82,7 +88,7 @@ class UserAdapter(context: Context, val items: List<User>, val own: String?) : A
                                         }
                                     })
                         })
-                .show()
+                        .show()
             }
         }
         return view
@@ -94,5 +100,17 @@ class UserAdapter(context: Context, val items: List<User>, val own: String?) : A
 
     override fun getCount(): Int {
         return items.size
+    }
+
+    class ViewHolder(view: View) {
+
+        val nameTextView = view.findViewById(R.id.name) as TextView
+
+        val emailTextView = view.findViewById(R.id.email) as TextView
+
+        val deleteImageView = view.findViewById(R.id.delete_button) as ImageView
+
+        val thumbnailImageView = view.findViewById(R.id.user_thumbnail) as ImageView
+
     }
 }

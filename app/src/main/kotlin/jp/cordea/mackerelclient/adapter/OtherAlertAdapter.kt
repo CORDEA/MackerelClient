@@ -24,17 +24,32 @@ class OtherAlertAdapter(context: Context, val items: List<Alert>) : ArrayAdapter
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
-        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.list_item_other_alart, parent, false)
+        var view = convertView
+        val viewHolder: ViewHolder
+        if (view == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.list_item_other_alart, parent, false)
+            viewHolder = ViewHolder(view)
+            view.tag = viewHolder
+        } else {
+            viewHolder = view.tag as ViewHolder
+        }
 
         val item = getItem(position)
 
-        val detail: TextView = view.findViewById(R.id.detail) as TextView
-        detail.text = item.type + " / " + item.status
-        val name: TextView = view.findViewById(R.id.name) as TextView
-        name.text = item.hostId
-        val status: CharCircleView = view.findViewById(R.id.status) as CharCircleView
-        status.setChar(item.status!!.first())
+        viewHolder.detailTextView.text = item.type + " / " + item.status
+        viewHolder.nameTextView.text = item.hostId
+        viewHolder.statusCircleView.setChar(item.status!!.first())
 
         return view
+    }
+
+    class ViewHolder(view: View) {
+
+        val detailTextView = view.findViewById(R.id.detail) as TextView
+
+        val nameTextView = view.findViewById(R.id.name) as TextView
+
+        val statusCircleView = view.findViewById(R.id.status) as CharCircleView
+
     }
 }

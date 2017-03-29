@@ -23,24 +23,38 @@ class AlertAdapter(context: Context, val items: List<Alert>) : ArrayAdapter<Aler
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
-        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.list_item_alert, parent, false)
+        var view = convertView
+        val viewHolder: ViewHolder
+        if (view == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.list_item_alert, parent, false)
+            viewHolder = ViewHolder(view)
+            view.tag = viewHolder
+        } else {
+            viewHolder = view.tag as ViewHolder
+        }
 
         val item = getItem(position)
 
-        val detail: TextView = view.findViewById(R.id.detail) as TextView
         if (!item.type.isNullOrBlank() || !item.status.isNullOrBlank()) {
             if (item.type.isNullOrBlank()) {
-                detail.text = item.status
+                viewHolder.detailTextView.text = item.status
             } else if (item.status.isNullOrBlank()) {
-                detail.text = item.type
+                viewHolder.detailTextView.text = item.type
             } else {
-                detail.text = item.type + " / " + item.status
+                viewHolder.detailTextView.text = item.type + " / " + item.status
             }
         }
 
-        val name: TextView = view.findViewById(R.id.name) as TextView
-        name.text = item.hostId
+        viewHolder.nameTextView.text = item.hostId
 
         return view
+    }
+
+    class ViewHolder(view: View) {
+
+        val nameTextView = view.findViewById(R.id.name) as TextView
+
+        val detailTextView = view.findViewById(R.id.detail) as TextView
+
     }
 }

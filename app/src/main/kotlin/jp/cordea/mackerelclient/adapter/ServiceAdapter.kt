@@ -23,23 +23,38 @@ class ServiceAdapter(context: Context, val items: List<Service>) : ArrayAdapter<
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
-        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.list_item_service, parent, false)
+        var view = convertView
+        val viewHolder: ViewHolder
+        if (view == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.list_item_service, parent, false)
+            viewHolder = ViewHolder(view)
+            view.tag = viewHolder
+        } else {
+            viewHolder = view.tag as ViewHolder
+        }
 
         val item = getItem(position)
         item ?: return convertView
-        val name: TextView = view.findViewById(R.id.name) as TextView
-        name.text = item.name
-        val role: TextView = view.findViewById(R.id.role) as TextView
-        role.text =
+        viewHolder.nameTextView.text = item.name
+        viewHolder.roleTextView.text =
                 item.roles.size.let {
                     if (it <= 1) context.resources.getString(R.string.format_role).format(it)
-                        else
-                            if (it > 99) context.resources.getString(R.string.format_roles_ex)
-                            else context.resources.getString(R.string.format_roles).format(it)
+                    else
+                        if (it > 99) context.resources.getString(R.string.format_roles_ex)
+                        else context.resources.getString(R.string.format_roles).format(it)
                 }
-        val detail: TextView = view.findViewById(R.id.detail) as TextView
-        detail.text = item.memo
+        viewHolder.detailTextView.text = item.memo
 
         return view
+    }
+
+    class ViewHolder(view: View) {
+
+        val nameTextView = view.findViewById(R.id.name) as TextView
+
+        val detailTextView = view.findViewById(R.id.detail) as TextView
+
+        val roleTextView = view.findViewById(R.id.role) as TextView
+
     }
 }
