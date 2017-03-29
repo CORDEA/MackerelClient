@@ -3,6 +3,7 @@ package jp.cordea.mackerelclient.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.preference.Preference
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -21,7 +22,7 @@ import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Users
 import jp.cordea.mackerelclient.model.UserKey
-import jp.cordea.mackerelclient.utils.PreferenceUtils
+import jp.cordea.mackerelclient.model.Preferences
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
@@ -41,6 +42,10 @@ class LoginActivity : AppCompatActivity() {
         LoginViewModel(this)
     }
 
+    private val prefs by lazy {
+        Preferences(this)
+    }
+
     private val compositeSubscription = CompositeSubscription()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +55,7 @@ class LoginActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         var userKey: UserKey? = null
-        val userId = PreferenceUtils.readUserId(applicationContext)
+        val userId = prefs.userId
         val realm = Realm.getDefaultInstance()
         realm.where(UserKey::class.java).equalTo("id", userId).findFirst()?.let {
             userKey = realm.copyFromRealm(it)
@@ -124,7 +129,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun onLoginSucceeded(id: Int? = null) {
         id?.let {
-            PreferenceUtils.writeUserId(applicationContext, it)
+            prefs.userId = it
         }
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)

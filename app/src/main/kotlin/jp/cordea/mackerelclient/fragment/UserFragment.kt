@@ -13,7 +13,7 @@ import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.UserAdapter
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.model.UserKey
-import jp.cordea.mackerelclient.utils.PreferenceUtils
+import jp.cordea.mackerelclient.model.Preferences
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 
@@ -56,7 +56,7 @@ class UserFragment : Fragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     swipeRefresh.isRefreshing = false
-                    val userId = PreferenceUtils.readUserId(context)
+                    val userId = Preferences(context).userId
                     val realm = Realm.getDefaultInstance()
                     val user = realm.copyFromRealm(realm.where(UserKey::class.java).equalTo("id", userId).findFirst())
                     realm.close()

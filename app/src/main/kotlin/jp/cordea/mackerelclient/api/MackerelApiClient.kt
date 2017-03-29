@@ -6,7 +6,7 @@ import io.realm.Realm
 import jp.cordea.mackerelclient.BuildConfig
 import jp.cordea.mackerelclient.api.response.*
 import jp.cordea.mackerelclient.model.UserKey
-import jp.cordea.mackerelclient.utils.PreferenceUtils
+import jp.cordea.mackerelclient.model.Preferences
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -34,7 +34,7 @@ class MackerelApiClient {
         private fun <T> getService(service: java.lang.Class<T>, context: Context, k: String? = null): T {
             var key = k
             if (key == null) {
-                val userId = PreferenceUtils.readUserId(context)
+                val userId = Preferences(context).userId
                 val realm = Realm.getDefaultInstance()
                 key = realm.copyFromRealm(realm.where(UserKey::class.java).equalTo("id", userId).findFirst()).key
                 realm.close()

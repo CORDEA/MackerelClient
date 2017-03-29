@@ -26,7 +26,7 @@ import jp.cordea.mackerelclient.fragment.*
 import jp.cordea.mackerelclient.fragment.alert.AlertFragment
 import jp.cordea.mackerelclient.model.UserKey
 import jp.cordea.mackerelclient.utils.GravatarUtils
-import jp.cordea.mackerelclient.utils.PreferenceUtils
+import jp.cordea.mackerelclient.model.Preferences
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -40,6 +40,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     val navigationView: NavigationView by bindView(R.id.nav_view)
 
     private var elevation: Float? = null
+
+    private val prefs by lazy {
+        Preferences(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +60,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val name: TextView = header.findViewById(R.id.name) as TextView
         val email: TextView = header.findViewById(R.id.email) as TextView
 
-        val userId = PreferenceUtils.readUserId(applicationContext)
+        val userId = prefs.userId
         val realm = Realm.getDefaultInstance()
         var user: UserKey? = null
         realm.where(UserKey::class.java).equalTo("id", userId).findFirst()?.let {
@@ -177,14 +181,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .Builder(context)
                 .setTitle(R.string.nav_bar_sign_out_dialog_title)
                 .setPositiveButton(R.string.nav_bar_sign_out_dialog_positive_button, { _, _ ->
-                    val userId = PreferenceUtils.readUserId(context)
+                    val userId = prefs.userId
                     val realm = Realm.getDefaultInstance()
                     realm.executeTransaction {
                         it.where(UserKey::class.java).equalTo("id", userId).findFirst()?.deleteFromRealm()
                     }
                     realm.close()
 
-                    PreferenceUtils.removeUserId(context)
+                    prefs.clear()
 
                     val intent = Intent(context, LoginActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
