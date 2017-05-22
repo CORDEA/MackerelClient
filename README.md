@@ -1,4 +1,7 @@
 # Mackerel Client
+
+[![codebeat badge](https://codebeat.co/badges/44ad11b4-bd10-42f8-9029-11d0625597e8)](https://codebeat.co/projects/github-com-cordea-mackerelclient-develop)
+
 Unofficial Android app of Mackerel.
 
 ## Bug / Request
