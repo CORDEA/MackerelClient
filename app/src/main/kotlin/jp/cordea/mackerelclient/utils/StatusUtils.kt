@@ -1,7 +1,5 @@
 package jp.cordea.mackerelclient.utils
 
-import android.content.Context
-import android.support.v4.content.ContextCompat
 import jp.cordea.mackerelclient.R
 
 /**

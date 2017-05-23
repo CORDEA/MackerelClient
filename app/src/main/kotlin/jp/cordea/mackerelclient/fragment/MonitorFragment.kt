@@ -75,8 +75,8 @@ class MonitorFragment : android.support.v4.app.Fragment() {
                     val sections = it.monitors.map { it.type }.distinct().sortedBy { it }
                     val monitors: MutableList<Pair<String, Monitor?>> = arrayListOf()
                     for (section in sections) {
-                        val items = it.monitors.filter { section!! == it.type }
-                        val type = items[0].type!!
+                        val items = it.monitors.filter { section == it.type }
+                        val type = items[0].type
                         monitors.add(Pair(type, null))
                         items.map { monitors.add(Pair(type, it)) }
                     }

@@ -5,8 +5,8 @@ import com.google.gson.GsonBuilder
 import io.realm.Realm
 import jp.cordea.mackerelclient.BuildConfig
 import jp.cordea.mackerelclient.api.response.*
-import jp.cordea.mackerelclient.model.UserKey
 import jp.cordea.mackerelclient.model.Preferences
+import jp.cordea.mackerelclient.model.UserKey
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit

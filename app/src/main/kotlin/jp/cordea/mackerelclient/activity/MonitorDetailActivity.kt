@@ -41,7 +41,7 @@ class MonitorDetailActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val monitor = intent.getParcelableExtra<Monitor>(MonitorKey)
+        val monitor = intent.getSerializableExtra(MonitorKey) as Monitor
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = DetailCommonAdapter(this, viewModel.getDisplayData(monitor))

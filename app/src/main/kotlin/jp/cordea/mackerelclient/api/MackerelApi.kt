@@ -18,7 +18,7 @@ interface MackerelApi {
     public fun getRoles(@Path("serviceName") serviceName: String): Observable<Roles>
 
     @GET("/api/v0/hosts/{hostId}")
-    public fun getHosts(@Path("hostId") hostId: String): Observable<Host>
+    public fun getHost(@Path("hostId") hostId: String): Observable<Host>
 
     @POST("/api/v0/hosts/{hostId}/retire")
     public fun postRetireHost(@Path("hostId") hostId: String, @Body emptyBody: EmptyBody = EmptyBody()): Call<RetireHost>

@@ -1,6 +1,5 @@
 package jp.cordea.mackerelclient
 
-import jp.cordea.mackerelclient.R
 import android.content.Context
 import android.graphics.Rect
 import android.support.v7.widget.RecyclerView

@@ -6,10 +6,10 @@ import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.widget.EditText
-import jp.cordea.mackerelclient.viewmodel.AlertCloseViewModel
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.response.Alert
 import jp.cordea.mackerelclient.utils.DialogUtils
+import jp.cordea.mackerelclient.viewmodel.AlertCloseViewModel
 
 /**
  * Created by Yoshihiro Tanaka on 2017/03/22.

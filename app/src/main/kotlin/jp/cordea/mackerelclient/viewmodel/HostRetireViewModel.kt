@@ -15,7 +15,7 @@ class HostRetireViewModel(private val context: Context) {
 
     fun retireHost(host: Host, onResponse: (response: Response<RetireHost>?) -> Unit, onFailure: () -> Unit) {
         MackerelApiClient
-                .retireHost(context, host.id!!)
+                .retireHost(context, host.id)
                 .enqueue(object : Callback<RetireHost> {
                     override fun onResponse(p0: Call<RetireHost>?, response: Response<RetireHost>?) {
                         onResponse(response)

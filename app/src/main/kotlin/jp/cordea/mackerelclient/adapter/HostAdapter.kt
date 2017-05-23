@@ -1,11 +1,7 @@
 package jp.cordea.mackerelclient.adapter
 
-import android.content.Intent
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.style.TextAppearanceSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,7 +47,7 @@ class HostAdapter(val fragment: android.support.v4.app.Fragment, val items: List
             role.text = viewModel.roleText
 
             health.setBackgroundColor(
-                 ContextCompat.getColor(fragment.context, StatusUtils.stringToStatusColor(item.status!!))
+                 ContextCompat.getColor(fragment.context, StatusUtils.stringToStatusColor(item.status))
             )
 
             loadavgTitleTextView.text = fragment.resources.getString(R.string.host_card_loadavg_title)

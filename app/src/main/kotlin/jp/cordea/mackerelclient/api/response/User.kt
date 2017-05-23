@@ -5,8 +5,4 @@ package jp.cordea.mackerelclient.api.response
  */
 class Users(val users: List<User>)
 
-class User(id: String, screenName: String, email: String) {
-    val id = id
-    val screenName = screenName
-    val email = email
-}
+class User(val id: String, val screenName: String, val email: String)

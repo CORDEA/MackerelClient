@@ -12,8 +12,8 @@ import io.realm.Realm
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.UserAdapter
 import jp.cordea.mackerelclient.api.MackerelApiClient
-import jp.cordea.mackerelclient.model.UserKey
 import jp.cordea.mackerelclient.model.Preferences
+import jp.cordea.mackerelclient.model.UserKey
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 
@@ -23,8 +23,11 @@ import rx.android.schedulers.AndroidSchedulers
 class UserFragment : Fragment() {
 
     val errView: View by bindView(R.id.error)
+
     val progress: View by bindView(R.id.progress)
+
     val listView : ListView by bindView(R.id.list_view)
+
     val swipeRefresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
 
     private var subscription: Subscription? = null

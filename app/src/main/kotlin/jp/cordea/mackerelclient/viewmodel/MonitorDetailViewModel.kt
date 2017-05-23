@@ -17,7 +17,7 @@ class MonitorDetailViewModel {
                 it.service?.let {
                     add(Pair(it, R.string.monitor_detail_service))
                 }
-                add(Pair(it.type!!, R.string.monitor_detail_type))
+                add(Pair(it.type, R.string.monitor_detail_type))
 
                 it.duration?.let {
                     add(Pair(it.toString(), R.string.monitor_detail_duration))

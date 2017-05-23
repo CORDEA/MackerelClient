@@ -1,6 +1,5 @@
 package jp.cordea.mackerelclient.fragment.alert
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
@@ -12,12 +11,9 @@ import butterknife.bindView
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.AlertDetailActivity
 import jp.cordea.mackerelclient.adapter.AlertAdapter
-import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Alert
 import jp.cordea.mackerelclient.viewmodel.AlertViewModel
-import rx.Observable
 import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
 
 /**
  * Created by Yoshihiro Tanaka on 16/01/13.

@@ -38,7 +38,7 @@ class HostDetailActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val host = intent.getParcelableExtra<Host>(HostKey)
+        val host = intent.getSerializableExtra(HostKey) as Host
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = DetailCommonAdapter(this, createData(host))
@@ -51,8 +51,8 @@ class HostDetailActivity : AppCompatActivity() {
         val list: MutableList<MutableList<Pair<String, Int>>> = arrayListOf()
         var inner: MutableList<Pair<String, Int>> = arrayListOf()
 
-        inner.add(Pair(StatusUtils.requestNameToString(host.status!!), R.string.host_detail_status))
-        inner.add(Pair(host.memo!!, R.string.host_detail_memo))
+        inner.add(Pair(StatusUtils.requestNameToString(host.status), R.string.host_detail_status))
+        inner.add(Pair(host.memo, R.string.host_detail_memo))
         list.add(inner)
 
         inner = arrayListOf()
@@ -65,7 +65,7 @@ class HostDetailActivity : AppCompatActivity() {
                 },
                 R.string.host_detail_roles
         ))
-        inner.add(Pair(DateUtils.stringDateFromEpoch(host.createdAt!!), R.string.host_detail_created_at))
+        inner.add(Pair(DateUtils.stringDateFromEpoch(host.createdAt), R.string.host_detail_created_at))
         list.add(inner)
         return list
     }

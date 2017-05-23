@@ -14,7 +14,7 @@ class MonitorSettingViewModel(private val context: Context) {
 
     fun deleteMonitorSetting(monitor: Monitor, onResponse: (response: Response<Monitor>?) -> Unit, onFailure: () -> Unit) {
         MackerelApiClient
-                .deleteMonitor(context, monitor.id!!)
+                .deleteMonitor(context, monitor.id)
                 .enqueue(object : Callback<Monitor> {
                     override fun onResponse(p0: Call<Monitor>?, response: Response<Monitor>?) {
                         onResponse(response)

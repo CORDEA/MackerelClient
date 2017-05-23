@@ -20,25 +20,36 @@ import retrofit2.Response
 
 class MonitorEditActivity : AppCompatActivity() {
 
-
     val toolbar: Toolbar by bindView(R.id.toolbar)
 
     val type: TextView by bindView(R.id.type)
+
     val name: EditText by bindView(R.id.name)
+
     val service: EditText by bindView(R.id.service)
+
     val duration: EditText by bindView(R.id.duration)
+
     val metric: EditText by bindView(R.id.metric)
+
     val operator: Spinner by bindView(R.id.operator)
+
     val operatorPair: Spinner by bindView(R.id.operator_pair)
+
     val warning: EditText by bindView(R.id.warning)
+
     val critical: EditText by bindView(R.id.critical)
+
     val notInterval: EditText by bindView(R.id.notification_interval)
+
     val scopes: EditText by bindView(R.id.scopes)
+
     val exScopes: EditText by bindView(R.id.exclude_scopes)
 
     val optionContainer: View by bindView(R.id.option_container)
 
     val done: Button by bindView(R.id.done)
+
     val discard: Button by bindView(R.id.discard)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +62,7 @@ class MonitorEditActivity : AppCompatActivity() {
         }
 
         val context: Context = this
-        val monitor = intent.getParcelableExtra<Monitor>(MonitorKey)
+        val monitor = intent.getSerializableExtra(MonitorKey) as Monitor
 
         initValues(monitor)
 
@@ -79,7 +90,7 @@ class MonitorEditActivity : AppCompatActivity() {
 
             val ref = checkValues(monitor)
             MackerelApiClient
-                    .refreshMonitor(applicationContext, ref.id!!, ref)
+                    .refreshMonitor(this, ref.id, ref)
                     .enqueue(object : Callback<RefreshMonitor> {
                         override fun onResponse(p0: Call<RefreshMonitor>?, response: Response<RefreshMonitor>?) {
                             dialog.dismiss()
@@ -108,7 +119,7 @@ class MonitorEditActivity : AppCompatActivity() {
 
     private fun initValues(monitor: Monitor) {
         type.text = monitor.type
-        if (monitor.type!! == "connectivity") {
+        if (monitor.type == "connectivity") {
             optionContainer.visibility = View.GONE
         } else {
             name.text = with(monitor.name ?: "", { SpannableStringBuilder(this) })
@@ -130,35 +141,46 @@ class MonitorEditActivity : AppCompatActivity() {
     }
 
     private fun checkValues(monitor: Monitor): Monitor {
-        val refresh = Monitor()
-        refresh.id = monitor.id
-        refresh.name = checkValue(monitor.name, name.text.toString())
-        refresh.service = checkValue(monitor.service, service.text.toString())
-        try {
-            refresh.duration = checkValue(monitor.duration, duration.text.toString().toInt())
+
+        val duration = try {
+            checkValue(monitor.duration, duration.text.toString().toInt())
         } catch (_: NumberFormatException) {
+            null
         }
 
-        refresh.metric = checkValue(monitor.metric, metric.text.toString())
-        refresh.operator = checkValue(monitor.operator, operator.selectedItem as String)
-
-        try {
-            refresh.warning = checkValue(monitor.warning, warning.text.toString().toFloat())
+        val warning = try {
+            checkValue(monitor.warning, warning.text.toString().toFloat())
         } catch (_: NumberFormatException) {
-        }
-        try {
-            refresh.critical = checkValue(monitor.critical, critical.text.toString().toFloat())
-        } catch (_: NumberFormatException) {
-        }
-        try {
-            refresh.notificationInterval = checkValue(monitor.notificationInterval, notInterval.text.toString().toInt())
-        } catch (_: NumberFormatException) {
+            null
         }
 
-        refresh.scopes = scopes.text.toString().split(",").map { it.trim() }.toTypedArray()
-        refresh.excludeScopes = exScopes.text.toString().split(",").map { it.trim() }.toTypedArray()
+        val critical = try {
+            checkValue(monitor.critical, critical.text.toString().toFloat())
+        } catch (_: NumberFormatException) {
+            null
+        }
 
-        return refresh
+        val interval = try {
+            checkValue(monitor.notificationInterval, notInterval.text.toString().toInt())
+        } catch (_: NumberFormatException) {
+            null
+        }
+
+        return Monitor(
+                monitor.id,
+                monitor.type,
+                checkValue(monitor.name, name.text.toString()),
+                checkValue(monitor.service, service.text.toString()),
+                duration,
+                checkValue(monitor.metric, metric.text.toString()),
+                checkValue(monitor.operator, operator.selectedItem as String),
+                warning,
+                critical,
+                interval,
+                monitor.url,
+                scopes.text.toString().split(",").map(String::trim).toTypedArray(),
+                exScopes.text.toString().split(",").map(String::trim).toTypedArray()
+        )
     }
 
     private fun <T> checkValue(v0: T, v1: T): T? {

@@ -31,7 +31,7 @@ class HostViewModel(private val context: Context) {
         return MackerelApiClient
                 .getHosts(context, items.map { it.name })
                 .filter {
-                    deleteOldMetricData(it.hosts.map { it.id!! })
+                    deleteOldMetricData(it.hosts.map { it.id })
                     true
                 }
                 .observeOn(AndroidSchedulers.mainThread())
@@ -39,7 +39,7 @@ class HostViewModel(private val context: Context) {
 
     fun getLatestMetrics(hosts: Hosts): Observable<Tsdbs> {
         return MackerelApiClient
-                .getLatestMetrics(context, hosts.hosts.map { it.id!! },
+                .getLatestMetrics(context, hosts.hosts.map { it.id },
                         arrayListOf(loadavgMetricsKey, cpuMetricsKey, memoryMetricsKey))
                 .observeOn(AndroidSchedulers.mainThread())
     }

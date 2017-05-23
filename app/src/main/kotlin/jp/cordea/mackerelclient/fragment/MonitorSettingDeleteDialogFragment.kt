@@ -4,10 +4,10 @@ import android.app.Dialog
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
-import jp.cordea.mackerelclient.viewmodel.MonitorSettingViewModel
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.response.Monitor
 import jp.cordea.mackerelclient.utils.DialogUtils
+import jp.cordea.mackerelclient.viewmodel.MonitorSettingViewModel
 
 /**
  * Created by Yoshihiro Tanaka on 2017/03/22.

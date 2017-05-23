@@ -33,7 +33,7 @@ class AlertDetailActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val alert = intent.getParcelableExtra<Alert>(AlertKey)
+        val alert = intent.getSerializableExtra(AlertKey) as Alert
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = DetailCommonAdapter(this, insertInfo(alert))
@@ -45,8 +45,8 @@ class AlertDetailActivity : AppCompatActivity() {
     private fun insertInfo(alert: Alert): List<List<Pair<String, Int>>> {
         val list: MutableList<MutableList<Pair<String, Int>>> = arrayListOf()
         var inner: MutableList<Pair<String, Int>> = arrayListOf()
-        inner.add(Pair(alert.status!!, R.string.alert_detail_status))
-        inner.add(Pair(DateUtils.stringDateFromEpoch(alert.openedAt!!), R.string.alert_detail_opened_at))
+        inner.add(Pair(alert.status, R.string.alert_detail_status))
+        inner.add(Pair(DateUtils.stringDateFromEpoch(alert.openedAt), R.string.alert_detail_opened_at))
         alert.closedAt?.let {
             inner.add(Pair(DateUtils.stringDateFromEpoch(it), R.string.alert_detail_closed_at))
         }
@@ -56,7 +56,7 @@ class AlertDetailActivity : AppCompatActivity() {
         alert.reason?.let {
             inner.add(Pair(it, R.string.alert_detail_reason))
         }
-        inner.add(Pair(alert.type!!, R.string.alert_detail_type))
+        inner.add(Pair(alert.type, R.string.alert_detail_type))
         alert.value?.let {
             inner.add(Pair(it.toString(), R.string.alert_detail_value))
         }
