@@ -35,11 +35,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     val appbar: AppBarLayout by bindView(R.id.appbar)
-    val toolbar: Toolbar by bindView(R.id.toolbar)
-    val drawer: DrawerLayout by bindView(R.id.drawer_layout)
-    val navigationView: NavigationView by bindView(R.id.nav_view)
 
-    private var elevation: Float? = null
+    val toolbar: Toolbar by bindView(R.id.toolbar)
+
+    val drawer: DrawerLayout by bindView(R.id.drawer_layout)
+
+    val navigationView: NavigationView by bindView(R.id.nav_view)
 
     private val prefs by lazy {
         Preferences(this)
@@ -85,8 +86,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 name.text = u.name
                 email.text = u.email
                 GravatarUtils.getGravatarImage(u.email!!,
-                        applicationContext.resources.getDimensionPixelSize(R.dimen.user_thumbnail_size))?.let {
-                    Picasso.with(applicationContext)
+                        resources.getDimensionPixelSize(R.dimen.user_thumbnail_size))?.let {
+                    Picasso.with(this)
                             .load(it)
                             .transform(PicassoCircularTransform())
                             .into(thumbnail)
@@ -97,15 +98,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
 
-        supportFragmentManager.beginTransaction().replace(R.id.container, AlertFragment.newInstance()).commit()
+        supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.container, AlertFragment.newInstance())
+                .commit()
     }
 
-    override fun onStart() {
+    override fun onResume() {
         super.onResume()
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            elevation = appbar.elevation
-            appbar.elevation = -1f
+            appbar.elevation = 0f
         }
     }
 
@@ -130,8 +133,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val id = item.itemId
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            elevation?.let {
-                appbar.elevation = if (id == R.id.nav_alert || id == R.id.nav_sign_out || id == R.id.nav_open_mackerel) -1f else it
+            appbar.elevation = if (id == R.id.nav_alert || id == R.id.nav_sign_out || id == R.id.nav_open_mackerel) {
+                0f
+            } else {
+                resources.getDimension(R.dimen.app_bar_elevation)
             }
         }
 
