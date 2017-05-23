@@ -148,7 +148,7 @@ class MetricsActivity : AppCompatActivity() {
         when (item.itemId) {
             android.R.id.home -> finish()
             R.id.action_add -> {
-                val intent = MetricsEditActivity.createIntent(applicationContext, MetricsType.HOST, hostId!!)
+                val intent = MetricsEditActivity.createIntent(this, MetricsType.HOST, hostId!!)
                 startActivityForResult(intent, MetricsEditActivity.RequestCode)
             }
         }

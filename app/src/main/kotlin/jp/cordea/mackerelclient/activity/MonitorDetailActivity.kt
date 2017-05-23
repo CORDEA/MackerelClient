@@ -43,10 +43,9 @@ class MonitorDetailActivity : AppCompatActivity() {
 
         val monitor = intent.getParcelableExtra<Monitor>(MonitorKey)
 
-        recyclerView.layoutManager = LinearLayoutManager(applicationContext)
-        recyclerView.adapter = DetailCommonAdapter(applicationContext, viewModel.getDisplayData(monitor))
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = DetailCommonAdapter(this, viewModel.getDisplayData(monitor))
         recyclerView.addItemDecoration(ListItemDecoration(this))
-
         this.monitor = monitor
     }
 

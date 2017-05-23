@@ -40,8 +40,8 @@ class HostDetailActivity : AppCompatActivity() {
 
         val host = intent.getParcelableExtra<Host>(HostKey)
 
-        recyclerView.layoutManager = LinearLayoutManager(applicationContext)
-        recyclerView.adapter = DetailCommonAdapter(applicationContext, createData(host))
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = DetailCommonAdapter(this, createData(host))
         recyclerView.addItemDecoration(ListItemDecoration(this))
 
         this.host = host

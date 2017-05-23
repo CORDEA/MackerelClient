@@ -35,8 +35,8 @@ class AlertDetailActivity : AppCompatActivity() {
 
         val alert = intent.getParcelableExtra<Alert>(AlertKey)
 
-        recyclerView.layoutManager = LinearLayoutManager(applicationContext)
-        recyclerView.adapter = DetailCommonAdapter(applicationContext, insertInfo(alert))
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = DetailCommonAdapter(this, insertInfo(alert))
         recyclerView.addItemDecoration(ListItemDecoration(this))
 
         this.alert = alert
