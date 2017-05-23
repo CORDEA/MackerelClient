@@ -63,8 +63,7 @@ class SettingFragment : android.support.v4.app.Fragment() {
                     if (it.where(DisplayHostState::class.java).findAll().size == 0) {
                         it.executeTransaction {
                             for (key in resources.getStringArray(R.array.setting_host_cell_arr)) {
-                                val item = it.createObject(DisplayHostState::class.java)
-                                item.name = key
+                                val item = it.createObject(DisplayHostState::class.java, key)
                                 item.isDisplay = (key == "standby" || key == "working")
                             }
                         }
