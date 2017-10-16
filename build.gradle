@@ -11,8 +11,11 @@ buildscript {
         maven {
             url "https://jitpack.io"
         }
+        maven {
+            url "http://dl.bintray.com/kotlin/kotlin-eap-1.2"
+        }
     }
-    ext.kotlin_version = '1.1.1'
+    ext.kotlin_version = '1.2.0-beta-31'
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -33,6 +36,9 @@ allprojects {
         }
         maven {
             url "https://jitpack.io"
+        }
+        maven {
+            url "http://dl.bintray.com/kotlin/kotlin-eap-1.2"
         }
     }
 }
