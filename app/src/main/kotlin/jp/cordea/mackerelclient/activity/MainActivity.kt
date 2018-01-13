@@ -2,45 +2,37 @@ package jp.cordea.mackerelclient.activity
 
 import android.content.Context
 import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
-import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
-import android.widget.TextView
 import com.squareup.picasso.Picasso
 import io.realm.Realm
 import jp.cordea.mackerelclient.PicassoCircularTransform
 import jp.cordea.mackerelclient.R
+import jp.cordea.mackerelclient.databinding.ActivityMainBinding
+import jp.cordea.mackerelclient.databinding.NavHeaderMainBinding
 import jp.cordea.mackerelclient.fragment.*
 import jp.cordea.mackerelclient.fragment.alert.AlertFragment
 import jp.cordea.mackerelclient.model.Preferences
 import jp.cordea.mackerelclient.model.UserKey
 import jp.cordea.mackerelclient.utils.GravatarUtils
-import kotterknife.bindView
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     companion object {
-        private val MackerelUrl = "https://mackerel.io"
+        private const val MackerelUrl = "https://mackerel.io"
     }
 
-    val appbar: AppBarLayout by bindView(R.id.appbar)
-
-    val toolbar: Toolbar by bindView(R.id.toolbar)
-
-    val drawer: DrawerLayout by bindView(R.id.drawer_layout)
-
-    val navigationView: NavigationView by bindView(R.id.nav_view)
+    private lateinit var binding: ActivityMainBinding
 
     private val prefs by lazy {
         Preferences(this)
@@ -48,18 +40,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        setSupportActionBar(binding.toolbar)
 
         val toggle = ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        drawer.addDrawerListener(toggle)
+                this,
+                binding.drawerLayout,
+                binding.toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close
+        )
+        binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        navigationView.setNavigationItemSelectedListener(this)
-        val header = navigationView.getHeaderView(0)
-        val name: TextView = header.findViewById(R.id.name) as TextView
-        val email: TextView = header.findViewById(R.id.email) as TextView
+        binding.navView.setNavigationItemSelectedListener(this)
+        val header = binding.navView.getHeaderView(0)
+        val headerBinding = NavHeaderMainBinding.bind(header)
 
         val userId = prefs.userId
         val realm = Realm.getDefaultInstance()
@@ -82,9 +78,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else {
             val u = user!!
             if (!u.email.isNullOrBlank() && !u.name.isNullOrBlank()) {
-                val thumbnail: ImageView = header.findViewById(R.id.user_thumbnail) as ImageView
-                name.text = u.name
-                email.text = u.email
+                val thumbnail: ImageView = header.findViewById(R.id.user_thumbnail_image_view) as ImageView
+                headerBinding.nameTextView.text = u.name
+                headerBinding.emailTextView.text = u.email
                 GravatarUtils.getGravatarImage(u.email!!,
                         resources.getDimensionPixelSize(R.dimen.user_thumbnail_size))?.let {
                     Picasso.with(this)
@@ -93,8 +89,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             .into(thumbnail)
                 }
             } else {
-                name.text = resources.getString(R.string.anonymous)
-                email.text = ""
+                headerBinding.nameTextView.text = resources.getString(R.string.anonymous)
+                headerBinding.emailTextView.text = ""
             }
         }
 
@@ -108,24 +104,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onResume()
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            appbar.elevation = 0f
+            binding.appbar.elevation = 0f
         }
     }
 
     override fun onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START)
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -133,7 +121,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val id = item.itemId
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            appbar.elevation = if (id == R.id.nav_alert || id == R.id.nav_sign_out || id == R.id.nav_open_mackerel) {
+            binding.appbar.elevation = if (id == R.id.nav_alert
+                    || id == R.id.nav_sign_out
+                    || id == R.id.nav_open_mackerel) {
                 0f
             } else {
                 resources.getDimension(R.dimen.app_bar_elevation)
