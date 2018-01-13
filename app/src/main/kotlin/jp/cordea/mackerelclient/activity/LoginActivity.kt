@@ -2,38 +2,24 @@ package jp.cordea.mackerelclient.activity
 
 import android.content.Context
 import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.text.SpannableStringBuilder
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
 import io.realm.Realm
 import jp.cordea.mackerelclient.R
+import jp.cordea.mackerelclient.databinding.ActivityLoginBinding
+import jp.cordea.mackerelclient.databinding.ContentLoginBinding
 import jp.cordea.mackerelclient.model.Preferences
 import jp.cordea.mackerelclient.model.UserKey
 import jp.cordea.mackerelclient.viewmodel.LoginViewModel
-import kotterknife.bindView
 import rx.subscriptions.CompositeSubscription
 
 class LoginActivity : AppCompatActivity() {
-
-    val toolbar: Toolbar by bindView(R.id.toolbar)
-
-    val progress: ProgressBar by bindView(R.id.progress)
-
-    val container: View by bindView(R.id.container)
-
-    val button: Button by bindView(R.id.button)
-
-    val apiKey: EditText by bindView(R.id.api_key)
-
-    val email: EditText by bindView(R.id.email)
 
     private val viewModel by lazy {
         LoginViewModel(this)
@@ -45,11 +31,15 @@ class LoginActivity : AppCompatActivity() {
 
     private val compositeSubscription = CompositeSubscription()
 
+    private lateinit var contentBinding: ContentLoginBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val binding = DataBindingUtil
+                .setContentView<ActivityLoginBinding>(this, R.layout.activity_login)
+        setSupportActionBar(binding.toolbar)
 
-        setContentView(R.layout.activity_login)
-        setSupportActionBar(toolbar)
+        contentBinding = binding.content ?: return
 
         var userKey: UserKey? = null
         val userId = prefs.userId
@@ -60,11 +50,11 @@ class LoginActivity : AppCompatActivity() {
         realm.close()
 
         userKey?.let { it0 ->
-            progress.visibility = View.VISIBLE
-            container.visibility = View.GONE
-            apiKey.text = with(it0.key, { SpannableStringBuilder(this) })
+            contentBinding.progressBar.visibility = View.VISIBLE
+            contentBinding.container.visibility = View.GONE
+            contentBinding.apiKeyEditText.text = with(it0.key, { SpannableStringBuilder(this) })
             it0.email?.let {
-                email.text = with(it, { SpannableStringBuilder(this) })
+                contentBinding.emailEditText.text = with(it, { SpannableStringBuilder(this) })
             }
 
             compositeSubscription.add(
@@ -83,14 +73,14 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setEvents() {
-        apiKey.setOnEditorActionListener({ _, actionId, _ ->
+        contentBinding.apiKeyEditText.setOnEditorActionListener({ _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                email.requestFocus()
+                contentBinding.emailEditText.requestFocus()
             }
             true
         })
 
-        email.setOnEditorActionListener({ _, actionId, _ ->
+        contentBinding.emailEditText.setOnEditorActionListener({ _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val im = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                 im?.hideSoftInputFromWindow(this.currentFocus.windowToken, 0)
@@ -99,8 +89,8 @@ class LoginActivity : AppCompatActivity() {
         })
 
         val context: Context = this
-        button.setOnClickListener {
-            val t = apiKey.text
+        contentBinding.button.setOnClickListener {
+            val t = contentBinding.apiKeyEditText.text
             if (t.isEmpty()) {
                 AlertDialog
                         .Builder(context)
@@ -108,10 +98,13 @@ class LoginActivity : AppCompatActivity() {
                         .setMessage(R.string.sign_in_error_dialog_message_key)
                         .show()
             } else {
-                progress.visibility = View.VISIBLE
-                container.visibility = View.GONE
+                contentBinding.progressBar.visibility = View.VISIBLE
+                contentBinding.container.visibility = View.GONE
                 compositeSubscription.add(
-                        viewModel.logIn(t.toString().trim(), email.text.toString(), false,
+                        viewModel.logIn(
+                                t.toString().trim(),
+                                contentBinding.emailEditText.text.toString(),
+                                false,
                                 onSuccess = {
                                     onLoginSucceeded(it)
                                 },
@@ -138,8 +131,8 @@ class LoginActivity : AppCompatActivity() {
                 .setTitle(R.string.sign_in_error_dialog_title)
                 .setMessage(R.string.sign_in_error_dialog_message_mail)
                 .show()
-        container.visibility = View.VISIBLE
-        progress.visibility = View.GONE
+        contentBinding.container.visibility = View.VISIBLE
+        contentBinding.progressBar.visibility = View.GONE
     }
 
     override fun onDestroy() {
