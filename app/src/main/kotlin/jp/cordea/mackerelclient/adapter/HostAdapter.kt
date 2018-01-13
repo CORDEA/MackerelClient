@@ -47,7 +47,7 @@ class HostAdapter(val fragment: android.support.v4.app.Fragment, val items: List
             role.text = viewModel.roleText
 
             health.setBackgroundColor(
-                 ContextCompat.getColor(fragment.context, StatusUtils.stringToStatusColor(item.status))
+                    ContextCompat.getColor(fragment.context, StatusUtils.stringToStatusColor(item.status))
             )
 
             loadavgTitleTextView.text = fragment.resources.getString(R.string.host_card_loadavg_title)

@@ -63,7 +63,7 @@ class AlertFragment : Fragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     onAlertItemChanged.post(it)
-                },{
+                }, {
                     onAlertItemChanged.post(null)
                 })
     }

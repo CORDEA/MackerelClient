@@ -26,7 +26,7 @@ class UserFragment : Fragment() {
 
     val progress: View by bindView(R.id.progress)
 
-    val listView : ListView by bindView(R.id.list_view)
+    val listView: ListView by bindView(R.id.list_view)
 
     val swipeRefresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
 
@@ -72,7 +72,7 @@ class UserFragment : Fragment() {
                             .doOnNext {
                                 refresh()
                             }
-                            .subscribe({},{})
+                            .subscribe({}, {})
                     progress.visibility = View.GONE
                     swipeRefresh.visibility = View.VISIBLE
                 }, {

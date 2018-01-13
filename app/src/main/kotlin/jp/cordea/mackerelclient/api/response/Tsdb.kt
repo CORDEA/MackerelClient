@@ -12,7 +12,7 @@ import java.util.*
  */
 class Tsdbs(val tsdbs: Map<String, Map<String, Tsdb>>)
 
-class Tsdb (val metricValue: Float?)
+class Tsdb(val metricValue: Float?)
 
 class TsdbsDeserializer() : JsonDeserializer<Tsdbs> {
     override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): Tsdbs {

@@ -18,12 +18,13 @@ import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.MetricsEditActivity
 import jp.cordea.mackerelclient.model.MetricsParameter
 import jp.cordea.mackerelclient.model.UserMetric
+import kotterknife.bindView
 import kotlin.concurrent.withLock
 
 /**
  * Created by Yoshihiro Tanaka on 16/01/20.
  */
-class MetricsAdapter (val activity: Activity, val items: MutableList<MetricsParameter>, val type: MetricsType, val id: String, var visibles: Int = 0, var canRefresh: Boolean = false) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MetricsAdapter(val activity: Activity, val items: MutableList<MetricsParameter>, val type: MetricsType, val id: String, var visibles: Int = 0, var canRefresh: Boolean = false) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val lock = java.util.concurrent.locks.ReentrantLock()
 
@@ -117,7 +118,7 @@ class MetricsAdapter (val activity: Activity, val items: MutableList<MetricsPara
         return drawComplete
     }
 
-    private class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    private class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         val progress: View by bindView(R.id.progress)
 

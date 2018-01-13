@@ -14,15 +14,15 @@ class GravatarUtils {
         private fun hex(arr: ByteArray): String {
             val sb = StringBuffer()
             for (it in arr) {
-                sb.append(Integer.toHexString((it.toInt() and 0xff) or 0x100).substring(1,3))
+                sb.append(Integer.toHexString((it.toInt() and 0xff) or 0x100).substring(1, 3))
             }
             return sb.toString()
         }
 
-        private fun md5Hex (message: String): String? {
+        private fun md5Hex(message: String): String? {
             try {
                 val md = MessageDigest.getInstance("MD5")
-                return hex (md.digest(message.toByteArray(Charset.forName("CP1252"))))
+                return hex(md.digest(message.toByteArray(Charset.forName("CP1252"))))
             } catch (e: NoSuchAlgorithmException) {
                 e.printStackTrace()
             } catch (e: UnsupportedEncodingException) {

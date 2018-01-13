@@ -48,7 +48,7 @@ interface MackerelApi {
     public fun getServiceMetrics(@Path("serviceName") serviceName: String,
                                  @Query("name") name: String,
                                  @Query("from") from: Long,
-                                 @Query("to") to: Long) : Observable<Metrics>
+                                 @Query("to") to: Long): Observable<Metrics>
 
     @GET("/api/v0/alerts")
     public fun getAlerts(): Observable<Alerts>

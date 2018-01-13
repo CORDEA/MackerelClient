@@ -48,7 +48,7 @@ class MonitorAdapter(val fragment: android.support.v4.app.Fragment, val items: L
         return items.size
     }
 
-    private class ViewHolder(val view: View): RecyclerView.ViewHolder(view) {
+    private class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val cell: View by bindView(R.id.cell)
 
         val title: TextView by bindView(R.id.title)

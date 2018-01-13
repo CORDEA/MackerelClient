@@ -103,7 +103,7 @@ class SettingFragment : android.support.v4.app.Fragment() {
                             .map { it.name }
                             .map { StatusUtils.requestNameToString(it) }
                             .toTypedArray(),
-                            BooleanArray(items.size, {i -> items[i].isDisplay!!}),
+                            BooleanArray(items.size, { i -> items[i].isDisplay!! }),
                             { _, which, flag ->
                                 val inRealm = Realm.getDefaultInstance()
                                 val item = items[which]
