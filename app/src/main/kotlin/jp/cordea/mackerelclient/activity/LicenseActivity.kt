@@ -1,13 +1,12 @@
 package jp.cordea.mackerelclient.activity
 
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.View
-import android.widget.TextView
 import jp.cordea.mackerelclient.R
+import jp.cordea.mackerelclient.databinding.ActivityLicenseBinding
 import jp.cordea.mackerelclient.viewmodel.LicenseViewModel
-import kotterknife.bindView
 
 class LicenseActivity : AppCompatActivity() {
 
@@ -15,29 +14,21 @@ class LicenseActivity : AppCompatActivity() {
         LicenseViewModel(this)
     }
 
-    val toolbar: Toolbar by bindView(R.id.toolbar)
-
-    val licenseView: TextView by bindView(R.id.license)
-
-    val container: View by bindView(R.id.container)
-
-    val progress: View by bindView(R.id.progress)
-
-    val error: View by bindView(R.id.error)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_license)
-        setSupportActionBar(toolbar)
+        val binding = DataBindingUtil
+                .setContentView<ActivityLicenseBinding>(this, R.layout.activity_license)
+        setSupportActionBar(binding.toolbar)
 
+        val content = binding.content
         viewModel.licensesObservable
                 .subscribe({
-                    licenseView.text = it
-                    container.visibility = View.VISIBLE
-                    progress.visibility = View.GONE
+                    content.licenseTextView.text = it
+                    content.container.visibility = View.VISIBLE
+                    content.progressLayout.visibility = View.GONE
                 }, {
-                    error.visibility = View.VISIBLE
-                    progress.visibility = View.GONE
+                    content.errorLayout.root.visibility = View.VISIBLE
+                    content.progressLayout.visibility = View.GONE
                     it.printStackTrace()
                 })
     }

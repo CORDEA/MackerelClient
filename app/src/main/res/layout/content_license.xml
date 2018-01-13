@@ -1,49 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activity.LicenseActivity"
-    tools:showIn="@layout/activity_license" >
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
-        android:id="@+id/progress"
-        android:orientation="vertical"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center" >
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".activity.LicenseActivity"
+        tools:showIn="@layout/activity_license">
 
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <ScrollView
-        android:id="@+id/container"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-
-        <HorizontalScrollView
+        <LinearLayout
+            android:id="@+id/progress_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <TextView
-                android:id="@+id/license"
-                android:padding="@dimen/license_padding"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-        </HorizontalScrollView>
-    </ScrollView>
+        </LinearLayout>
 
-    <include
-        android:id="@+id/error"
-        layout="@layout/content_error" />
+        <ScrollView
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
-</FrameLayout>
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/license_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/license_padding" />
+
+            </HorizontalScrollView>
+        </ScrollView>
+
+        <include
+            android:id="@+id/error_layout"
+            layout="@layout/content_error" />
+
+    </FrameLayout>
+</layout>
