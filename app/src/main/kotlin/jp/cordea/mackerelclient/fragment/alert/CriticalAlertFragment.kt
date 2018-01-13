@@ -7,12 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ListView
-import butterknife.bindView
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.AlertDetailActivity
 import jp.cordea.mackerelclient.adapter.AlertAdapter
 import jp.cordea.mackerelclient.api.response.Alert
 import jp.cordea.mackerelclient.viewmodel.AlertViewModel
+import kotterknife.bindView
 import rx.Subscription
 
 /**

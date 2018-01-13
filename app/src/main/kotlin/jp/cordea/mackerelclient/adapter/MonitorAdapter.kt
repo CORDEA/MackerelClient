@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import butterknife.bindView
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.MonitorDetailActivity
 import jp.cordea.mackerelclient.api.response.Monitor
+import kotterknife.bindView
 
 /**
  * Created by Yoshihiro Tanaka on 16/01/15.

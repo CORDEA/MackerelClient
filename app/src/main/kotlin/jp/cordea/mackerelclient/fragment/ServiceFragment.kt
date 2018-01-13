@@ -7,12 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ListView
-import butterknife.bindView
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.ServiceMetricsActivity
 import jp.cordea.mackerelclient.adapter.ServiceAdapter
 import jp.cordea.mackerelclient.api.response.Service
 import jp.cordea.mackerelclient.viewmodel.ServiceViewModel
+import kotterknife.bindView
 import rx.Subscription
 
 class ServiceFragment : android.support.v4.app.Fragment() {

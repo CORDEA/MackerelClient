@@ -10,10 +10,10 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
-import butterknife.bindView
 import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.viewmodel.MetricsEditViewModel
+import kotterknife.bindView
 
 class MetricsEditActivity : AppCompatActivity() {
 

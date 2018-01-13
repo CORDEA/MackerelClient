@@ -9,12 +9,12 @@ import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import butterknife.bindView
 import com.ogaclejapan.rx.binding.RxEvent
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.AlertFragmentPagerAdapter
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Alerts
+import kotterknife.bindView
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit

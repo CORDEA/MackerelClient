@@ -10,12 +10,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import butterknife.bindView
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.MonitorDetailActivity
 import jp.cordea.mackerelclient.adapter.MonitorAdapter
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Monitor
+import kotterknife.bindView
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 

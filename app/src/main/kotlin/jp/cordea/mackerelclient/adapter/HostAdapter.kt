@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import butterknife.bindView
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.HostDetailActivity
 import jp.cordea.mackerelclient.activity.MetricsActivity
@@ -15,6 +14,7 @@ import jp.cordea.mackerelclient.api.response.Host
 import jp.cordea.mackerelclient.api.response.Tsdb
 import jp.cordea.mackerelclient.utils.StatusUtils
 import jp.cordea.mackerelclient.viewmodel.HostListItemViewModel
+import kotterknife.bindView
 
 /**
  * Created by Yoshihiro Tanaka on 16/01/12.

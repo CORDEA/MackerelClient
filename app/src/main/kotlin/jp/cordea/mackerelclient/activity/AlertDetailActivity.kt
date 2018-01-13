@@ -10,13 +10,13 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
-import butterknife.bindView
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.DetailCommonAdapter
 import jp.cordea.mackerelclient.api.response.Alert
 import jp.cordea.mackerelclient.fragment.AlertCloseDialogFragment
 import jp.cordea.mackerelclient.utils.DateUtils
+import kotterknife.bindView
 
 class AlertDetailActivity : AppCompatActivity() {
 

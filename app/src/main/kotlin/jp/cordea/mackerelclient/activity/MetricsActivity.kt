@@ -13,7 +13,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
-import butterknife.bindView
 import io.realm.Realm
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.MetricsType
@@ -22,6 +21,7 @@ import jp.cordea.mackerelclient.adapter.MetricsAdapter
 import jp.cordea.mackerelclient.model.MetricsParameter
 import jp.cordea.mackerelclient.model.UserMetric
 import jp.cordea.mackerelclient.viewmodel.MetricsViewModel
+import kotterknife.bindView
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 

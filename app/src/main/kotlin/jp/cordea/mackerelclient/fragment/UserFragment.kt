@@ -7,13 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
-import butterknife.bindView
 import io.realm.Realm
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.UserAdapter
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.model.Preferences
 import jp.cordea.mackerelclient.model.UserKey
+import kotterknife.bindView
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 

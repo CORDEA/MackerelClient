@@ -5,9 +5,9 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.TextView
-import butterknife.bindView
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.viewmodel.LicenseViewModel
+import kotterknife.bindView
 
 class LicenseActivity : AppCompatActivity() {
 

@@ -8,12 +8,12 @@ import android.support.v7.widget.Toolbar
 import android.text.SpannableStringBuilder
 import android.view.View
 import android.widget.*
-import butterknife.bindView
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Monitor
 import jp.cordea.mackerelclient.api.response.RefreshMonitor
 import jp.cordea.mackerelclient.utils.DialogUtils
+import kotterknife.bindView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

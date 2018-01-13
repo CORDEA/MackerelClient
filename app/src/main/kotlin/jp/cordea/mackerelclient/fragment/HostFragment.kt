@@ -10,13 +10,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import butterknife.bindView
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.HostDetailActivity
 import jp.cordea.mackerelclient.adapter.HostAdapter
 import jp.cordea.mackerelclient.model.DisplayHostState
 import jp.cordea.mackerelclient.viewmodel.HostViewModel
+import kotterknife.bindView
 import rx.Subscription
 
 /**

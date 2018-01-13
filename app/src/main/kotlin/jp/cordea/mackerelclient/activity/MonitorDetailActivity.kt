@@ -10,13 +10,13 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
-import butterknife.bindView
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.DetailCommonAdapter
 import jp.cordea.mackerelclient.api.response.Monitor
 import jp.cordea.mackerelclient.fragment.MonitorSettingDeleteDialogFragment
 import jp.cordea.mackerelclient.viewmodel.MonitorDetailViewModel
+import kotterknife.bindView
 import rx.Subscription
 
 class MonitorDetailActivity : AppCompatActivity() {

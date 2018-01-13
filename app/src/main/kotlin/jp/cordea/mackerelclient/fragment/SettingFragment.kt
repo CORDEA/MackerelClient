@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import butterknife.bindView
 import io.realm.Realm
 import jp.cordea.mackerelclient.BuildConfig
 import jp.cordea.mackerelclient.R
@@ -16,6 +15,7 @@ import jp.cordea.mackerelclient.activity.LicenseActivity
 import jp.cordea.mackerelclient.model.DisplayHostState
 import jp.cordea.mackerelclient.model.UserMetric
 import jp.cordea.mackerelclient.utils.StatusUtils
+import kotterknife.bindView
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers

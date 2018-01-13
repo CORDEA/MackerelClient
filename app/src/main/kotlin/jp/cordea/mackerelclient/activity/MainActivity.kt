@@ -17,7 +17,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
-import butterknife.bindView
 import com.squareup.picasso.Picasso
 import io.realm.Realm
 import jp.cordea.mackerelclient.PicassoCircularTransform
@@ -27,6 +26,7 @@ import jp.cordea.mackerelclient.fragment.alert.AlertFragment
 import jp.cordea.mackerelclient.model.Preferences
 import jp.cordea.mackerelclient.model.UserKey
 import jp.cordea.mackerelclient.utils.GravatarUtils
+import kotterknife.bindView
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 

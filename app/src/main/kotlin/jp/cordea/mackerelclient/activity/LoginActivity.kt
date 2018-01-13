@@ -13,12 +13,12 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
-import butterknife.bindView
 import io.realm.Realm
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.model.Preferences
 import jp.cordea.mackerelclient.model.UserKey
 import jp.cordea.mackerelclient.viewmodel.LoginViewModel
+import kotterknife.bindView
 import rx.subscriptions.CompositeSubscription
 
 class LoginActivity : AppCompatActivity() {
