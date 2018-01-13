@@ -18,6 +18,7 @@ import jp.cordea.mackerelclient.api.response.Monitor
 import kotterknife.bindView
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
+import rx.subscriptions.Subscriptions
 
 /**
  * Created by Yoshihiro Tanaka on 16/01/15.
@@ -38,8 +39,12 @@ class MonitorFragment : android.support.v4.app.Fragment() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater?.inflate(R.layout.fragment_monitor, container, false)
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View {
+        val view = inflater.inflate(R.layout.fragment_monitor, container, false)
         return view
     }
 
@@ -69,6 +74,7 @@ class MonitorFragment : android.support.v4.app.Fragment() {
     }
 
     private fun requestApi(): Subscription {
+        val context = context ?: return Subscriptions.empty()
         return MackerelApiClient
                 .getMonitors(context)
                 .map {

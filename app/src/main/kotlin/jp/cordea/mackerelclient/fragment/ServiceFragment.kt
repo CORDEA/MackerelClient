@@ -14,6 +14,7 @@ import jp.cordea.mackerelclient.api.response.Service
 import jp.cordea.mackerelclient.viewmodel.ServiceViewModel
 import kotterknife.bindView
 import rx.Subscription
+import rx.subscriptions.Subscriptions
 
 class ServiceFragment : android.support.v4.app.Fragment() {
 
@@ -30,20 +31,25 @@ class ServiceFragment : android.support.v4.app.Fragment() {
     private var subscription: Subscription? = null
 
     private val viewModel by lazy {
-        ServiceViewModel(context)
+        ServiceViewModel(context!!)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater?.inflate(R.layout.fragment_service, container, false)
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View {
+        val view = inflater.inflate(R.layout.fragment_service, container, false)
         return view
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        val context = context ?: return
 
         refresh()
 
@@ -71,6 +77,7 @@ class ServiceFragment : android.support.v4.app.Fragment() {
     }
 
     private fun getServices(): Subscription {
+        val context = context ?: return Subscriptions.empty()
         return viewModel
                 .getServices()
                 .subscribe({

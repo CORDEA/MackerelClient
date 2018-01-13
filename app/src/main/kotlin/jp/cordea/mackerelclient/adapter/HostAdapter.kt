@@ -19,23 +19,28 @@ import kotterknife.bindView
 /**
  * Created by Yoshihiro Tanaka on 16/01/12.
  */
-class HostAdapter(val fragment: android.support.v4.app.Fragment, val items: List<Host>, val metrics: Map<String, Map<String, Tsdb>>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class HostAdapter(
+        val fragment: android.support.v4.app.Fragment,
+        val items: List<Host>,
+        private val metrics: Map<String, Map<String, Tsdb>>
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+        val context = fragment.context ?: return
         val item = items[position]
         (holder as? ViewHolder)?.apply {
             cardView.setOnClickListener {
-                val intent = MetricsActivity.createIntent(fragment.context, item.id)
+                val intent = MetricsActivity.createIntent(context, item.id)
                 fragment.startActivity(intent)
             }
 
             detailButton.setOnClickListener {
-                val intent = HostDetailActivity.createIntent(fragment.context, item)
+                val intent = HostDetailActivity.createIntent(context, item)
                 fragment.startActivityForResult(intent, HostDetailActivity.RequestCode)
             }
 
             val metric = metrics[item.id]
-            val viewModel = HostListItemViewModel(fragment.context, item, metric)
+            val viewModel = HostListItemViewModel(context, item, metric)
 
             if (item.displayName.isNullOrBlank()) {
                 name.text = item.name
@@ -47,7 +52,7 @@ class HostAdapter(val fragment: android.support.v4.app.Fragment, val items: List
             role.text = viewModel.roleText
 
             health.setBackgroundColor(
-                    ContextCompat.getColor(fragment.context, StatusUtils.stringToStatusColor(item.status))
+                    ContextCompat.getColor(context, StatusUtils.stringToStatusColor(item.status))
             )
 
             loadavgTitleTextView.text = fragment.resources.getString(R.string.host_card_loadavg_title)

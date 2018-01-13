@@ -14,6 +14,7 @@ import jp.cordea.mackerelclient.api.response.Alert
 import jp.cordea.mackerelclient.viewmodel.AlertViewModel
 import kotterknife.bindView
 import rx.Subscription
+import rx.subscriptions.Subscriptions
 
 /**
  * Created by Yoshihiro Tanaka on 16/01/13.
@@ -30,7 +31,7 @@ class CriticalAlertFragment : android.support.v4.app.Fragment() {
     }
 
     private val viewModel by lazy {
-        AlertViewModel(context)
+        AlertViewModel(context!!)
     }
 
     val listView: ListView by bindView(R.id.list)
@@ -53,13 +54,19 @@ class CriticalAlertFragment : android.support.v4.app.Fragment() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater?.inflate(R.layout.fragment_inside_alert, container, false)
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View {
+        val view = inflater.inflate(R.layout.fragment_inside_alert, container, false)
         return view
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        val context = context ?: return
+        val parentFragment = parentFragment ?: return
 
         itemSubscription?.let(Subscription::unsubscribe)
         itemSubscription = (parentFragment as AlertFragment)
@@ -108,6 +115,7 @@ class CriticalAlertFragment : android.support.v4.app.Fragment() {
     }
 
     private fun getAlert(): Subscription {
+        val context = context ?: return Subscriptions.empty()
         return viewModel
                 .getAlerts(alerts, { it.status.equals("CRITICAL") })
                 .subscribe({

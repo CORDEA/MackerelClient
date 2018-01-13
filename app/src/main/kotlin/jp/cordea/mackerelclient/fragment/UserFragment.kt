@@ -16,6 +16,7 @@ import jp.cordea.mackerelclient.model.UserKey
 import kotterknife.bindView
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
+import rx.subscriptions.Subscriptions
 
 /**
  * Created by Yoshihiro Tanaka on 16/01/14.
@@ -36,8 +37,12 @@ class UserFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater?.inflate(R.layout.fragment_user, container, false)
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View {
+        val view = inflater.inflate(R.layout.fragment_user, container, false)
         setHasOptionsMenu(true)
         return view
     }
@@ -54,6 +59,7 @@ class UserFragment : Fragment() {
     }
 
     private fun refresh(): Subscription {
+        val context = context ?: return Subscriptions.empty()
         return MackerelApiClient
                 .getUsers(context)
                 .observeOn(AndroidSchedulers.mainThread())

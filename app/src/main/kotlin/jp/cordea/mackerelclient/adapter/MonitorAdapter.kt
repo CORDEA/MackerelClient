@@ -13,13 +13,17 @@ import kotterknife.bindView
 /**
  * Created by Yoshihiro Tanaka on 16/01/15.
  */
-class MonitorAdapter(val fragment: android.support.v4.app.Fragment, val items: List<Pair<String, Monitor?>>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MonitorAdapter(
+        val fragment: android.support.v4.app.Fragment,
+        val items: List<Pair<String, Monitor?>>
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+        val context = fragment.context ?: return
         (holder as? ViewHolder)?.apply {
             items[position].second?.let { item ->
                 cell.setOnClickListener {
-                    val intent = MonitorDetailActivity.createIntent(fragment.context, item)
+                    val intent = MonitorDetailActivity.createIntent(context, item)
                     fragment.startActivityForResult(intent, MonitorDetailActivity.RequestCode)
                 }
                 if (!item.name.isNullOrBlank()) {

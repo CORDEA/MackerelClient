@@ -17,10 +17,11 @@ class MonitorSettingDeleteDialogFragment(private val monitor: Monitor) : DialogF
     var onSuccess = { }
 
     private val viewModel by lazy {
-        MonitorSettingViewModel(context)
+        MonitorSettingViewModel(context!!)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val context = context!!
         return AlertDialog
                 .Builder(context)
                 .setMessage(R.string.monitor_detail_delete_dialog_title)

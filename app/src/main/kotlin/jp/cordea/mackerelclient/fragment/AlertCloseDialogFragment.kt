@@ -19,10 +19,11 @@ class AlertCloseDialogFragment(private val alert: Alert) : DialogFragment() {
     var onSuccess = { }
 
     private val viewModel by lazy {
-        AlertCloseViewModel(context)
+        AlertCloseViewModel(context!!)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val context = context!!
         val layout = LayoutInflater.from(context).inflate(R.layout.dialog_edit_text, null)
         val editText = layout.findViewById(R.id.reason) as EditText
         return AlertDialog.Builder(context)

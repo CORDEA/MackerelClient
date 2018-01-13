@@ -17,10 +17,11 @@ class HostRetireDialogFragment(private val host: Host) : DialogFragment() {
     var onSuccess = { }
 
     private val viewModel by lazy {
-        HostRetireViewModel(context)
+        HostRetireViewModel(context!!)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val context = context!!
         return AlertDialog.Builder(context)
                 .setMessage(R.string.host_detail_retire_dialog_title)
                 .setPositiveButton(R.string.retire_positive_button, { _, _ ->

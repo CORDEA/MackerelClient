@@ -18,6 +18,7 @@ import jp.cordea.mackerelclient.model.DisplayHostState
 import jp.cordea.mackerelclient.viewmodel.HostViewModel
 import kotterknife.bindView
 import rx.Subscription
+import rx.subscriptions.Subscriptions
 
 /**
  * Created by Yoshihiro Tanaka on 16/01/12.
@@ -35,15 +36,19 @@ class HostFragment : android.support.v4.app.Fragment() {
     private var subscription: Subscription? = null
 
     private val viewModel by lazy {
-        HostViewModel(context)
+        HostViewModel(context!!)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater?.inflate(R.layout.fragment_host, container, false)
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View {
+        val view = inflater.inflate(R.layout.fragment_host, container, false)
         return view
     }
 
@@ -73,6 +78,7 @@ class HostFragment : android.support.v4.app.Fragment() {
     }
 
     private fun getHosts(items: List<DisplayHostState>): Subscription {
+        val context = context ?: return Subscriptions.empty()
         return viewModel
                 .getHosts(items)
                 .subscribe({
