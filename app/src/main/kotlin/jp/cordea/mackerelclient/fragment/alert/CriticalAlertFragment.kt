@@ -16,9 +16,6 @@ import kotterknife.bindView
 import rx.Subscription
 import rx.subscriptions.Subscriptions
 
-/**
- * Created by Yoshihiro Tanaka on 16/01/13.
- */
 class CriticalAlertFragment : android.support.v4.app.Fragment() {
 
     companion object {

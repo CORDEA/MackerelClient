@@ -9,9 +9,6 @@ import android.widget.TextView
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.response.Service
 
-/**
- * Created by CORDEA on 2016/01/11.
- */
 class ServiceAdapter(context: Context, val items: List<Service>) : ArrayAdapter<Service>(context, R.layout.list_item_service) {
 
     override fun getItem(position: Int): Service? {

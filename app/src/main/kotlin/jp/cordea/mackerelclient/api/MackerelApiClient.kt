@@ -15,9 +15,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import rx.Observable
 import rx.schedulers.Schedulers
 
-/**
- * Created by CORDEA on 2016/01/11.
- */
 object MackerelApiClient {
     private const val baseUrl = "https://mackerel.io"
 

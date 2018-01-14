@@ -20,9 +20,6 @@ import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.Subscriptions
 
-/**
- * Created by Yoshihiro Tanaka on 16/01/15.
- */
 class MonitorFragment : android.support.v4.app.Fragment() {
 
     val progress: View by bindView(R.id.progress)

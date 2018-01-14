@@ -17,9 +17,6 @@ import kotterknife.bindView
 import rx.Subscription
 import rx.subscriptions.Subscriptions
 
-/**
- * Created by Yoshihiro Tanaka on 16/01/13.
- */
 class OtherAlertFragment : Fragment() {
 
     companion object {

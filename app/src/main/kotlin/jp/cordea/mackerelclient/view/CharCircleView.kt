@@ -9,9 +9,6 @@ import android.util.AttributeSet
 import android.view.View
 import jp.cordea.mackerelclient.R
 
-/**
- * Created by Yoshihiro Tanaka on 16/01/19.
- */
 class CharCircleView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
     var char: Char = 'U'

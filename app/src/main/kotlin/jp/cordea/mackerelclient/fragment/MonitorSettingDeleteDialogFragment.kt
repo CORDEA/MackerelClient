@@ -9,9 +9,6 @@ import jp.cordea.mackerelclient.api.response.Monitor
 import jp.cordea.mackerelclient.utils.DialogUtils
 import jp.cordea.mackerelclient.viewmodel.MonitorSettingViewModel
 
-/**
- * Created by Yoshihiro Tanaka on 2017/03/22.
- */
 class MonitorSettingDeleteDialogFragment(private val monitor: Monitor) : DialogFragment() {
 
     var onSuccess = { }

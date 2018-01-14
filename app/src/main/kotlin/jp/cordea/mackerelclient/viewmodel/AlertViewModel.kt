@@ -6,9 +6,6 @@ import jp.cordea.mackerelclient.api.response.Alert
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 
-/**
- * Created by Yoshihiro Tanaka on 2017/03/24.
- */
 class AlertViewModel(private val context: Context) {
 
     fun getAlerts(

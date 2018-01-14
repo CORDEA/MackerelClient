@@ -2,9 +2,6 @@ package jp.cordea.mackerelclient.api.response
 
 import java.io.Serializable
 
-/**
- * Created by Yoshihiro Tanaka on 16/01/15.
- */
 class Monitors(val monitors: List<Monitor>)
 
 class RefreshMonitor(val id: String)

@@ -11,9 +11,6 @@ import rx.schedulers.Schedulers
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-/**
- * Created by Yoshihiro Tanaka on 2017/03/22.
- */
 class LicenseViewModel(private val context: Context) {
 
     val licensesObservable: Observable<SpannableStringBuilder>

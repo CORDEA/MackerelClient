@@ -10,9 +10,6 @@ import jp.cordea.mackerelclient.activity.MonitorDetailActivity
 import jp.cordea.mackerelclient.api.response.Monitor
 import kotterknife.bindView
 
-/**
- * Created by Yoshihiro Tanaka on 16/01/15.
- */
 class MonitorAdapter(
         val fragment: android.support.v4.app.Fragment,
         val items: List<Pair<String, Monitor?>>

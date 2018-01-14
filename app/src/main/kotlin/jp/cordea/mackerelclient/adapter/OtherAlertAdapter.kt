@@ -10,9 +10,6 @@ import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.response.Alert
 import jp.cordea.mackerelclient.view.CharCircleView
 
-/**
- * Created by Yoshihiro Tanaka on 16/01/19.
- */
 class OtherAlertAdapter(context: Context, val items: List<Alert>) : ArrayAdapter<Alert>(context, R.layout.list_item_other_alart) {
 
     override fun getItem(position: Int): Alert {

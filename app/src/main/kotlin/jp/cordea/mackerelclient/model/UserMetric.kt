@@ -4,9 +4,6 @@ import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.Required
 
-/**
- * Created by Yoshihiro Tanaka on 16/01/20.
- */
 open class UserMetric : RealmObject() {
     @PrimaryKey
     open var id: Int = 0

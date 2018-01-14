@@ -11,9 +11,6 @@ import jp.cordea.mackerelclient.api.response.Alert
 import jp.cordea.mackerelclient.utils.DialogUtils
 import jp.cordea.mackerelclient.viewmodel.AlertCloseViewModel
 
-/**
- * Created by Yoshihiro Tanaka on 2017/03/22.
- */
 class AlertCloseDialogFragment(private val alert: Alert) : DialogFragment() {
 
     var onSuccess = { }

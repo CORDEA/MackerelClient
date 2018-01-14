@@ -20,9 +20,6 @@ import kotterknife.bindView
 import rx.Subscription
 import rx.subscriptions.Subscriptions
 
-/**
- * Created by Yoshihiro Tanaka on 16/01/12.
- */
 class HostFragment : android.support.v4.app.Fragment() {
 
     val progress: View by bindView(R.id.progress)

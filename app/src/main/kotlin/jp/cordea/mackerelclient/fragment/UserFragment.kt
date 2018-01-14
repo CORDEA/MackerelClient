@@ -18,9 +18,6 @@ import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.Subscriptions
 
-/**
- * Created by Yoshihiro Tanaka on 16/01/14.
- */
 class UserFragment : Fragment() {
 
     val errView: View by bindView(R.id.error)

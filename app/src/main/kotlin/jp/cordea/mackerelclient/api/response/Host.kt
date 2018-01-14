@@ -2,9 +2,6 @@ package jp.cordea.mackerelclient.api.response
 
 import java.io.Serializable
 
-/**
- * Created by CORDEA on 2016/01/11.
- */
 class Hosts(val hosts: List<Host>)
 
 class RetireHost(val success: Boolean)

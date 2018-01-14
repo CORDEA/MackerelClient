@@ -21,9 +21,6 @@ import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
-/**
- * Created by Yoshihiro Tanaka on 16/01/14.
- */
 class SettingFragment : android.support.v4.app.Fragment() {
 
     val hostCell: View by bindView(R.id.host_cell)

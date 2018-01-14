@@ -2,9 +2,6 @@ package jp.cordea.mackerelclient.utils
 
 import org.junit.Test
 
-/**
- * Created by CORDEA on 2016/03/21.
- */
 class GravatarUtilsTest {
 
     @Test

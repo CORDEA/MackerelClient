@@ -1,13 +1,8 @@
 package jp.cordea.mackerelclient.utils
 
-import android.support.v4.content.ContextCompat
-import android.test.InstrumentationTestCase
 import jp.cordea.mackerelclient.R
 import org.junit.Test
 
-/**
- * Created by CORDEA on 2016/03/21.
- */
 class StatusUtilsTest() {
     @Test
     public fun testStringToRequestName() {

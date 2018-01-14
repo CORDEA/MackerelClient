@@ -5,9 +5,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-/**
- * Created by CORDEA on 2016/01/17.
- */
 object DateUtils {
     fun getEpochSec(beforeHour: Long): Long {
         val now = Date().time / 1000

@@ -7,9 +7,6 @@ import com.google.gson.JsonObject
 import java.lang.reflect.Type
 import java.util.*
 
-/**
- * Created by CORDEA on 2016/01/16.
- */
 class Tsdbs(val tsdbs: Map<String, Map<String, Tsdb>>)
 
 class Tsdb(val metricValue: Float?)

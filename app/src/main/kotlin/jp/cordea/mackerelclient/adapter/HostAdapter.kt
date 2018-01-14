@@ -16,9 +16,6 @@ import jp.cordea.mackerelclient.utils.StatusUtils
 import jp.cordea.mackerelclient.viewmodel.HostListItemViewModel
 import kotterknife.bindView
 
-/**
- * Created by Yoshihiro Tanaka on 16/01/12.
- */
 class HostAdapter(
         val fragment: android.support.v4.app.Fragment,
         val items: List<Host>,

@@ -8,9 +8,6 @@ import jp.cordea.mackerelclient.model.UserKey
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 
-/**
- * Created by Yoshihiro Tanaka on 2017/03/22.
- */
 class LoginViewModel(private val context: Context) {
 
     fun logIn(

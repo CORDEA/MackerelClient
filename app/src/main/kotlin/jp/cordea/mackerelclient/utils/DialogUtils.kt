@@ -7,9 +7,6 @@ import retrofit2.Response
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 
-/**
- * Created by CORDEA on 2016/01/23.
- */
 object DialogUtils {
     fun <T> switchDialog(context: Context, response: Response<T>, title: Int, m403: Int): Boolean {
         if (!response.isSuccessful) {

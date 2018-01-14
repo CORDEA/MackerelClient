@@ -4,9 +4,6 @@ import android.test.AndroidTestCase
 import org.junit.Test
 import java.util.*
 
-/**
- * Created by CORDEA on 2016/03/21.
- */
 class DateUtilsTest() : AndroidTestCase() {
 
     @Test

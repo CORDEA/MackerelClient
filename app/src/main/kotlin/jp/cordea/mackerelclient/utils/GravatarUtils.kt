@@ -5,9 +5,6 @@ import java.nio.charset.Charset
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
-/**
- * Created by CORDEA on 2016/01/17.
- */
 object GravatarUtils {
 
     private fun hex(arr: ByteArray): String {

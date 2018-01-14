@@ -8,9 +8,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-/**
- * Created by Yoshihiro Tanaka on 2017/03/22.
- */
 class AlertCloseViewModel(private val context: Context) {
 
     fun closeAlert(

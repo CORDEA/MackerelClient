@@ -12,9 +12,6 @@ import jp.cordea.mackerelclient.model.UserMetric
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 
-/**
- * Created by Yoshihiro Tanaka on 2017/03/29.
- */
 class HostViewModel(private val context: Context) {
 
     val displayHostState: List<DisplayHostState>

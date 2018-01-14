@@ -3,9 +3,6 @@ package jp.cordea.mackerelclient.viewmodel
 import io.realm.Realm
 import jp.cordea.mackerelclient.model.UserMetric
 
-/**
- * Created by Yoshihiro Tanaka on 2017/03/22.
- */
 class MetricsEditViewModel {
 
     fun getMetric(id: Int): UserMetric {

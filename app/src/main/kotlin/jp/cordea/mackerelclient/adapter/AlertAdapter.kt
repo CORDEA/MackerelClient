@@ -9,9 +9,6 @@ import android.widget.TextView
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.response.Alert
 
-/**
- * Created by Yoshihiro Tanaka on 16/01/13.
- */
 class AlertAdapter(context: Context, val items: List<Alert>) : ArrayAdapter<Alert>(context, R.layout.list_item_alert) {
 
     override fun getItem(position: Int): Alert {

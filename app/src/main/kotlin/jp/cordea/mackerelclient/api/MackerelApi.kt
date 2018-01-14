@@ -6,9 +6,6 @@ import retrofit2.Call
 import retrofit2.http.*
 import rx.Observable
 
-/**
- * Created by CORDEA on 2016/01/11.
- */
 interface MackerelApi {
 
     @GET("/api/v0/services")

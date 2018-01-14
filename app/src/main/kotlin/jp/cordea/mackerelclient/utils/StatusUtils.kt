@@ -2,9 +2,6 @@ package jp.cordea.mackerelclient.utils
 
 import jp.cordea.mackerelclient.R
 
-/**
- * Created by CORDEA on 2016/01/31.
- */
 object StatusUtils {
 
     fun stringToRequestName(name: String): String =

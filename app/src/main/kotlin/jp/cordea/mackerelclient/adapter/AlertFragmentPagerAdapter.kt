@@ -8,9 +8,6 @@ import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.fragment.alert.CriticalAlertFragment
 import jp.cordea.mackerelclient.fragment.alert.OtherAlertFragment
 
-/**
- * Created by Yoshihiro Tanaka on 16/01/13.
- */
 class AlertFragmentPagerAdapter(fm: FragmentManager, val context: Context) : FragmentPagerAdapter(fm) {
 
     override fun getCount(): Int {

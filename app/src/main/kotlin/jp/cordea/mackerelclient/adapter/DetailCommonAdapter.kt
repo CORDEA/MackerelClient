@@ -10,9 +10,6 @@ import android.widget.TextView
 import jp.cordea.mackerelclient.R
 import kotterknife.bindView
 
-/**
- * Created by Yoshihiro Tanaka on 16/01/21.
- */
 class DetailCommonAdapter(val context: Context, val items: List<List<Pair<String, Int>>>, val sections: List<String>? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {

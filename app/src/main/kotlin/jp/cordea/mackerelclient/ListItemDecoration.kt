@@ -5,9 +5,6 @@ import android.graphics.Rect
 import android.support.v7.widget.RecyclerView
 import android.view.View
 
-/**
- * Created by CORDEA on 2016/09/10.
- */
 class ListItemDecoration(private val context: Context) : RecyclerView.ItemDecoration() {
 
     override fun getItemOffsets(

@@ -12,9 +12,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-/**
- * Created by Yoshihiro Tanaka on 2017/03/29.
- */
 class UserListItemViewModel(private val context: Context, private val item: User) {
 
     var onUserDeleteSucceeded = { }

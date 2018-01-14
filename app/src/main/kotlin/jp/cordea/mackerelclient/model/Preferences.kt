@@ -3,9 +3,6 @@ package jp.cordea.mackerelclient.model
 import android.content.Context
 import android.preference.PreferenceManager
 
-/**
- * Created by Yoshihiro Tanaka on 16/01/22.
- */
 class Preferences(context: Context) {
 
     private val pref = PreferenceManager.getDefaultSharedPreferences(context)

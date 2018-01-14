@@ -20,9 +20,6 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.Subscriptions
 import java.util.concurrent.TimeUnit
 
-/**
- * Created by Yoshihiro Tanaka on 16/01/12.
- */
 class AlertFragment : Fragment() {
 
     val onOtherAlertFragmentResult: RxEvent<Boolean> = RxEvent.create<Boolean>()

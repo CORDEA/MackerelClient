@@ -3,9 +3,6 @@ package jp.cordea.mackerelclient
 import android.graphics.*
 import com.squareup.picasso.Transformation
 
-/**
- * Created by CORDEA on 2016/01/17.
- */
 class PicassoCircularTransform : Transformation {
 
     override fun transform(source: Bitmap): Bitmap? {

@@ -5,9 +5,6 @@ import jp.cordea.mackerelclient.model.Preferences
 import org.junit.Assert
 import org.junit.Test
 
-/**
- * Created by CORDEA on 2016/03/21.
- */
 class PreferencesTest() : InstrumentationTestCase() {
 
     @Test

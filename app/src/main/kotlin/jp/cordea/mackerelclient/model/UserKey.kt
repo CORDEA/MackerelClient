@@ -1,9 +1,5 @@
 package jp.cordea.mackerelclient.model
 
-/**
- * Created by Yoshihiro Tanaka on 16/01/22.
- */
-
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.Required

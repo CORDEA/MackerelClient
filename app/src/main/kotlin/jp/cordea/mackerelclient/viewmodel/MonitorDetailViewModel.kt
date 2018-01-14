@@ -3,9 +3,6 @@ package jp.cordea.mackerelclient.viewmodel
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.response.Monitor
 
-/**
- * Created by Yoshihiro Tanaka on 2017/03/29.
- */
 class MonitorDetailViewModel {
 
     fun getDisplayData(it: Monitor): List<List<Pair<String, Int>>> =

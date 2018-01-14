@@ -8,9 +8,6 @@ import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.response.Host
 import jp.cordea.mackerelclient.api.response.Tsdb
 
-/**
- * Created by Yoshihiro Tanaka on 2017/03/29.
- */
 class HostListItemViewModel(
         private val context: Context,
         private val item: Host,

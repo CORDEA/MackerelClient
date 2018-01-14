@@ -19,9 +19,6 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.lang.kotlin.onErrorReturnNull
 import java.util.concurrent.TimeUnit
 
-/**
- * Created by Yoshihiro Tanaka on 16/01/19.
- */
 class MetricsViewModel(val context: Context) {
 
     private val apiResponses: MutableList<MetricsApiRequestParameter> = arrayListOf()

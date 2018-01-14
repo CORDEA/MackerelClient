@@ -9,9 +9,6 @@ import jp.cordea.mackerelclient.api.response.Host
 import jp.cordea.mackerelclient.utils.DialogUtils
 import jp.cordea.mackerelclient.viewmodel.HostRetireViewModel
 
-/**
- * Created by Yoshihiro Tanaka on 2017/03/22.
- */
 class HostRetireDialogFragment(private val host: Host) : DialogFragment() {
 
     var onSuccess = { }

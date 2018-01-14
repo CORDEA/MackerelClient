@@ -15,9 +15,6 @@ import jp.cordea.mackerelclient.api.response.User
 import jp.cordea.mackerelclient.utils.GravatarUtils
 import jp.cordea.mackerelclient.viewmodel.UserListItemViewModel
 
-/**
- * Created by Yoshihiro Tanaka on 16/01/14.
- */
 class UserAdapter(context: Context, val items: List<User>, val own: String?) : ArrayAdapter<User>(context, R.layout.list_item_user) {
 
     val onUserDeleteSucceeded: RxEvent<Boolean> = RxEvent.create<Boolean>()
