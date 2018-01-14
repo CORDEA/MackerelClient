@@ -35,10 +35,6 @@ class MonitorFragment : android.support.v4.app.Fragment() {
 
     private var subscription: Subscription? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -116,9 +112,7 @@ class MonitorFragment : android.support.v4.app.Fragment() {
     }
 
     companion object {
-        fun newInstance(): MonitorFragment {
-            val fragment = MonitorFragment()
-            return fragment
-        }
+        fun newInstance(): MonitorFragment =
+                MonitorFragment()
     }
 }

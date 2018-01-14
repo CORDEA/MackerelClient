@@ -14,18 +14,18 @@ import jp.cordea.mackerelclient.R
  */
 class CharCircleView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
+    var char: Char = 'U'
+        set(value) {
+            field = value
+            invalidate()
+        }
+
     private val colorSet: Map<Char, Int> = mapOf(
             Pair('C', R.color.statusCritical),
             Pair('O', R.color.statusOk),
             Pair('W', R.color.statusWarning),
             Pair('U', R.color.statusUnknown)
     )
-
-    var char: Char = 'U'
-        set(value) {
-            field = value
-            invalidate()
-        }
 
     private val paint = Paint()
 
@@ -47,6 +47,11 @@ class CharCircleView(context: Context, attrs: AttributeSet?) : View(context, att
 
         paint.color = ContextCompat.getColor(context, android.R.color.white)
 
-        canvas.drawText(char.toString(), size, size - ((paint.ascent() + paint.descent()) / 2.0f), paint)
+        canvas.drawText(
+                char.toString(),
+                size,
+                size - ((paint.ascent() + paint.descent()) / 2.0f),
+                paint
+        )
     }
 }

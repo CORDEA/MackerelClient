@@ -13,7 +13,11 @@ import retrofit2.Response
  */
 class HostRetireViewModel(private val context: Context) {
 
-    fun retireHost(host: Host, onResponse: (response: Response<RetireHost>?) -> Unit, onFailure: () -> Unit) {
+    fun retireHost(
+            host: Host,
+            onResponse: (Response<RetireHost>?) -> Unit,
+            onFailure: () -> Unit
+    ) {
         MackerelApiClient
                 .retireHost(context, host.id)
                 .enqueue(object : Callback<RetireHost> {

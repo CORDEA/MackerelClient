@@ -157,12 +157,11 @@ class MetricsActivity : AppCompatActivity() {
 
     companion object {
 
-        private val HostIdKey = "HostIdKey"
+        private const val HostIdKey = "HostIdKey"
 
-        fun createIntent(context: Context, hostId: String?): Intent {
-            return Intent(context, MetricsActivity::class.java).apply {
-                putExtra(HostIdKey, hostId)
-            }
-        }
+        fun createIntent(context: Context, hostId: String?): Intent =
+                Intent(context, MetricsActivity::class.java).apply {
+                    putExtra(HostIdKey, hostId)
+                }
     }
 }

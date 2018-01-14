@@ -33,10 +33,6 @@ class UserFragment : Fragment() {
 
     private var subscription: Subscription? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -95,9 +91,7 @@ class UserFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(): UserFragment {
-            val fragment = UserFragment()
-            return fragment
-        }
+        fun newInstance(): UserFragment =
+                UserFragment()
     }
 }

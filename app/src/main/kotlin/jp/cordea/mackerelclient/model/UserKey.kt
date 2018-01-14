@@ -8,13 +8,13 @@ import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.Required
 
-public open class UserKey : RealmObject() {
+open class UserKey : RealmObject() {
     @PrimaryKey
-    public open var id: Int = 0
+    open var id: Int = 0
 
-    public open var name: String? = null
-    public open var email: String? = null
+    open var name: String? = null
+    open var email: String? = null
 
     @Required
-    public open var key: String? = null
+    open var key: String? = null
 }

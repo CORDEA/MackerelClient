@@ -22,12 +22,10 @@ import rx.subscriptions.Subscriptions
 class CriticalAlertFragment : android.support.v4.app.Fragment() {
 
     companion object {
-        public val RequestCode = 1
+        const val RequestCode = 1
 
-        fun newInstance(): CriticalAlertFragment {
-            val fragment = CriticalAlertFragment()
-            return fragment
-        }
+        fun newInstance(): CriticalAlertFragment =
+                CriticalAlertFragment()
     }
 
     private val viewModel by lazy {
@@ -49,10 +47,6 @@ class CriticalAlertFragment : android.support.v4.app.Fragment() {
     private var resultSubscription: Subscription? = null
 
     private var itemSubscription: Subscription? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
             inflater: LayoutInflater,

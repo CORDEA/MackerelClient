@@ -84,14 +84,13 @@ class MonitorDetailActivity : AppCompatActivity() {
 
     companion object {
 
-        public val RequestCode = 0
+        const val RequestCode = 0
 
-        private val MonitorKey = "MonitorKey"
+        private const val MonitorKey = "MonitorKey"
 
-        fun createIntent(context: Context, monitor: Monitor): Intent {
-            return Intent(context, MonitorDetailActivity::class.java).apply {
-                putExtra(MonitorKey, monitor)
-            }
-        }
+        fun createIntent(context: Context, monitor: Monitor): Intent =
+                Intent(context, MonitorDetailActivity::class.java).apply {
+                    putExtra(MonitorKey, monitor)
+                }
     }
 }

@@ -23,6 +23,6 @@ class Preferences(context: Context) {
     }
 
     companion object {
-        private val userIdKey = "UserIdKey"
+        private const val userIdKey = "UserIdKey"
     }
 }

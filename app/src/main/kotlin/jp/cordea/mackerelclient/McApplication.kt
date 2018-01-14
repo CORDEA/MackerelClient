@@ -34,7 +34,7 @@ class McApplication : Application() {
     }
 
     companion object {
-        private val SchemaVersion = 1L
+        private const val SchemaVersion = 1L
     }
 
 }

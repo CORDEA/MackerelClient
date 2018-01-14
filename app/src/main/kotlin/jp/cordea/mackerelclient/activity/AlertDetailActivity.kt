@@ -90,12 +90,11 @@ class AlertDetailActivity : AppCompatActivity() {
 
     companion object {
 
-        private val AlertKey = "AlertKey"
+        private const val AlertKey = "AlertKey"
 
-        fun createIntent(context: Context, alert: Alert): Intent {
-            return Intent(context, AlertDetailActivity::class.java).apply {
-                putExtra(AlertKey, alert)
-            }
-        }
+        fun createIntent(context: Context, alert: Alert): Intent =
+                Intent(context, AlertDetailActivity::class.java).apply {
+                    putExtra(AlertKey, alert)
+                }
     }
 }

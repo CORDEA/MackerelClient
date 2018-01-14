@@ -14,15 +14,14 @@ import rx.android.schedulers.AndroidSchedulers
  */
 class ServiceViewModel(private val context: Context) {
 
-    fun getServices(): Observable<Services> {
-        return MackerelApiClient
-                .getServices(context)
-                .filter {
-                    deleteOldMetricData(it.services.map { it.name })
-                    true
-                }
-                .observeOn(AndroidSchedulers.mainThread())
-    }
+    fun getServices(): Observable<Services> =
+            MackerelApiClient
+                    .getServices(context)
+                    .filter {
+                        deleteOldMetricData(it.services.map { it.name })
+                        true
+                    }
+                    .observeOn(AndroidSchedulers.mainThread())
 
     private fun deleteOldMetricData(hosts: List<String>) {
         val realm = Realm.getDefaultInstance()

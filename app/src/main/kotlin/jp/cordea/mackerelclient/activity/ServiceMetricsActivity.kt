@@ -148,13 +148,12 @@ class ServiceMetricsActivity : AppCompatActivity() {
 
     companion object {
 
-        private val ServiceNameKey = "ServiceNameKey"
+        private const val ServiceNameKey = "ServiceNameKey"
 
-        fun createIntent(context: Context, name: String): Intent {
-            return Intent(context, ServiceMetricsActivity::class.java).apply {
-                putExtra(ServiceMetricsActivity.ServiceNameKey, name)
-            }
-        }
+        fun createIntent(context: Context, name: String): Intent =
+                Intent(context, ServiceMetricsActivity::class.java).apply {
+                    putExtra(ServiceMetricsActivity.ServiceNameKey, name)
+                }
     }
 
 }

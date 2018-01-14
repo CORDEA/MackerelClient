@@ -1,13 +1,12 @@
 package jp.cordea.mackerelclient.viewmodel
 
-import android.content.Context
 import io.realm.Realm
 import jp.cordea.mackerelclient.model.UserMetric
 
 /**
  * Created by Yoshihiro Tanaka on 2017/03/22.
  */
-class MetricsEditViewModel(private val context: Context) {
+class MetricsEditViewModel {
 
     fun getMetric(id: Int): UserMetric {
         val realm = Realm.getDefaultInstance()
@@ -16,8 +15,14 @@ class MetricsEditViewModel(private val context: Context) {
         return metric
     }
 
-    fun storeMetric(id: Int, parentId: String, type: String, label: String,
-                    metric0: String, metric1: String?): Boolean? {
+    fun storeMetric(
+            id: Int,
+            parentId: String,
+            type: String,
+            label: String,
+            metric0: String,
+            metric1: String?
+    ) {
         val realm = Realm.getDefaultInstance()
         val maxId = realm.where(UserMetric::class.java).max("id")
         val item = UserMetric()
@@ -33,8 +38,5 @@ class MetricsEditViewModel(private val context: Context) {
         realm.executeTransaction {
             realm.copyToRealmOrUpdate(item)
         }
-        realm.close()
-        return true
     }
-
 }

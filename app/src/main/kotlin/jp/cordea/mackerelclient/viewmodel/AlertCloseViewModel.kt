@@ -13,7 +13,12 @@ import retrofit2.Response
  */
 class AlertCloseViewModel(private val context: Context) {
 
-    fun closeAlert(alert: Alert, reason: String, onResponse: (response: Response<Alert>?) -> Unit, onFailure: () -> Unit) {
+    fun closeAlert(
+            alert: Alert,
+            reason: String,
+            onResponse: (Response<Alert>?) -> Unit,
+            onFailure: () -> Unit
+    ) {
         MackerelApiClient
                 .closeAlert(context, alert.id, CloseAlert(reason))
                 .enqueue(object : Callback<Alert> {

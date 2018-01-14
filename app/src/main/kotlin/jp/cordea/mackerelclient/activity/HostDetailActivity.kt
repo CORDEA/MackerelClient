@@ -100,14 +100,13 @@ class HostDetailActivity : AppCompatActivity() {
 
     companion object {
 
-        public val RequestCode = 0
+        const val RequestCode = 0
 
-        private val HostKey = "HostKey"
+        private const val HostKey = "HostKey"
 
-        fun createIntent(context: Context, host: Host): Intent {
-            return Intent(context, HostDetailActivity::class.java).apply {
-                putExtra(HostKey, host)
-            }
-        }
+        fun createIntent(context: Context, host: Host): Intent =
+                Intent(context, HostDetailActivity::class.java).apply {
+                    putExtra(HostKey, host)
+                }
     }
 }

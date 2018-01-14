@@ -23,12 +23,10 @@ import rx.subscriptions.Subscriptions
 class OtherAlertFragment : Fragment() {
 
     companion object {
-        public val RequestCode = 0
+        const val RequestCode = 0
 
-        fun newInstance(): OtherAlertFragment {
-            val fragment = OtherAlertFragment()
-            return fragment
-        }
+        fun newInstance(): OtherAlertFragment =
+                OtherAlertFragment()
     }
 
     private val viewModel by lazy {
@@ -51,15 +49,11 @@ class OtherAlertFragment : Fragment() {
 
     private var itemSubscription: Subscription? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val view = inflater.inflate(R.layout.fragment_inside_alert, container, false)
         return view
     }

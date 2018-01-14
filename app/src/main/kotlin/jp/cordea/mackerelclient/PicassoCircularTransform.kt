@@ -14,7 +14,7 @@ class PicassoCircularTransform : Transformation {
         val canvas = Canvas(bitmap)
         val paint = Paint()
         paint.isAntiAlias = true
-        paint.setShader(BitmapShader(source, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP))
+        paint.shader = BitmapShader(source, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
 
         val size = source.width / 2.0f
         canvas.drawCircle(size, size, size, paint)
@@ -23,7 +23,6 @@ class PicassoCircularTransform : Transformation {
         return bitmap
     }
 
-    override fun key(): String? {
-        return "circular"
-    }
+    override fun key(): String =
+            "circular"
 }

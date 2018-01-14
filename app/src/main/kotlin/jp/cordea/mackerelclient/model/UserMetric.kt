@@ -7,18 +7,18 @@ import io.realm.annotations.Required
 /**
  * Created by Yoshihiro Tanaka on 16/01/20.
  */
-public open class UserMetric : RealmObject() {
+open class UserMetric : RealmObject() {
     @PrimaryKey
-    public open var id: Int = 0
+    open var id: Int = 0
 
     @Required
-    public open var parentId: String? = null
+    open var parentId: String? = null
 
     @Required
-    public open var type: String? = null
-    public open var label: String? = null
+    open var type: String? = null
+    open var label: String? = null
 
     @Required
-    public open var metric0: String? = null
-    public open var metric1: String? = null
+    open var metric0: String? = null
+    open var metric1: String? = null
 }

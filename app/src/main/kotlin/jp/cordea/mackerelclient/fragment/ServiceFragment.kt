@@ -34,10 +34,6 @@ class ServiceFragment : android.support.v4.app.Fragment() {
         ServiceViewModel(context!!)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -100,9 +96,7 @@ class ServiceFragment : android.support.v4.app.Fragment() {
     }
 
     companion object {
-        fun newInstance(): ServiceFragment {
-            val fragment = ServiceFragment()
-            return fragment
-        }
+        fun newInstance(): ServiceFragment =
+                ServiceFragment()
     }
 }

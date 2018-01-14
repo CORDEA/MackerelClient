@@ -24,11 +24,11 @@ import java.util.concurrent.TimeUnit
  */
 class MetricsViewModel(val context: Context) {
 
-    val onChartDataAlive: RxEvent<Pair<Int, LineData?>> = RxEvent.create()
-
     private val apiResponses: MutableList<MetricsApiRequestParameter> = arrayListOf()
 
     private var nofMetrics: MutableList<Int> = arrayListOf()
+
+    val onChartDataAlive: RxEvent<Pair<Int, LineData?>> = RxEvent.create()
 
     var subscription: Subscription? = null
 
@@ -75,15 +75,29 @@ class MetricsViewModel(val context: Context) {
         realm.close()
     }
 
-    private fun hostMetrics(hostId: String, param: MetricsApiRequestParameter): Observable<Metrics> {
-        return MackerelApiClient
-                .getMetrics(context, hostId, param.metricsName, DateUtils.getEpochSec(1), DateUtils.getEpochSec(0))
-    }
+    private fun hostMetrics(
+            hostId: String,
+            param: MetricsApiRequestParameter
+    ): Observable<Metrics> =
+            MackerelApiClient.getMetrics(
+                    context,
+                    hostId,
+                    param.metricsName,
+                    DateUtils.getEpochSec(1),
+                    DateUtils.getEpochSec(0)
+            )
 
-    private fun serviceMetrics(serviceName: String, param: MetricsApiRequestParameter): Observable<Metrics> {
-        return MackerelApiClient
-                .getServiceMetrics(context, serviceName, param.metricsName, DateUtils.getEpochSec(1), DateUtils.getEpochSec(0))
-    }
+    private fun serviceMetrics(
+            serviceName: String,
+            param: MetricsApiRequestParameter
+    ): Observable<Metrics> =
+            MackerelApiClient.getServiceMetrics(
+                    context,
+                    serviceName,
+                    param.metricsName,
+                    DateUtils.getEpochSec(1),
+                    DateUtils.getEpochSec(0)
+            )
 
     fun requestMetricsApi(metrics: List<UserMetric>, id: String, idType: MetricsType) {
         val requests: MutableList<MetricsApiRequestParameter> = arrayListOf()
@@ -101,7 +115,12 @@ class MetricsViewModel(val context: Context) {
         runMetricsApiWithDelay(id, idType, requests)
     }
 
-    fun runMetricsApiWithDelay(id: String, idType: MetricsType, metricsApiRequestParameters: List<MetricsApiRequestParameter>, idx: Int = 0) {
+    private fun runMetricsApiWithDelay(
+            id: String,
+            idType: MetricsType,
+            metricsApiRequestParameters: List<MetricsApiRequestParameter>,
+            idx: Int = 0
+    ) {
         if (metricsApiRequestParameters.size <= idx) {
             return
         }

@@ -5,33 +5,30 @@ import jp.cordea.mackerelclient.R
 /**
  * Created by CORDEA on 2016/01/31.
  */
-class StatusUtils {
-    companion object {
-        public fun stringToRequestName(name: String): String {
-            if (name.equals("Power off")) {
-                return "poweroff"
-            }
-            return name.toLowerCase()
-        }
+object StatusUtils {
 
-        public fun requestNameToString(status: String): String {
-            when (status) {
-                "working" -> return "Working"
-                "standby" -> return "Standby"
-                "maintenance" -> return "Maintenance"
-                "poweroff" -> return "Power off"
-                else -> return status
+    fun stringToRequestName(name: String): String =
+            if (name == "Power off") {
+                "poweroff"
+            } else {
+                name.toLowerCase()
             }
-        }
 
-        public fun stringToStatusColor(status: String): Int {
+    fun requestNameToString(status: String): String =
             when (status) {
-                "working" -> return R.color.statusWorking
-                "standby" -> return R.color.statusStandby
-                "maintenance" -> return R.color.statusMaintenance
-                "poweroff" -> return R.color.statusPoweroff
-                else -> return R.color.statusPoweroff
+                "working" -> "Working"
+                "standby" -> "Standby"
+                "maintenance" -> "Maintenance"
+                "poweroff" -> "Power off"
+                else -> status
             }
-        }
-    }
+
+    fun stringToStatusColor(status: String): Int =
+            when (status) {
+                "working" -> R.color.statusWorking
+                "standby" -> R.color.statusStandby
+                "maintenance" -> R.color.statusMaintenance
+                "poweroff" -> R.color.statusPoweroff
+                else -> R.color.statusPoweroff
+            }
 }

@@ -124,7 +124,8 @@ class MonitorEditActivity : AppCompatActivity() {
         } else {
             name.text = with(monitor.name ?: "", { SpannableStringBuilder(this) })
             service.text = with(monitor.service ?: "", { SpannableStringBuilder(this) })
-            duration.text = with(monitor.duration ?: "", { SpannableStringBuilder(this.toString()) })
+            duration.text = with(monitor.duration
+                    ?: "", { SpannableStringBuilder(this.toString()) })
             metric.text = with(monitor.metric ?: "", { SpannableStringBuilder(this) })
             val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayOf("<", ">"))
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -133,8 +134,10 @@ class MonitorEditActivity : AppCompatActivity() {
             operator.setSelection(if ("<" == monitor.operator) 0 else 1)
             operatorPair.setSelection(operator.selectedItemPosition)
             warning.text = with(monitor.warning ?: "", { SpannableStringBuilder(this.toString()) })
-            critical.text = with(monitor.critical ?: "", { SpannableStringBuilder(this.toString()) })
-            notInterval.text = with(monitor.notificationInterval ?: "", { SpannableStringBuilder(this.toString()) })
+            critical.text = with(monitor.critical
+                    ?: "", { SpannableStringBuilder(this.toString()) })
+            notInterval.text = with(monitor.notificationInterval
+                    ?: "", { SpannableStringBuilder(this.toString()) })
         }
         scopes.text = with(monitor.scopes.joinToString(", "), { SpannableStringBuilder(this) })
         exScopes.text = with(monitor.excludeScopes.joinToString(", "), { SpannableStringBuilder(this) })
@@ -192,12 +195,11 @@ class MonitorEditActivity : AppCompatActivity() {
 
     companion object {
 
-        private val MonitorKey = "MonitorKey"
+        private const val MonitorKey = "MonitorKey"
 
-        fun createIntent(context: Context, monitor: Monitor): Intent {
-            return Intent(context, MonitorEditActivity::class.java).apply {
-                putExtra(MonitorKey, monitor)
-            }
-        }
+        fun createIntent(context: Context, monitor: Monitor): Intent =
+                Intent(context, MonitorEditActivity::class.java).apply {
+                    putExtra(MonitorKey, monitor)
+                }
     }
 }

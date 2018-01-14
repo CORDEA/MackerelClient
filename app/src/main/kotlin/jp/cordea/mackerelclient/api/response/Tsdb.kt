@@ -14,9 +14,9 @@ class Tsdbs(val tsdbs: Map<String, Map<String, Tsdb>>)
 
 class Tsdb(val metricValue: Float?)
 
-class TsdbsDeserializer() : JsonDeserializer<Tsdbs> {
+class TsdbsDeserializer : JsonDeserializer<Tsdbs> {
     override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): Tsdbs {
-        var ts = HashMap<String, Map<String, Tsdb>>()
+        val ts = HashMap<String, Map<String, Tsdb>>()
         json ?: return Tsdbs(ts)
         if (json.asJsonObject.has("tsdbLatest")) {
             val tsObj = (json as JsonObject).get("tsdbLatest") as JsonObject

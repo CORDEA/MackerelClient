@@ -18,7 +18,7 @@ import kotterknife.bindView
 class MetricsEditActivity : AppCompatActivity() {
 
     private val viewModel: MetricsEditViewModel by lazy {
-        MetricsEditViewModel(this)
+        MetricsEditViewModel()
     }
 
     val toolbar: Toolbar by bindView(R.id.toolbar)
@@ -107,15 +107,20 @@ class MetricsEditActivity : AppCompatActivity() {
 
     companion object {
 
-        public val RequestCode = 0
+        const val RequestCode = 0
 
-        private val IdKey = "IdKey"
+        private const val IdKey = "IdKey"
 
-        private val UserMetricKey = "UserMetricKey"
+        private const val UserMetricKey = "UserMetricKey"
 
-        private val TypeKey = "TypeKey"
+        private const val TypeKey = "TypeKey"
 
-        fun createIntent(context: Context, type: MetricsType, id: String, metricId: Int? = null): Intent {
+        fun createIntent(
+                context: Context,
+                type: MetricsType,
+                id: String,
+                metricId: Int? = null
+        ): Intent {
             val intent = Intent(context, MetricsEditActivity::class.java)
             metricId?.let {
                 intent.putExtra(UserMetricKey, metricId)

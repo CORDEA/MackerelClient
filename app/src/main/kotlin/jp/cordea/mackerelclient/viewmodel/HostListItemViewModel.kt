@@ -11,15 +11,22 @@ import jp.cordea.mackerelclient.api.response.Tsdb
 /**
  * Created by Yoshihiro Tanaka on 2017/03/29.
  */
-class HostListItemViewModel(private val context: Context, private val item: Host, private val metric: Map<String, Tsdb>?) {
+class HostListItemViewModel(
+        private val context: Context,
+        private val item: Host,
+        private val metric: Map<String, Tsdb>?
+) {
 
     val roleText: String
-        get() {
-            return item.roles.size.let {
-                if (it <= 1) context.resources.getString(R.string.format_role).format(it)
-                else
-                    if (it > 99) context.resources.getString(R.string.format_roles_ex)
-                    else context.resources.getString(R.string.format_roles).format(it)
+        get() = item.roles.size.let {
+            if (it <= 1) {
+                context.resources.getString(R.string.format_role).format(it)
+            } else {
+                if (it > 99) {
+                    context.resources.getString(R.string.format_roles_ex)
+                } else {
+                    context.resources.getString(R.string.format_roles).format(it)
+                }
             }
         }
 

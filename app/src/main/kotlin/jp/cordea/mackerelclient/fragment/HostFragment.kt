@@ -39,10 +39,6 @@ class HostFragment : android.support.v4.app.Fragment() {
         HostViewModel(context!!)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -115,9 +111,7 @@ class HostFragment : android.support.v4.app.Fragment() {
     }
 
     companion object {
-        fun newInstance(): HostFragment {
-            val fragment = HostFragment()
-            return fragment
-        }
+        fun newInstance(): HostFragment =
+                HostFragment()
     }
 }

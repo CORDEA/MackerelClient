@@ -13,9 +13,13 @@ import rx.android.schedulers.AndroidSchedulers
  */
 class LoginViewModel(private val context: Context) {
 
-    fun logIn(key: String, email: String?, autoLogin: Boolean,
-              onSuccess: (id: Int?) -> Unit,
-              onFailure: () -> Unit): Subscription {
+    fun logIn(
+            key: String,
+            email: String?,
+            autoLogin: Boolean,
+            onSuccess: (id: Int?) -> Unit,
+            onFailure: () -> Unit
+    ): Subscription {
         return MackerelApiClient
                 .getUsers(context, key)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -30,9 +34,13 @@ class LoginViewModel(private val context: Context) {
                 })
     }
 
-    private fun storeLoginUser(it: Users, key: String, email: String?,
-                               onSuccess: (id: Int?) -> Unit,
-                               onFailure: () -> Unit) {
+    private fun storeLoginUser(
+            it: Users,
+            key: String,
+            email: String?,
+            onSuccess: (id: Int?) -> Unit,
+            onFailure: () -> Unit
+    ) {
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
         val maxId: Number? = realm.where(UserKey::class.java).max("id")

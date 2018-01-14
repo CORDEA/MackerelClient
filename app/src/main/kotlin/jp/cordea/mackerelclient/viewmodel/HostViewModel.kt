@@ -27,22 +27,20 @@ class HostViewModel(private val context: Context) {
                     .also { realm.close() }
         }
 
-    fun getHosts(items: List<DisplayHostState>): Observable<Hosts> {
-        return MackerelApiClient
-                .getHosts(context, items.map { it.name })
-                .filter {
-                    deleteOldMetricData(it.hosts.map { it.id })
-                    true
-                }
-                .observeOn(AndroidSchedulers.mainThread())
-    }
+    fun getHosts(items: List<DisplayHostState>): Observable<Hosts> =
+            MackerelApiClient
+                    .getHosts(context, items.map { it.name })
+                    .filter {
+                        deleteOldMetricData(it.hosts.map { it.id })
+                        true
+                    }
+                    .observeOn(AndroidSchedulers.mainThread())
 
-    fun getLatestMetrics(hosts: Hosts): Observable<Tsdbs> {
-        return MackerelApiClient
-                .getLatestMetrics(context, hosts.hosts.map { it.id },
-                        arrayListOf(loadavgMetricsKey, cpuMetricsKey, memoryMetricsKey))
-                .observeOn(AndroidSchedulers.mainThread())
-    }
+    fun getLatestMetrics(hosts: Hosts): Observable<Tsdbs> =
+            MackerelApiClient
+                    .getLatestMetrics(context, hosts.hosts.map { it.id },
+                            arrayListOf(loadavgMetricsKey, cpuMetricsKey, memoryMetricsKey))
+                    .observeOn(AndroidSchedulers.mainThread())
 
     private fun initDisplayHostState(realm: Realm) {
         if (realm.where(DisplayHostState::class.java).findAll().size == 0) {
@@ -73,11 +71,10 @@ class HostViewModel(private val context: Context) {
 
     companion object {
 
-        val loadavgMetricsKey = "loadavg5"
+        const val loadavgMetricsKey = "loadavg5"
 
-        val cpuMetricsKey = "cpu.user.percentage"
+        const val cpuMetricsKey = "cpu.user.percentage"
 
-        val memoryMetricsKey = "memory.used"
-
+        const val memoryMetricsKey = "memory.used"
     }
 }

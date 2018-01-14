@@ -10,7 +10,12 @@ import android.view.View
  */
 class ListItemDecoration(private val context: Context) : RecyclerView.ItemDecoration() {
 
-    override fun getItemOffsets(outRect: Rect?, view: View?, parent: RecyclerView?, state: RecyclerView.State?) {
+    override fun getItemOffsets(
+            outRect: Rect?,
+            view: View?,
+            parent: RecyclerView?,
+            state: RecyclerView.State?
+    ) {
         view?.let {
             parent?.let { parent ->
                 val lp = it.layoutParams as RecyclerView.LayoutParams
