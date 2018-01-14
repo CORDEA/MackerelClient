@@ -3,41 +3,39 @@ package jp.cordea.mackerelclient.activity
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.DetailCommonAdapter
 import jp.cordea.mackerelclient.api.response.Alert
+import jp.cordea.mackerelclient.databinding.ActivityDetailCommonBinding
 import jp.cordea.mackerelclient.fragment.AlertCloseDialogFragment
 import jp.cordea.mackerelclient.utils.DateUtils
-import kotterknife.bindView
 
 class AlertDetailActivity : AppCompatActivity() {
-
-    val toolbar: Toolbar by bindView(R.id.toolbar)
-
-    val recyclerView: RecyclerView by bindView(R.id.recycler_view)
 
     private var alert: Alert? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail_common)
-        setSupportActionBar(toolbar)
+        val binding = DataBindingUtil
+                .setContentView<ActivityDetailCommonBinding>(this, R.layout.activity_detail_common)
+        setSupportActionBar(binding.toolbar)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val alert = intent.getSerializableExtra(AlertKey) as Alert
 
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = DetailCommonAdapter(this, insertInfo(alert))
-        recyclerView.addItemDecoration(ListItemDecoration(this))
+        binding.recyclerView.let {
+            it.layoutManager = LinearLayoutManager(this)
+            it.adapter = DetailCommonAdapter(this, insertInfo(alert))
+            it.addItemDecoration(ListItemDecoration(this))
+        }
 
         this.alert = alert
     }
