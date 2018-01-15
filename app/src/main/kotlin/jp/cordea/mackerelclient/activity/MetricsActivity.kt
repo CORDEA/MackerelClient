@@ -3,39 +3,27 @@ package jp.cordea.mackerelclient.activity
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
 import io.realm.Realm
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.MetricsAdapter
+import jp.cordea.mackerelclient.databinding.ActivityMetricsBinding
+import jp.cordea.mackerelclient.databinding.ContentMetricsBinding
 import jp.cordea.mackerelclient.model.MetricsParameter
 import jp.cordea.mackerelclient.model.UserMetric
 import jp.cordea.mackerelclient.viewmodel.MetricsViewModel
-import kotterknife.bindView
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 
 class MetricsActivity : AppCompatActivity() {
-
-    val toolbar: Toolbar by bindView(R.id.toolbar)
-
-    val noticeView: View by bindView(R.id.notice_container)
-
-    val templateButton: Button by bindView(R.id.template)
-
-    val recyclerView: RecyclerView by bindView(R.id.recycler_view)
-
-    val swipeRefresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
 
     private val viewModel by lazy {
         MetricsViewModel(this)
@@ -51,21 +39,25 @@ class MetricsActivity : AppCompatActivity() {
 
     private var enableRefresh = false
 
+    private lateinit var contentBinding: ContentMetricsBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_metrics)
-        setSupportActionBar(toolbar)
+        val binding = DataBindingUtil
+                .setContentView<ActivityMetricsBinding>(this, R.layout.activity_metrics)
+        contentBinding = binding.content ?: return
+        setSupportActionBar(binding.toolbar)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        contentBinding.recyclerView.layoutManager = LinearLayoutManager(this)
         val hostId = intent.getStringExtra(HostIdKey)
 
-        swipeRefresh.setOnRefreshListener {
+        contentBinding.swipeRefresh.setOnRefreshListener {
             if (enableRefresh) {
                 refresh(hostId)
             }
-            swipeRefresh.isRefreshing = false
+            contentBinding.swipeRefresh.isRefreshing = false
         }
 
         needRefresh = true
@@ -90,8 +82,8 @@ class MetricsActivity : AppCompatActivity() {
         val item = metrics.map { MetricsParameter(it.id, null, it.label!!) }
         realm.close()
 
-        recyclerView.adapter = MetricsAdapter(this, item as MutableList, MetricsType.HOST, hostId)
-        recyclerView.addItemDecoration(ListItemDecoration(this))
+        contentBinding.recyclerView.adapter = MetricsAdapter(this, item as MutableList, MetricsType.HOST, hostId)
+        contentBinding.recyclerView.addItemDecoration(ListItemDecoration(this))
 
         drawCompleteMetrics = 0
         subscription?.let(Subscription::unsubscribe)
@@ -100,7 +92,7 @@ class MetricsActivity : AppCompatActivity() {
                 .asObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ it0 ->
-                    val adapter = recyclerView.adapter as MetricsAdapter
+                    val adapter = contentBinding.recyclerView.adapter as MetricsAdapter
                     drawCompleteMetrics = adapter.refreshRecyclerViewItem(it0, drawCompleteMetrics)
                     if (adapter.itemCount == drawCompleteMetrics) {
                         enableRefresh = true
@@ -108,16 +100,16 @@ class MetricsActivity : AppCompatActivity() {
                 }, {})
 
         if (metrics.size == 0) {
-            noticeView.visibility = View.VISIBLE
-            templateButton.setOnClickListener {
-                templateButton.isClickable = false
+            contentBinding.noticeContainer.visibility = View.VISIBLE
+            contentBinding.templateButton.setOnClickListener {
+                contentBinding.templateButton.isClickable = false
                 viewModel.initUserMetrics(hostId)
                 refresh(hostId)
             }
-            swipeRefresh.visibility = View.GONE
+            contentBinding.swipeRefresh.visibility = View.GONE
         } else {
-            swipeRefresh.visibility = View.VISIBLE
-            noticeView.visibility = View.GONE
+            contentBinding.swipeRefresh.visibility = View.VISIBLE
+            contentBinding.noticeContainer.visibility = View.GONE
             viewModel.requestMetricsApi(metrics, hostId, MetricsType.HOST)
         }
     }
