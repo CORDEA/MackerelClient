@@ -1,66 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activity.MetricsEditActivity"
-    tools:showIn="@layout/activity_metrics_edit">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".activity.MetricsEditActivity"
+        tools:showIn="@layout/activity_metrics_edit">
 
-        <ImageView
-            android:src="@drawable/ic_label_black_24dp"
-            style="@style/IconActive"
-            android:layout_marginRight="@dimen/metrics_edit_icon_margin_right"
-            android:layout_width="@dimen/common_icon_size"
-            android:layout_height="@dimen/common_icon_size" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                style="@style/IconActive"
+                android:layout_width="@dimen/common_icon_size"
+                android:layout_height="@dimen/common_icon_size"
+                android:layout_marginRight="@dimen/metrics_edit_icon_margin_right"
+                android:src="@drawable/ic_label_black_24dp" />
+
+            <EditText
+                android:id="@+id/label_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/metrics_edit_label_height"
+                android:hint="@string/metrics_edit_label_hint" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                style="@style/IconActive"
+                android:layout_width="@dimen/common_icon_size"
+                android:layout_height="@dimen/common_icon_size"
+                android:layout_marginRight="@dimen/metrics_edit_icon_margin_right"
+                android:src="@drawable/ic_timeline_black_24dp" />
+
+            <EditText
+                android:id="@+id/metric_first_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/metrics_edit_label_height"
+                android:hint="@string/metrics_edit_metric0_hint" />
+
+        </LinearLayout>
 
         <EditText
-            android:id="@+id/label"
-            android:hint="@string/metrics_edit_label_hint"
+            android:id="@+id/metric_second_edit_text"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/metrics_edit_label_height" />
+            android:layout_height="@dimen/metrics_edit_label_height"
+            android:layout_marginLeft="@dimen/metrics_edit_label_margin_left"
+            android:hint="@string/metrics_edit_metric1_hint" />
 
     </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:src="@drawable/ic_timeline_black_24dp"
-            style="@style/IconActive"
-            android:layout_marginRight="@dimen/metrics_edit_icon_margin_right"
-            android:layout_width="@dimen/common_icon_size"
-            android:layout_height="@dimen/common_icon_size" />
-
-        <EditText
-            android:id="@+id/metric_0"
-            android:hint="@string/metrics_edit_metric0_hint"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/metrics_edit_label_height" />
-
-    </LinearLayout>
-
-    <EditText
-        android:id="@+id/metric_1"
-        android:hint="@string/metrics_edit_metric1_hint"
-        android:layout_marginLeft="@dimen/metrics_edit_label_margin_left"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/metrics_edit_label_height" />
-
-</LinearLayout>
+</layout>

@@ -3,17 +3,17 @@ package jp.cordea.mackerelclient.activity
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.TextView
 import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.R
+import jp.cordea.mackerelclient.databinding.ActivityMetricsEditBinding
+import jp.cordea.mackerelclient.databinding.ContentMetricsEditBinding
 import jp.cordea.mackerelclient.viewmodel.MetricsEditViewModel
-import kotterknife.bindView
 
 class MetricsEditActivity : AppCompatActivity() {
 
@@ -21,31 +21,27 @@ class MetricsEditActivity : AppCompatActivity() {
         MetricsEditViewModel()
     }
 
-    val toolbar: Toolbar by bindView(R.id.toolbar)
-
-    val label: TextView by bindView(R.id.label)
-
-    val metric0: TextView by bindView(R.id.metric_0)
-
-    val metric1: TextView by bindView(R.id.metric_1)
-
     private var id: Int = -1
 
     private var type: MetricsType? = null
 
+    private lateinit var contentBinding: ContentMetricsEditBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_metrics_edit)
-        setSupportActionBar(toolbar)
+        val binding = DataBindingUtil
+                .setContentView<ActivityMetricsEditBinding>(this, R.layout.activity_metrics_edit)
+        contentBinding = binding.content ?: return
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         id = intent.getIntExtra(UserMetricKey, -1)
         type = MetricsType.valueOf(intent.getStringExtra(TypeKey))
         if (id != -1) {
             val metric = viewModel.getMetric(id)
-            label.text = metric.label
-            metric0.text = metric.metric0
-            metric1.text = metric.metric1
+            contentBinding.labelEditText.setText(metric.label)
+            contentBinding.metricFirstEditText.setText(metric.metric0)
+            contentBinding.metricSecondEditText.setText(metric.metric1)
         }
     }
 
@@ -86,22 +82,23 @@ class MetricsEditActivity : AppCompatActivity() {
     }
 
     private fun saveMetric(): Boolean? {
-        val m0 = metric0.text.toString()
-        val m1 = metric1.text.toString()
-        if (m0.isNullOrBlank()) {
-            if (label.text.toString().isNullOrBlank() && m1.isNullOrBlank()) {
-                return false
+        val metricFirst = contentBinding.metricFirstEditText.text.toString()
+        val metricSecond = contentBinding.metricSecondEditText.text.toString()
+        if (metricFirst.isBlank()) {
+            val label = contentBinding.labelEditText.text.toString()
+            return if (label.isBlank() && metricSecond.isBlank()) {
+                false
             } else {
                 AlertDialog
                         .Builder(this)
                         .setMessage(R.string.metrics_edit_dialog_title)
                         .show()
-                return null
+                null
             }
         }
 
         viewModel.storeMetric(id, intent.getStringExtra(IdKey), type!!.name,
-                label.text.toString(), m0, m1)
+                contentBinding.labelEditText.text.toString(), metricFirst, metricSecond)
         return true
     }
 
