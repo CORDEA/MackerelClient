@@ -3,12 +3,10 @@ package jp.cordea.mackerelclient.activity
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -17,22 +15,17 @@ import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.MetricsAdapter
+import jp.cordea.mackerelclient.databinding.ActivityServiceMetricsBinding
+import jp.cordea.mackerelclient.databinding.ContentServiceMetricsBinding
 import jp.cordea.mackerelclient.model.MetricsParameter
 import jp.cordea.mackerelclient.model.UserMetric
 import jp.cordea.mackerelclient.viewmodel.MetricsViewModel
-import kotterknife.bindView
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 
 class ServiceMetricsActivity : AppCompatActivity() {
 
-    val toolbar: Toolbar by bindView(R.id.toolbar)
-
-    val noticeView: View by bindView(R.id.notice_container)
-
-    val recyclerView: RecyclerView by bindView(R.id.recycler_view)
-
-    val swipeRefresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
+    private lateinit var contentBinding: ContentServiceMetricsBinding
 
     private var viewModel: MetricsViewModel? = null
 
@@ -48,19 +41,23 @@ class ServiceMetricsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_service_metrics)
-        setSupportActionBar(toolbar)
+        val binding = DataBindingUtil.setContentView<ActivityServiceMetricsBinding>(
+                this,
+                R.layout.activity_service_metrics
+        )
+        contentBinding = binding.content ?: return
+        setSupportActionBar(binding.toolbar)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        contentBinding.recyclerView.layoutManager = LinearLayoutManager(this)
         val serviceName = intent.getStringExtra(ServiceNameKey)
 
-        swipeRefresh.setOnRefreshListener {
+        contentBinding.swipeRefresh.setOnRefreshListener {
             if (enableRefresh) {
                 refresh(serviceName)
             }
-            swipeRefresh.isRefreshing = false
+            contentBinding.swipeRefresh.isRefreshing = false
         }
 
         viewModel = MetricsViewModel(this)
@@ -87,8 +84,9 @@ class ServiceMetricsActivity : AppCompatActivity() {
         realm.close()
 
         val item = metrics.map { MetricsParameter(it.id, null, it.label!!) }
-        recyclerView.adapter = MetricsAdapter(this, item as MutableList, MetricsType.SERVICE, serviceName)
-        recyclerView.addItemDecoration(ListItemDecoration(this))
+        contentBinding.recyclerView.adapter =
+                MetricsAdapter(this, item as MutableList, MetricsType.SERVICE, serviceName)
+        contentBinding.recyclerView.addItemDecoration(ListItemDecoration(this))
 
         drawCompleteMetrics = 0
         subscription?.let(Subscription::unsubscribe)
@@ -97,20 +95,22 @@ class ServiceMetricsActivity : AppCompatActivity() {
                 .asObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ it0 ->
-                    val adapter = recyclerView.adapter as MetricsAdapter
+                    val adapter = contentBinding.recyclerView.adapter as MetricsAdapter
                     drawCompleteMetrics = adapter.refreshRecyclerViewItem(it0, drawCompleteMetrics)
                     if (adapter.itemCount == drawCompleteMetrics) {
                         enableRefresh = true
                     }
                 }, {})
 
-        if (metrics.size == 0) {
-            noticeView.visibility = View.VISIBLE
-            swipeRefresh.visibility = View.GONE
-        } else {
-            swipeRefresh.visibility = View.VISIBLE
-            noticeView.visibility = View.GONE
-            viewModel!!.requestMetricsApi(metrics, serviceName, MetricsType.SERVICE)
+        contentBinding.run {
+            if (metrics.size == 0) {
+                noticeContainer.visibility = View.VISIBLE
+                swipeRefresh.visibility = View.GONE
+            } else {
+                swipeRefresh.visibility = View.VISIBLE
+                noticeContainer.visibility = View.GONE
+                viewModel!!.requestMetricsApi(metrics, serviceName, MetricsType.SERVICE)
+            }
         }
     }
 
@@ -139,7 +139,8 @@ class ServiceMetricsActivity : AppCompatActivity() {
         when (item.itemId) {
             android.R.id.home -> finish()
             R.id.action_add -> {
-                val intent = MetricsEditActivity.createIntent(this, MetricsType.SERVICE, serviceName!!)
+                val intent = MetricsEditActivity
+                        .createIntent(this, MetricsType.SERVICE, serviceName!!)
                 startActivityForResult(intent, MetricsEditActivity.RequestCode)
             }
         }
