@@ -3,6 +3,7 @@ package jp.cordea.mackerelclient.activity
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -14,16 +15,13 @@ import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.DetailCommonAdapter
 import jp.cordea.mackerelclient.api.response.Monitor
+import jp.cordea.mackerelclient.databinding.ActivityDetailCommonBinding
 import jp.cordea.mackerelclient.fragment.MonitorSettingDeleteDialogFragment
 import jp.cordea.mackerelclient.viewmodel.MonitorDetailViewModel
 import kotterknife.bindView
 import rx.Subscription
 
 class MonitorDetailActivity : AppCompatActivity() {
-
-    val toolbar: Toolbar by bindView(R.id.toolbar)
-
-    val recyclerView: RecyclerView by bindView(R.id.recycler_view)
 
     var monitor: Monitor? = null
 
@@ -35,17 +33,17 @@ class MonitorDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail_common)
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
-        setSupportActionBar(toolbar)
+        val binding = DataBindingUtil
+                .setContentView<ActivityDetailCommonBinding>(this, R.layout.activity_detail_common)
+        setSupportActionBar(binding.toolbar)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val monitor = intent.getSerializableExtra(MonitorKey) as Monitor
 
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = DetailCommonAdapter(this, viewModel.getDisplayData(monitor))
-        recyclerView.addItemDecoration(ListItemDecoration(this))
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.adapter = DetailCommonAdapter(this, viewModel.getDisplayData(monitor))
+        binding.recyclerView.addItemDecoration(ListItemDecoration(this))
         this.monitor = monitor
     }
 
