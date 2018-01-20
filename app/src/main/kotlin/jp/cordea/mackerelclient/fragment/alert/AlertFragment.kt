@@ -3,18 +3,15 @@ package jp.cordea.mackerelclient.fragment.alert
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
-import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.ogaclejapan.rx.binding.RxEvent
-import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.AlertFragmentPagerAdapter
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Alerts
-import kotterknife.bindView
+import jp.cordea.mackerelclient.databinding.FragmentAlertBinding
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.Subscriptions
@@ -28,28 +25,26 @@ class AlertFragment : Fragment() {
 
     val onAlertItemChanged: RxEvent<Alerts?> = RxEvent.create<Alerts?>()
 
-    val viewPager: ViewPager by bindView(R.id.viewpager)
-
-    val tabLayout: TabLayout by bindView(R.id.tab_layout)
-
     private var subscription: Subscription? = null
+
+    private lateinit var binding: FragmentAlertBinding
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View {
-        val view = inflater.inflate(R.layout.fragment_alert, container, false)
-        return view
-    }
+    ): View =
+            FragmentAlertBinding.inflate(inflater, container, false).also {
+                binding = it
+            }.root
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val context = context ?: return
 
         val adapter = AlertFragmentPagerAdapter(childFragmentManager, context)
-        viewPager.adapter = adapter
-        tabLayout.setupWithViewPager(viewPager)
+        binding.viewPager.adapter = adapter
+        binding.tabLayout.setupWithViewPager(binding.viewPager)
 
         subscription?.unsubscribe()
         subscription = requestApi()
