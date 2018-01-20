@@ -15,7 +15,7 @@
             android:text="@string/network_error_message" />
 
         <Button
-            android:id="@+id/retry"
+            android:id="@+id/retry_button"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/error_with_retry_button_height"

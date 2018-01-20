@@ -71,7 +71,7 @@ class CriticalAlertFragment : android.support.v4.app.Fragment() {
                     refresh()
                 })
 
-        val retry: Button = error.findViewById(R.id.retry) as Button
+        val retry: Button = error.findViewById(R.id.retry_button) as Button
         retry.setOnClickListener {
             progress.visibility = View.VISIBLE
             error.visibility = View.GONE
