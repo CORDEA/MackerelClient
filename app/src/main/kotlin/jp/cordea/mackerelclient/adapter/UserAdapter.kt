@@ -5,17 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.TextView
 import com.ogaclejapan.rx.binding.RxEvent
 import com.squareup.picasso.Picasso
 import jp.cordea.mackerelclient.PicassoCircularTransform
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.response.User
+import jp.cordea.mackerelclient.databinding.ListItemUserBinding
 import jp.cordea.mackerelclient.utils.GravatarUtils
 import jp.cordea.mackerelclient.viewmodel.UserListItemViewModel
 
-class UserAdapter(context: Context, val items: List<User>, val own: String?) : ArrayAdapter<User>(context, R.layout.list_item_user) {
+class UserAdapter(
+        context: Context,
+        val items: List<User>,
+        private val own: String?
+) : ArrayAdapter<User>(
+        context,
+        R.layout.list_item_user
+) {
 
     val onUserDeleteSucceeded: RxEvent<Boolean> = RxEvent.create<Boolean>()
 
@@ -30,50 +36,43 @@ class UserAdapter(context: Context, val items: List<User>, val own: String?) : A
             viewHolder = view.tag as ViewHolder
         }
 
-        val viewModel = UserListItemViewModel(context, items[position])
-        viewModel.onUserDeleteSucceeded = {
-            onUserDeleteSucceeded.post(true)
-        }
-        GravatarUtils.getGravatarImage(items[position].email,
-                context.resources.getDimensionPixelSize(R.dimen.user_thumbnail_size_small))?.let { url ->
-            Picasso.with(context)
-                    .load(url)
-                    .transform(PicassoCircularTransform())
-                    .into(viewHolder.thumbnailImageView)
-        }
-        viewHolder.nameTextView.text = items[position].screenName
-        viewHolder.emailTextView.text = items[position].email
-
-        var isOwn = false
-        own?.let {
-            if (it == items[position].email) {
-                isOwn = true
-                viewHolder.deleteImageView.visibility = View.GONE
+        viewHolder.binding.run {
+            val viewModel = UserListItemViewModel(context, items[position])
+            viewModel.onUserDeleteSucceeded = {
+                onUserDeleteSucceeded.post(true)
             }
-        }
-        if (!isOwn) {
-            viewHolder.deleteImageView.setOnClickListener(viewModel.deleteButtonOnClick)
+            GravatarUtils.getGravatarImage(items[position].email,
+                    context.resources.getDimensionPixelSize(R.dimen.user_thumbnail_size_small))?.let { url ->
+                Picasso.with(context)
+                        .load(url)
+                        .transform(PicassoCircularTransform())
+                        .into(userThumbnailImageView)
+            }
+            nameTextView.text = items[position].screenName
+            emailTextView.text = items[position].email
+
+            var isOwn = false
+            own?.let {
+                if (it == items[position].email) {
+                    isOwn = true
+                    deleteImageView.visibility = View.GONE
+                }
+            }
+            if (!isOwn) {
+                deleteImageView.setOnClickListener(viewModel.deleteButtonOnClick)
+            }
         }
         return view
     }
 
-    override fun getItem(position: Int): User? {
-        return items[position]
-    }
+    override fun getItem(position: Int): User? =
+            items[position]
 
-    override fun getCount(): Int {
-        return items.size
-    }
+    override fun getCount(): Int =
+            items.size
 
     class ViewHolder(view: View) {
 
-        val nameTextView = view.findViewById(R.id.name) as TextView
-
-        val emailTextView = view.findViewById(R.id.email) as TextView
-
-        val deleteImageView = view.findViewById(R.id.delete_button) as ImageView
-
-        val thumbnailImageView = view.findViewById(R.id.user_thumbnail) as ImageView
-
+        val binding: ListItemUserBinding = ListItemUserBinding.bind(view)
     }
 }
