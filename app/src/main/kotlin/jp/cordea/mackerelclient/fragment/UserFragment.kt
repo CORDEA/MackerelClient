@@ -2,31 +2,22 @@ package jp.cordea.mackerelclient.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
 import io.realm.Realm
-import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.UserAdapter
 import jp.cordea.mackerelclient.api.MackerelApiClient
+import jp.cordea.mackerelclient.databinding.FragmentUserBinding
 import jp.cordea.mackerelclient.model.Preferences
 import jp.cordea.mackerelclient.model.UserKey
-import kotterknife.bindView
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.Subscriptions
 
 class UserFragment : Fragment() {
 
-    val errView: View by bindView(R.id.error)
-
-    val progress: View by bindView(R.id.progress)
-
-    val listView: ListView by bindView(R.id.list_view)
-
-    val swipeRefresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
+    private lateinit var binding: FragmentUserBinding
 
     private var subscription: Subscription? = null
 
@@ -34,18 +25,18 @@ class UserFragment : Fragment() {
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View {
-        val view = inflater.inflate(R.layout.fragment_user, container, false)
-        setHasOptionsMenu(true)
-        return view
-    }
+    ): View =
+            FragmentUserBinding.inflate(inflater, container, false).also {
+                setHasOptionsMenu(true)
+                binding = it
+            }.root
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         subscription?.let(Subscription::unsubscribe)
         subscription = refresh()
-        swipeRefresh.setOnRefreshListener {
+        binding.swipeRefresh.setOnRefreshListener {
             subscription?.let(Subscription::unsubscribe)
             subscription = refresh()
         }
@@ -57,14 +48,14 @@ class UserFragment : Fragment() {
                 .getUsers(context)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    swipeRefresh.isRefreshing = false
+                    binding.swipeRefresh.isRefreshing = false
                     val userId = Preferences(context).userId
                     val realm = Realm.getDefaultInstance()
                     val user = realm.copyFromRealm(realm.where(UserKey::class.java).equalTo("id", userId).findFirst())
                     realm.close()
 
                     val adapter = UserAdapter(context, it.users, user.email)
-                    listView.adapter = adapter
+                    binding.listView.adapter = adapter
                     adapter.onUserDeleteSucceeded
                             .asObservable()
                             .filter { it }
@@ -72,13 +63,13 @@ class UserFragment : Fragment() {
                                 refresh()
                             }
                             .subscribe({}, {})
-                    progress.visibility = View.GONE
-                    swipeRefresh.visibility = View.VISIBLE
+                    binding.progressLayout.visibility = View.GONE
+                    binding.swipeRefresh.visibility = View.VISIBLE
                 }, {
-                    swipeRefresh.isRefreshing = false
-                    errView.visibility = View.VISIBLE
-                    progress.visibility = View.GONE
-                    swipeRefresh.visibility = View.GONE
+                    binding.swipeRefresh.isRefreshing = false
+                    binding.error?.root?.visibility = View.VISIBLE
+                    binding.progressLayout.visibility = View.GONE
+                    binding.swipeRefresh.visibility = View.GONE
                 })
     }
 
