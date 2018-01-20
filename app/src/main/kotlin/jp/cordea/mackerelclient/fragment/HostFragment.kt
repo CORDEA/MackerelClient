@@ -3,6 +3,7 @@ package jp.cordea.mackerelclient.fragment
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +17,7 @@ import jp.cordea.mackerelclient.viewmodel.HostViewModel
 import rx.Subscription
 import rx.subscriptions.Subscriptions
 
-class HostFragment : android.support.v4.app.Fragment() {
+class HostFragment : Fragment() {
 
     private var subscription: Subscription? = null
 

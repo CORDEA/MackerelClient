@@ -1,5 +1,6 @@
 package jp.cordea.mackerelclient.adapter
 
+import android.support.v4.app.Fragment
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +12,7 @@ import jp.cordea.mackerelclient.api.response.Monitor
 import kotterknife.bindView
 
 class MonitorAdapter(
-        val fragment: android.support.v4.app.Fragment,
+        val fragment: Fragment,
         val items: List<Pair<String, Monitor?>>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

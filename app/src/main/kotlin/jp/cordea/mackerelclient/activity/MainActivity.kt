@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.NavigationView
+import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
@@ -131,7 +132,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
         val transaction = supportFragmentManager.beginTransaction()
-        val fragment: android.support.v4.app.Fragment
+        val fragment: Fragment
         when (id) {
             R.id.nav_alert -> {
                 fragment = AlertFragment.newInstance()

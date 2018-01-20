@@ -1,6 +1,7 @@
 package jp.cordea.mackerelclient.fragment
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,7 @@ import jp.cordea.mackerelclient.viewmodel.ServiceViewModel
 import rx.Subscription
 import rx.subscriptions.Subscriptions
 
-class ServiceFragment : android.support.v4.app.Fragment() {
+class ServiceFragment : Fragment() {
 
     private lateinit var binding: FragmentServiceBinding
 

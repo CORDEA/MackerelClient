@@ -1,6 +1,7 @@
 package jp.cordea.mackerelclient.fragment.alert
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,7 @@ import jp.cordea.mackerelclient.viewmodel.AlertViewModel
 import rx.Subscription
 import rx.subscriptions.Subscriptions
 
-class CriticalAlertFragment : android.support.v4.app.Fragment() {
+class CriticalAlertFragment : Fragment() {
 
     private val viewModel by lazy {
         AlertViewModel(context!!)

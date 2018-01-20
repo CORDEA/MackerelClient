@@ -1,5 +1,6 @@
 package jp.cordea.mackerelclient.adapter
 
+import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -17,7 +18,7 @@ import jp.cordea.mackerelclient.viewmodel.HostListItemViewModel
 import kotterknife.bindView
 
 class HostAdapter(
-        val fragment: android.support.v4.app.Fragment,
+        val fragment: Fragment,
         val items: List<Host>,
         private val metrics: Map<String, Map<String, Tsdb>>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
