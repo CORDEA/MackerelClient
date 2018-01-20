@@ -2,18 +2,14 @@ package jp.cordea.mackerelclient.fragment.alert
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ListView
-import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.AlertDetailActivity
 import jp.cordea.mackerelclient.adapter.OtherAlertAdapter
 import jp.cordea.mackerelclient.api.response.Alert
+import jp.cordea.mackerelclient.databinding.FragmentInsideAlertBinding
 import jp.cordea.mackerelclient.viewmodel.AlertViewModel
-import kotterknife.bindView
 import rx.Subscription
 import rx.subscriptions.Subscriptions
 
@@ -30,14 +26,6 @@ class OtherAlertFragment : Fragment() {
         AlertViewModel(context!!)
     }
 
-    val listView: ListView by bindView(R.id.list)
-
-    val swipeRefresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
-
-    val progress: View by bindView(R.id.progress)
-
-    val error: View by bindView(R.id.error)
-
     private var alerts: List<Alert>? = null
 
     private var subscription: Subscription? = null
@@ -46,14 +34,16 @@ class OtherAlertFragment : Fragment() {
 
     private var itemSubscription: Subscription? = null
 
+    private lateinit var binding: FragmentInsideAlertBinding
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View {
-        val view = inflater.inflate(R.layout.fragment_inside_alert, container, false)
-        return view
-    }
+    ): View =
+            FragmentInsideAlertBinding.inflate(inflater, container, false).also {
+                binding = it
+            }.root
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -72,19 +62,19 @@ class OtherAlertFragment : Fragment() {
                     refresh()
                 })
 
-        val retry: Button = error.findViewById(R.id.retry_button) as Button
-        retry.setOnClickListener {
-            progress.visibility = View.VISIBLE
-            error.visibility = View.GONE
+        binding.error?.retryButton?.setOnClickListener {
+            binding.progressLayout.visibility = View.VISIBLE
+            binding.error?.root?.visibility = View.GONE
             refresh()
         }
 
-        swipeRefresh.setOnRefreshListener {
+        binding.swipeRefresh.setOnRefreshListener {
             refresh()
         }
 
-        listView.setOnItemClickListener { _, _, i, _ ->
-            val intent = AlertDetailActivity.createIntent(context, listView.adapter.getItem(i) as Alert)
+        binding.listView.setOnItemClickListener { _, _, i, _ ->
+            val intent = AlertDetailActivity
+                    .createIntent(context, binding.listView.adapter.getItem(i) as Alert)
             parentFragment.startActivityForResult(intent, OtherAlertFragment.RequestCode)
         }
 
@@ -101,7 +91,7 @@ class OtherAlertFragment : Fragment() {
     }
 
     private fun refresh() {
-        swipeRefresh.isRefreshing = true
+        binding.swipeRefresh.isRefreshing = true
         subscription?.unsubscribe()
         subscription = getAlert()
     }
@@ -111,15 +101,15 @@ class OtherAlertFragment : Fragment() {
         return viewModel
                 .getAlerts(alerts, { !it.status.equals("CRITICAL") })
                 .subscribe({
-                    listView.adapter = OtherAlertAdapter(context, it)
-                    swipeRefresh.isRefreshing = false
-                    swipeRefresh.visibility = View.VISIBLE
-                    progress.visibility = View.GONE
+                    binding.listView.adapter = OtherAlertAdapter(context, it)
+                    binding.swipeRefresh.isRefreshing = false
+                    binding.swipeRefresh.visibility = View.VISIBLE
+                    binding.progressLayout.visibility = View.GONE
                 }, {
                     it.printStackTrace()
-                    swipeRefresh.isRefreshing = false
-                    error.visibility = View.VISIBLE
-                    progress.visibility = View.GONE
+                    binding.swipeRefresh.isRefreshing = false
+                    binding.error?.root?.visibility = View.VISIBLE
+                    binding.progressLayout.visibility = View.GONE
                 })
     }
 

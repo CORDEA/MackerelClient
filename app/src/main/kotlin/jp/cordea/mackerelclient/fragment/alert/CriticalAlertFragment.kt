@@ -1,41 +1,22 @@
 package jp.cordea.mackerelclient.fragment.alert
 
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ListView
-import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.AlertDetailActivity
 import jp.cordea.mackerelclient.adapter.AlertAdapter
 import jp.cordea.mackerelclient.api.response.Alert
+import jp.cordea.mackerelclient.databinding.FragmentInsideAlertBinding
 import jp.cordea.mackerelclient.viewmodel.AlertViewModel
-import kotterknife.bindView
 import rx.Subscription
 import rx.subscriptions.Subscriptions
 
 class CriticalAlertFragment : android.support.v4.app.Fragment() {
 
-    companion object {
-        const val RequestCode = 1
-
-        fun newInstance(): CriticalAlertFragment =
-                CriticalAlertFragment()
-    }
-
     private val viewModel by lazy {
         AlertViewModel(context!!)
     }
-
-    val listView: ListView by bindView(R.id.list)
-
-    val swipeRefresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
-
-    val progress: View by bindView(R.id.progress)
-
-    val error: View by bindView(R.id.error)
 
     private var alerts: List<Alert>? = null
 
@@ -45,14 +26,16 @@ class CriticalAlertFragment : android.support.v4.app.Fragment() {
 
     private var itemSubscription: Subscription? = null
 
+    private lateinit var binding: FragmentInsideAlertBinding
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View {
-        val view = inflater.inflate(R.layout.fragment_inside_alert, container, false)
-        return view
-    }
+    ): View =
+            FragmentInsideAlertBinding.inflate(inflater, container, false).also {
+                binding = it
+            }.root
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -71,19 +54,19 @@ class CriticalAlertFragment : android.support.v4.app.Fragment() {
                     refresh()
                 })
 
-        val retry: Button = error.findViewById(R.id.retry_button) as Button
-        retry.setOnClickListener {
-            progress.visibility = View.VISIBLE
-            error.visibility = View.GONE
+        binding.error?.retryButton?.setOnClickListener {
+            binding.progressLayout.visibility = View.VISIBLE
+            binding.error?.root?.visibility = View.GONE
             refresh()
         }
 
-        swipeRefresh.setOnRefreshListener {
+        binding.swipeRefresh.setOnRefreshListener {
             refresh()
         }
 
-        listView.setOnItemClickListener { _, _, i, _ ->
-            val intent = AlertDetailActivity.createIntent(context, listView.adapter.getItem(i) as Alert)
+        binding.listView.setOnItemClickListener { _, _, i, _ ->
+            val intent = AlertDetailActivity
+                    .createIntent(context, binding.listView.adapter.getItem(i) as Alert)
             parentFragment.startActivityForResult(intent, CriticalAlertFragment.RequestCode)
         }
 
@@ -100,7 +83,7 @@ class CriticalAlertFragment : android.support.v4.app.Fragment() {
     }
 
     private fun refresh() {
-        swipeRefresh.isRefreshing = true
+        binding.swipeRefresh.isRefreshing = true
         subscription?.let(Subscription::unsubscribe)
         subscription = getAlert()
     }
@@ -110,15 +93,15 @@ class CriticalAlertFragment : android.support.v4.app.Fragment() {
         return viewModel
                 .getAlerts(alerts, { it.status.equals("CRITICAL") })
                 .subscribe({
-                    listView.adapter = AlertAdapter(context, it)
-                    swipeRefresh.visibility = View.VISIBLE
-                    swipeRefresh.isRefreshing = false
-                    progress.visibility = View.GONE
+                    binding.listView.adapter = AlertAdapter(context, it)
+                    binding.swipeRefresh.visibility = View.VISIBLE
+                    binding.swipeRefresh.isRefreshing = false
+                    binding.progressLayout.visibility = View.GONE
                 }, {
                     it.printStackTrace()
-                    swipeRefresh.isRefreshing = false
-                    error.visibility = View.VISIBLE
-                    progress.visibility = View.GONE
+                    binding.swipeRefresh.isRefreshing = false
+                    binding.error?.root?.visibility = View.VISIBLE
+                    binding.progressLayout.visibility = View.GONE
                 })
     }
 
@@ -127,5 +110,12 @@ class CriticalAlertFragment : android.support.v4.app.Fragment() {
         resultSubscription?.let(Subscription::unsubscribe)
         itemSubscription?.let(Subscription::unsubscribe)
         super.onDestroyView()
+    }
+
+    companion object {
+        const val RequestCode = 1
+
+        fun newInstance(): CriticalAlertFragment =
+                CriticalAlertFragment()
     }
 }
