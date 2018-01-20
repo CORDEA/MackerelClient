@@ -3,32 +3,20 @@ package jp.cordea.mackerelclient.fragment
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import jp.cordea.mackerelclient.ListItemDecoration
-import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.HostDetailActivity
 import jp.cordea.mackerelclient.adapter.HostAdapter
+import jp.cordea.mackerelclient.databinding.FragmentHostBinding
 import jp.cordea.mackerelclient.model.DisplayHostState
 import jp.cordea.mackerelclient.viewmodel.HostViewModel
-import kotterknife.bindView
 import rx.Subscription
 import rx.subscriptions.Subscriptions
 
 class HostFragment : android.support.v4.app.Fragment() {
-
-    val progress: View by bindView(R.id.progress)
-
-    val recyclerView: RecyclerView by bindView(R.id.recycler_view)
-
-    val swipeRefresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
-
-    val error: View by bindView(R.id.error)
 
     private var subscription: Subscription? = null
 
@@ -36,36 +24,37 @@ class HostFragment : android.support.v4.app.Fragment() {
         HostViewModel(context!!)
     }
 
+    private lateinit var binding: FragmentHostBinding
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View {
-        val view = inflater.inflate(R.layout.fragment_host, container, false)
-        return view
-    }
+    ): View =
+            FragmentHostBinding.inflate(inflater, container, false).also {
+                binding = it
+            }.root
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
 
         refresh()
 
-        swipeRefresh.setOnRefreshListener {
+        binding.swipeRefresh.setOnRefreshListener {
             refresh()
         }
 
-        val retry: Button = error.findViewById(R.id.retry_button) as Button
-        retry.setOnClickListener {
-            progress.visibility = View.VISIBLE
-            error.visibility = View.GONE
+        binding.error?.retryButton?.setOnClickListener {
+            binding.progressLayout.visibility = View.VISIBLE
+            binding.error?.root?.visibility = View.GONE
             refresh()
         }
     }
 
     private fun refresh() {
-        swipeRefresh.isRefreshing = true
+        binding.swipeRefresh.isRefreshing = true
         subscription?.unsubscribe()
         subscription = getHosts(viewModel.displayHostState)
     }
@@ -78,18 +67,18 @@ class HostFragment : android.support.v4.app.Fragment() {
                     viewModel
                             .getLatestMetrics(it)
                             .subscribe({ it2 ->
-                                recyclerView.adapter = HostAdapter(this, it.hosts, it2.tsdbs)
-                                recyclerView.addItemDecoration(ListItemDecoration(context))
-                                progress.visibility = View.GONE
-                                swipeRefresh.visibility = View.VISIBLE
-                                swipeRefresh.isRefreshing = false
+                                binding.recyclerView.adapter = HostAdapter(this, it.hosts, it2.tsdbs)
+                                binding.recyclerView.addItemDecoration(ListItemDecoration(context))
+                                binding.progressLayout.visibility = View.GONE
+                                binding.swipeRefresh.visibility = View.VISIBLE
+                                binding.swipeRefresh.isRefreshing = false
                             })
                 }, {
                     it.printStackTrace()
-                    swipeRefresh.isRefreshing = false
-                    error.visibility = View.VISIBLE
-                    progress.visibility = View.GONE
-                    swipeRefresh.visibility = View.GONE
+                    binding.swipeRefresh.isRefreshing = false
+                    binding.error?.root?.visibility = View.VISIBLE
+                    binding.progressLayout.visibility = View.GONE
+                    binding.swipeRefresh.visibility = View.GONE
                 })
     }
 
