@@ -1,157 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <FrameLayout
-        android:id="@+id/host_cell"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/common_cell_height"
-        android:foreground="?android:attr/selectableItemBackground">
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_marginLeft="@dimen/setting_cell_padding_side"
-            android:layout_marginRight="@dimen/setting_cell_padding_side"
-            android:layout_gravity="center_vertical"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/host_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:text="@string/setting_host_cell_title"
-                style="@style/ListText.Title"
+            android:layout_height="@dimen/common_cell_height"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/host_cell_detail"
-                android:textSize="16sp"
-                android:maxLines="2"
-                android:textColor="@color/colorSecondaryText"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/setting_cell_padding_side"
+                android:layout_marginRight="@dimen/setting_cell_padding_side"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/ListText.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setting_host_cell_title" />
+
+                <TextView
+                    android:id="@+id/host_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="2"
+                    android:textColor="@color/colorSecondaryText"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <View
+                style="@style/DividerDefault"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+                android:layout_height="@dimen/common_divider_height"
+                android:layout_gravity="bottom" />
+        </FrameLayout>
 
-        <View
-            style="@style/DividerDefault"
-            android:layout_gravity="bottom"
+        <FrameLayout
+            android:id="@+id/init_layout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/common_divider_height" />
-    </FrameLayout>
+            android:layout_height="@dimen/common_cell_height"
+            android:foreground="?android:attr/selectableItemBackground">
 
-    <FrameLayout
-        android:id="@+id/init_cell"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/common_cell_height"
-        android:foreground="?android:attr/selectableItemBackground">
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_marginLeft="@dimen/setting_cell_padding_side"
-            android:layout_marginRight="@dimen/setting_cell_padding_side"
-            android:layout_gravity="center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:text="@string/setting_init_cell_title"
-                style="@style/ListText.Title"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/init_cell_detail"
-                android:text="@string/setting_init_cell_detail"
-                android:textSize="16sp"
-                android:maxLines="2"
-                android:textColor="@color/colorSecondaryText"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/setting_cell_padding_side"
+                android:layout_marginRight="@dimen/setting_cell_padding_side"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/ListText.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setting_init_cell_title" />
+
+                <TextView
+                    android:id="@+id/init_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="2"
+                    android:text="@string/setting_init_cell_detail"
+                    android:textColor="@color/colorSecondaryText"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <View
+                style="@style/DividerDefault"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+                android:layout_height="1dp"
+                android:layout_gravity="bottom" />
+        </FrameLayout>
 
-        <View
-            android:layout_gravity="bottom"
-            style="@style/DividerDefault"
+        <FrameLayout
+            android:id="@+id/license_layout"
             android:layout_width="match_parent"
-            android:layout_height="1dp" />
-    </FrameLayout>
+            android:layout_height="@dimen/common_one_line_cell_height"
+            android:foreground="?android:attr/selectableItemBackground">
 
-    <FrameLayout
-        android:id="@+id/license_cell"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/common_one_line_cell_height"
-        android:foreground="?android:attr/selectableItemBackground">
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_marginLeft="@dimen/setting_cell_padding_side"
-            android:layout_marginRight="@dimen/setting_cell_padding_side"
-            android:layout_gravity="center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:text="@string/setting_license_cell_title"
-                style="@style/ListText.Title"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/setting_cell_padding_side"
+                android:layout_marginRight="@dimen/setting_cell_padding_side"
+                android:orientation="vertical">
 
-        <View
-            android:layout_gravity="bottom"
-            style="@style/DividerDefault"
-            android:layout_width="match_parent"
-            android:layout_height="1dp" />
-    </FrameLayout>
+                <TextView
+                    style="@style/ListText.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setting_license_cell_title" />
+            </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/contributor_cell"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/common_one_line_cell_height"
-        android:foreground="?android:attr/selectableItemBackground">
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_marginLeft="@dimen/setting_cell_padding_side"
-            android:layout_marginRight="@dimen/setting_cell_padding_side"
-            android:layout_gravity="center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:text="@string/setting_contributor_cell_title"
-                style="@style/ListText.Title"
+            <View
+                style="@style/DividerDefault"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+                android:layout_height="1dp"
+                android:layout_gravity="bottom" />
+        </FrameLayout>
 
-        <View
-            android:layout_gravity="bottom"
-            style="@style/DividerDefault"
+        <FrameLayout
+            android:id="@+id/contributor_layout"
             android:layout_width="match_parent"
-            android:layout_height="1dp" />
-    </FrameLayout>
+            android:layout_height="@dimen/common_one_line_cell_height"
+            android:foreground="?android:attr/selectableItemBackground">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/common_cell_height"
-        android:foreground="?android:attr/selectableItemBackground">
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_marginLeft="@dimen/setting_cell_padding_side"
-            android:layout_marginRight="@dimen/setting_cell_padding_side"
-            android:layout_gravity="center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:text="@string/setting_version_cell_title"
-                style="@style/ListText.Title"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/version"
-                android:textSize="16sp"
-                android:maxLines="2"
-                android:textColor="@color/colorSecondaryText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/setting_cell_padding_side"
+                android:layout_marginRight="@dimen/setting_cell_padding_side"
+                android:orientation="vertical">
 
-        <View
-            android:layout_gravity="bottom"
-            style="@style/DividerDefault"
+                <TextView
+                    style="@style/ListText.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setting_contributor_cell_title" />
+            </LinearLayout>
+
+            <View
+                style="@style/DividerDefault"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="bottom" />
+        </FrameLayout>
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp" />
-    </FrameLayout>
-</LinearLayout>
+            android:layout_height="@dimen/common_cell_height"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/setting_cell_padding_side"
+                android:layout_marginRight="@dimen/setting_cell_padding_side"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/ListText.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setting_version_cell_title" />
+
+                <TextView
+                    android:id="@+id/version_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="2"
+                    android:textColor="@color/colorSecondaryText"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <View
+                style="@style/DividerDefault"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="bottom" />
+        </FrameLayout>
+    </LinearLayout>
+</layout>

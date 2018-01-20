@@ -7,15 +7,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import io.realm.Realm
 import jp.cordea.mackerelclient.BuildConfig
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.LicenseActivity
+import jp.cordea.mackerelclient.databinding.FragmentSettingBinding
 import jp.cordea.mackerelclient.model.DisplayHostState
 import jp.cordea.mackerelclient.model.UserMetric
 import jp.cordea.mackerelclient.utils.StatusUtils
-import kotterknife.bindView
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -23,32 +22,18 @@ import rx.schedulers.Schedulers
 
 class SettingFragment : android.support.v4.app.Fragment() {
 
-    val hostCell: View by bindView(R.id.host_cell)
+    private var subscription: Subscription? = null
 
-    val hostCellDetail: TextView by bindView(R.id.host_cell_detail)
-
-    val initCell: View by bindView(R.id.init_cell)
-
-    val licenseCell: View by bindView(R.id.license_cell)
-
-    val contributorCell: View by bindView(R.id.contributor_cell)
-
-    val version: TextView by bindView(R.id.version)
-
-    var subscription: Subscription? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private lateinit var binding: FragmentSettingBinding
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View {
-        val view = inflater.inflate(R.layout.fragment_setting, container, false)
-        return view
-    }
+    ): View =
+            FragmentSettingBinding.inflate(inflater, container, false).also {
+                binding = it
+            }.root
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -79,22 +64,22 @@ class SettingFragment : android.support.v4.app.Fragment() {
                     addEvents()
                 }, {})
 
-        licenseCell.setOnClickListener {
+        binding.licenseLayout.setOnClickListener {
             val intent = Intent(context, LicenseActivity::class.java)
             startActivity(intent)
         }
 
-        contributorCell.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(contributorUrl))
+        binding.contributorLayout.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(ContributorsUrl))
             startActivity(intent)
         }
 
-        version.text = BuildConfig.VERSION_NAME
+        binding.versionTextView.text = BuildConfig.VERSION_NAME
     }
 
     private fun addEvents() {
         var realm: Realm
-        hostCell.setOnClickListener {
+        binding.hostLayout.setOnClickListener {
             realm = Realm.getDefaultInstance()
             val items = realm.copyFromRealm(realm.where(DisplayHostState::class.java).findAll())
             realm.close()
@@ -135,7 +120,7 @@ class SettingFragment : android.support.v4.app.Fragment() {
                     }.show()
         }
 
-        initCell.setOnClickListener {
+        binding.initLayout.setOnClickListener {
             AlertDialog
                     .Builder(context)
                     .setMessage(R.string.setting_init_dialog_title)
@@ -159,7 +144,7 @@ class SettingFragment : android.support.v4.app.Fragment() {
         } else {
             realm = r
         }
-        hostCellDetail.text = realm.where(DisplayHostState::class.java).findAll()
+        binding.hostTextView.text = realm.where(DisplayHostState::class.java).findAll()
                 .filter { it.isDisplay!! }
                 .map { it.name }
                 .map { StatusUtils.requestNameToString(it) }
@@ -175,11 +160,10 @@ class SettingFragment : android.support.v4.app.Fragment() {
     }
 
     companion object {
-        private val contributorUrl = "https://github.com/CORDEA/MackerelClient/graphs/contributors"
 
-        fun newInstance(): SettingFragment {
-            val fragment = SettingFragment()
-            return fragment
-        }
+        private const val ContributorsUrl = "https://github.com/CORDEA/MackerelClient/graphs/contributors"
+
+        fun newInstance(): SettingFragment =
+                SettingFragment()
     }
 }
