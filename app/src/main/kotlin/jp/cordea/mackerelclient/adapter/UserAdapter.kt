@@ -25,7 +25,11 @@ class UserAdapter(
 
     val onUserDeleteSucceeded: RxEvent<Boolean> = RxEvent.create<Boolean>()
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
+    override fun getView(
+            position: Int,
+            convertView: View?,
+            parent: ViewGroup?
+    ): View? {
         var view = convertView
         val viewHolder: ViewHolder
         if (view == null) {
@@ -41,8 +45,10 @@ class UserAdapter(
             viewModel.onUserDeleteSucceeded = {
                 onUserDeleteSucceeded.post(true)
             }
-            GravatarUtils.getGravatarImage(items[position].email,
-                    context.resources.getDimensionPixelSize(R.dimen.user_thumbnail_size_small))?.let { url ->
+            GravatarUtils.getGravatarImage(
+                    items[position].email,
+                    context.resources.getDimensionPixelSize(R.dimen.user_thumbnail_size_small)
+            )?.let { url ->
                 Picasso.with(context)
                         .load(url)
                         .transform(PicassoCircularTransform())
