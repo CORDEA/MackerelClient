@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.TextView
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.response.Alert
+import jp.cordea.mackerelclient.databinding.ListItemAlertBinding
 
 class AlertAdapter(context: Context, val items: List<Alert>) : ArrayAdapter<Alert>(context, R.layout.list_item_alert) {
 
@@ -32,7 +32,7 @@ class AlertAdapter(context: Context, val items: List<Alert>) : ArrayAdapter<Aler
 
         val item = getItem(position)
 
-        viewHolder.apply {
+        viewHolder.binding.run {
             if (!item.type.isBlank() || !item.status.isBlank()) {
                 detailTextView.text = when {
                     item.type.isBlank() -> item.status
@@ -49,9 +49,6 @@ class AlertAdapter(context: Context, val items: List<Alert>) : ArrayAdapter<Aler
 
     class ViewHolder(view: View) {
 
-        val nameTextView = view.findViewById(R.id.name) as TextView
-
-        val detailTextView = view.findViewById(R.id.detail) as TextView
-
+        val binding: ListItemAlertBinding = ListItemAlertBinding.bind(view)
     }
 }
