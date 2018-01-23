@@ -9,15 +9,19 @@ import android.widget.TextView
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.response.Service
 
-class ServiceAdapter(context: Context, val items: List<Service>) : ArrayAdapter<Service>(context, R.layout.list_item_service) {
+class ServiceAdapter(
+        context: Context,
+        val items: List<Service>
+) : ArrayAdapter<Service>(
+        context,
+        R.layout.list_item_service
+) {
 
-    override fun getItem(position: Int): Service? {
-        return items[position]
-    }
+    override fun getItem(position: Int): Service =
+            items[position]
 
-    override fun getCount(): Int {
-        return items.size
-    }
+    override fun getCount(): Int =
+            items.size
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         var view = convertView
@@ -31,15 +35,19 @@ class ServiceAdapter(context: Context, val items: List<Service>) : ArrayAdapter<
         }
 
         val item = getItem(position)
-        item ?: return convertView
         viewHolder.apply {
             nameTextView.text = item.name
             roleTextView.text =
                     item.roles.size.let {
-                        if (it <= 1) context.resources.getString(R.string.format_role).format(it)
-                        else
-                            if (it > 99) context.resources.getString(R.string.format_roles_ex)
-                            else context.resources.getString(R.string.format_roles).format(it)
+                        if (it <= 1) {
+                            context.resources.getString(R.string.format_role).format(it)
+                        } else {
+                            if (it > 99) {
+                                context.resources.getString(R.string.format_roles_ex)
+                            } else {
+                                context.resources.getString(R.string.format_roles).format(it)
+                            }
+                        }
                     }
             detailTextView.text = item.memo
         }
