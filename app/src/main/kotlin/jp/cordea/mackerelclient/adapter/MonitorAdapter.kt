@@ -5,11 +5,11 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.MonitorDetailActivity
 import jp.cordea.mackerelclient.api.response.Monitor
-import kotterknife.bindView
+import jp.cordea.mackerelclient.databinding.ListItemMonitorBinding
+import jp.cordea.mackerelclient.databinding.ListItemMonitorSectionBinding
 
 class MonitorAdapter(
         val fragment: Fragment,
@@ -18,21 +18,21 @@ class MonitorAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         val context = fragment.context ?: return
-        (holder as? ViewHolder)?.run {
+        (holder as? ViewHolder)?.binding?.run {
             items[position].second?.let { item ->
-                cell.setOnClickListener {
+                root.setOnClickListener {
                     val intent = MonitorDetailActivity.createIntent(context, item)
                     fragment.startActivityForResult(intent, MonitorDetailActivity.RequestCode)
                 }
                 if (!item.name.isNullOrBlank()) {
-                    name.text = item.name
+                    nameTextView.text = item.name
                 }
-                id.text = item.id
+                idTextView.text = item.id
                 return
             }
         }
-        (holder as? SectionViewHolder)?.run {
-            title.text = items[position].first
+        (holder as? SectionViewHolder)?.binding?.run {
+            titleTextView.text = items[position].first
         }
     }
 
@@ -55,15 +55,13 @@ class MonitorAdapter(
         return items.size
     }
 
-    private class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    private class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        val cell: View by bindView(R.id.cell)
-        val name: TextView by bindView(R.id.name)
-        val id: TextView by bindView(R.id.id)
+        val binding: ListItemMonitorBinding = ListItemMonitorBinding.bind(view)
     }
 
-    private class SectionViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    private class SectionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        val title: TextView by bindView(R.id.title)
+        val binding: ListItemMonitorSectionBinding = ListItemMonitorSectionBinding.bind(view)
     }
 }

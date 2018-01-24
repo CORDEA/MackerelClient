@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/cell"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/common_cell_height"
-    android:paddingRight="@dimen/list_item_monitor_cell_padding_side"
-    android:paddingLeft="@dimen/list_item_monitor_cell_padding_side"
-    android:foreground="?android:attr/selectableItemBackground">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
-        android:layout_marginLeft="@dimen/list_item_monitor_cell_content_margin_left"
-        android:gravity="center_vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_cell_height"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:paddingLeft="@dimen/list_item_monitor_cell_padding_side"
+        android:paddingRight="@dimen/list_item_monitor_cell_padding_side">
 
-        <TextView
-            android:id="@+id/name"
-            android:text="@string/na_text"
-            style="@style/ListText.Title"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/list_item_monitor_cell_content_margin_left"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/id"
-            style="@style/ListText.Detail"
-            android:text="@string/na_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-</FrameLayout>
+            <TextView
+                android:id="@+id/name_text_view"
+                style="@style/ListText.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/na_text" />
+
+            <TextView
+                android:id="@+id/id_text_view"
+                style="@style/ListText.Detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/na_text" />
+        </LinearLayout>
+    </FrameLayout>
+</layout>
