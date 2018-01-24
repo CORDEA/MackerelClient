@@ -1,48 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="@dimen/common_cell_height"
-    android:layout_width="match_parent" >
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <RelativeLayout
-        android:layout_marginLeft="@dimen/list_item_alert_margin_side"
-        android:layout_marginRight="@dimen/list_item_alert_margin_side"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="@dimen/common_cell_height">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_centerVertical="true"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent" >
-
-            <jp.cordea.mackerelclient.view.CharCircleView
-                android:id="@+id/status"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="@dimen/list_item_alert_char_circle_margin_right"
-                android:layout_width="@dimen/list_item_alert_char_circle_size"
-                android:layout_height="@dimen/list_item_alert_char_circle_size" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/list_item_alert_margin_side"
+            android:layout_marginRight="@dimen/list_item_alert_margin_side">
 
             <LinearLayout
-                android:gravity="center_vertical"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:layout_centerVertical="true"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/name"
-                    style="@style/ListText.Title"
-                    android:text="@string/na_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                <jp.cordea.mackerelclient.view.CharCircleView
+                    android:id="@+id/status_view"
+                    android:layout_width="@dimen/list_item_alert_char_circle_size"
+                    android:layout_height="@dimen/list_item_alert_char_circle_size"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/list_item_alert_char_circle_margin_right" />
 
-                <TextView
-                    android:id="@+id/detail"
-                    style="@style/ListText.Detail"
-                    android:text="@string/na_text"
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/name_text_view"
+                        style="@style/ListText.Title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/na_text" />
+
+                    <TextView
+                        android:id="@+id/detail_text_view"
+                        style="@style/ListText.Detail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/na_text" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-    </RelativeLayout>
-</FrameLayout>
+        </RelativeLayout>
+    </FrameLayout>
+</layout>
