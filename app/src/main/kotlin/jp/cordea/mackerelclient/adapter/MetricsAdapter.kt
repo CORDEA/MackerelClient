@@ -6,9 +6,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
-import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.LineData
 import io.realm.Realm
@@ -16,9 +13,9 @@ import jp.cordea.mackerelclient.MemoryValueFormatter
 import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.MetricsEditActivity
+import jp.cordea.mackerelclient.databinding.ListItemMetricsChartBinding
 import jp.cordea.mackerelclient.model.MetricsParameter
 import jp.cordea.mackerelclient.model.UserMetric
-import kotterknife.bindView
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
@@ -36,20 +33,20 @@ class MetricsAdapter(
     private var drawComplete: Int = 0
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
-        (holder as? ViewHolder)?.let {
+        (holder as? ViewHolder)?.binding?.let {
             if (items[position].label.isEmpty()) {
-                it.title.visibility = View.GONE
+                it.titleTextView.visibility = View.GONE
             } else {
-                it.title.text = items[position].label
+                it.titleTextView.text = items[position].label
             }
             val lineData = items[position].data
             if (lineData == null) {
                 if (items[position].isError) {
-                    it.progress.visibility = View.GONE
-                    it.error.visibility = View.VISIBLE
+                    it.progressLayout.visibility = View.GONE
+                    it.error.root.visibility = View.VISIBLE
                 }
             } else {
-                it.chart.apply {
+                it.lineChart.apply {
                     data = lineData
                     setDescription("")
                     xAxis.position = XAxis.XAxisPosition.BOTTOM
@@ -72,20 +69,20 @@ class MetricsAdapter(
                     axisRight.setLabelCount(3, false)
                     axisLeft.setLabelCount(3, false)
                     visibility = View.VISIBLE
-                    it.progress.visibility = View.GONE
+                    it.progressLayout.visibility = View.GONE
                     invalidate()
                 }
                 ++visibles
                 canRefresh = visibles == itemCount
             }
 
-            it.edit.setOnClickListener {
+            it.editButton.setOnClickListener {
                 val intent = MetricsEditActivity
                         .createIntent(activity, type, id, items[position].id)
                 activity.startActivityForResult(intent, MetricsEditActivity.RequestCode)
             }
 
-            it.delete.setOnClickListener {
+            it.deleteButton.setOnClickListener {
                 AlertDialog
                         .Builder(activity)
                         .setMessage(R.string.metrics_card_delete_dialog_title)
@@ -138,17 +135,6 @@ class MetricsAdapter(
 
     private class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        val progress: View by bindView(R.id.progress)
-
-        val chart: LineChart by bindView(R.id.chart)
-
-        val title: TextView by bindView(R.id.title)
-
-        val delete: Button by bindView(R.id.delete)
-
-        val edit: Button by bindView(R.id.edit)
-
-        val error: View by bindView(R.id.error)
-
+        val binding: ListItemMetricsChartBinding = ListItemMetricsChartBinding.bind(view)
     }
 }

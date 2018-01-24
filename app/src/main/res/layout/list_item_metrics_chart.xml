@@ -1,92 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/CardDefault"
-    app:cardBackgroundColor="@android:color/white"
-    android:layout_marginBottom="@dimen/card_margin"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <android.support.v7.widget.CardView
+        style="@style/CardDefault"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/card_metrics_chart_height">
-            <FrameLayout
-                android:id="@+id/progress"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ProgressBar
-                    style="?android:attr/progressBarStyleLarge"
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </FrameLayout>
-
-            <com.github.mikephil.charting.charts.LineChart
-                android:id="@+id/chart"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <include
-                android:id="@+id/error"
-                layout="@layout/content_error" />
-        </FrameLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/card_margin"
+        app:cardBackgroundColor="@android:color/white">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <View
-                style="@style/DividerDefault"
-                android:layout_marginRight="@dimen/card_metrics_content_margin"
-                android:layout_marginLeft="@dimen/card_metrics_content_margin"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/common_divider_height" />
+                android:layout_height="@dimen/card_metrics_chart_height">
 
-            <TextView
-                android:id="@+id/title"
-                android:textSize="24sp"
-                android:textColor="@color/colorPrimaryText"
-                android:layout_marginTop="@dimen/card_metrics_title_margin_top"
-                android:layout_marginRight="@dimen/card_metrics_content_margin"
-                android:layout_marginLeft="@dimen/card_metrics_content_margin"
-                android:layout_marginBottom="@dimen/card_metrics_content_margin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <FrameLayout
+                    android:id="@+id/progress_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ProgressBar
+                        style="?android:attr/progressBarStyleLarge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center" />
+
+                </FrameLayout>
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/line_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+
+                <include
+                    android:id="@+id/error"
+                    layout="@layout/content_error" />
+            </FrameLayout>
 
             <LinearLayout
-                android:layout_marginBottom="@dimen/card_metrics_button_bar_margin_bottom"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <Button
-                    style="?attr/buttonBarButtonStyle"
-                    android:id="@+id/edit"
-                    android:text="@string/edit"
-                    android:layout_marginLeft="@dimen/card_metrics_button_bar_button_margin_left"
-                    android:minWidth="@dimen/card_metrics_button_bar_button_min_width"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                <View
+                    style="@style/DividerDefault"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/common_divider_height"
+                    android:layout_marginLeft="@dimen/card_metrics_content_margin"
+                    android:layout_marginRight="@dimen/card_metrics_content_margin" />
 
-                <Button
-                    style="?attr/buttonBarButtonStyle"
-                    android:id="@+id/delete"
-                    android:text="@string/delete"
-                    android:minWidth="@dimen/card_metrics_button_bar_button_min_width"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/title_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/card_metrics_content_margin"
+                    android:layout_marginLeft="@dimen/card_metrics_content_margin"
+                    android:layout_marginRight="@dimen/card_metrics_content_margin"
+                    android:layout_marginTop="@dimen/card_metrics_title_margin_top"
+                    android:textColor="@color/colorPrimaryText"
+                    android:textSize="24sp" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/card_metrics_button_bar_margin_bottom"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/edit_button"
+                        style="?attr/buttonBarButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/card_metrics_button_bar_button_margin_left"
+                        android:minWidth="@dimen/card_metrics_button_bar_button_min_width"
+                        android:text="@string/edit" />
+
+                    <Button
+                        android:id="@+id/delete_button"
+                        style="?attr/buttonBarButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="@dimen/card_metrics_button_bar_button_min_width"
+                        android:text="@string/delete" />
+
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</android.support.v7.widget.CardView>
+    </android.support.v7.widget.CardView>
+</layout>
