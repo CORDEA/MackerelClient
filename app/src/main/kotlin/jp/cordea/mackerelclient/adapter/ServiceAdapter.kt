@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.TextView
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.response.Service
+import jp.cordea.mackerelclient.databinding.ListItemServiceBinding
 
 class ServiceAdapter(
         context: Context,
@@ -35,7 +35,7 @@ class ServiceAdapter(
         }
 
         val item = getItem(position)
-        viewHolder.apply {
+        viewHolder.binding.apply {
             nameTextView.text = item.name
             roleTextView.text =
                     item.roles.size.let {
@@ -57,11 +57,6 @@ class ServiceAdapter(
 
     class ViewHolder(view: View) {
 
-        val nameTextView = view.findViewById(R.id.name) as TextView
-
-        val detailTextView = view.findViewById(R.id.detail) as TextView
-
-        val roleTextView = view.findViewById(R.id.role) as TextView
-
+        val binding: ListItemServiceBinding = ListItemServiceBinding.bind(view)
     }
 }
