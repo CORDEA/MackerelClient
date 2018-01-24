@@ -43,7 +43,7 @@ class MetricsAdapter(
             if (lineData == null) {
                 if (items[position].isError) {
                     it.progressLayout.visibility = View.GONE
-                    it.error.root.visibility = View.VISIBLE
+                    it.error?.root?.visibility = View.VISIBLE
                 }
             } else {
                 it.lineChart.apply {
@@ -51,12 +51,7 @@ class MetricsAdapter(
                     setDescription("")
                     xAxis.position = XAxis.XAxisPosition.BOTTOM
 
-                    val needFormat = lineData.dataSets
-                            .filter {
-                                "memory" == it.label.split(".")[0]
-                            }
-                            .size == lineData.dataSets.size
-                    if (needFormat) {
+                    if (data.needFormat) {
                         val format = context.resources.getString(R.string.metrics_data_gb_format)
                         data.dataSets[0].label = format.format(data.dataSets[0].label)
                         if (data.dataSets.size > 1) {
@@ -83,25 +78,7 @@ class MetricsAdapter(
             }
 
             it.deleteButton.setOnClickListener {
-                AlertDialog
-                        .Builder(activity)
-                        .setMessage(R.string.metrics_card_delete_dialog_title)
-                        .setPositiveButton(R.string.button_positive, { _, _ ->
-                            lock.withLock {
-                                val realm = Realm.getDefaultInstance()
-                                realm.executeTransaction {
-                                    realm.where(UserMetric::class.java)
-                                            .equalTo("id", items[position].id)
-                                            .findFirst()
-                                            .deleteFromRealm()
-                                }
-                                realm.close()
-                                items.removeAt(position)
-                                notifyItemRemoved(position)
-                                notifyItemRangeRemoved(position, items.size)
-                                --drawComplete
-                            }
-                        }).show()
+                showDeleteConfirmDialog(position)
             }
         }
     }
@@ -132,6 +109,36 @@ class MetricsAdapter(
         }
         return drawComplete
     }
+
+    private fun showDeleteConfirmDialog(position: Int) {
+        AlertDialog
+                .Builder(activity)
+                .setMessage(R.string.metrics_card_delete_dialog_title)
+                .setPositiveButton(R.string.button_positive, { _, _ ->
+                    lock.withLock {
+                        val realm = Realm.getDefaultInstance()
+                        realm.executeTransaction {
+                            realm.where(UserMetric::class.java)
+                                    .equalTo("id", items[position].id)
+                                    .findFirst()
+                                    .deleteFromRealm()
+                        }
+                        realm.close()
+                        items.removeAt(position)
+                        notifyItemRemoved(position)
+                        notifyItemRangeRemoved(position, items.size)
+                        --drawComplete
+                    }
+                }).show()
+    }
+
+    private val LineData.needFormat: Boolean
+        get() =
+            this.dataSets
+                    .filter {
+                        "memory" == it.label.split(".")[0]
+                    }
+                    .size == this.dataSets.size
 
     private class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
