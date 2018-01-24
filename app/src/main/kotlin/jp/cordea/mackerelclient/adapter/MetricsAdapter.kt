@@ -60,9 +60,10 @@ class MetricsAdapter(
                             }
                             .size == lineData.dataSets.size
                     if (needFormat) {
-                        data.dataSets[0].label = data.dataSets[0].label + " (GB)"
+                        val format = context.resources.getString(R.string.metrics_data_gb_format)
+                        data.dataSets[0].label = format.format(data.dataSets[0].label)
                         if (data.dataSets.size > 1) {
-                            data.dataSets[1].label = data.dataSets[1].label + " (GB)"
+                            data.dataSets[1].label = format.format(data.dataSets[1].label)
                         }
                         axisRight.valueFormatter = MemoryValueFormatter()
                         axisLeft.valueFormatter = MemoryValueFormatter()

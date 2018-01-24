@@ -137,6 +137,8 @@
     <string name="metrics_edit_metric0_hint">cpu.user.percentage</string>
     <string name="metrics_edit_metric1_hint">loadavg5 (optional)</string>
 
+    <string name="metrics_data_gb_format">%s (GB)</string>
+
     <string name="network_error_message">取得できませんでした</string>
 
     <string name="anonymous">Anonymous</string>
