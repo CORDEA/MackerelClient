@@ -19,17 +19,25 @@ import jp.cordea.mackerelclient.activity.MetricsEditActivity
 import jp.cordea.mackerelclient.model.MetricsParameter
 import jp.cordea.mackerelclient.model.UserMetric
 import kotterknife.bindView
+import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
-class MetricsAdapter(val activity: Activity, val items: MutableList<MetricsParameter>, val type: MetricsType, val id: String, var visibles: Int = 0, var canRefresh: Boolean = false) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MetricsAdapter(
+        val activity: Activity,
+        val items: MutableList<MetricsParameter>,
+        val type: MetricsType,
+        val id: String,
+        private var visibles: Int = 0,
+        private var canRefresh: Boolean = false
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val lock = java.util.concurrent.locks.ReentrantLock()
+    private val lock = ReentrantLock()
 
     private var drawComplete: Int = 0
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         (holder as? ViewHolder)?.let {
-            if (items[position].label.isNullOrEmpty()) {
+            if (items[position].label.isEmpty()) {
                 it.title.visibility = View.GONE
             } else {
                 it.title.text = items[position].label
@@ -47,7 +55,10 @@ class MetricsAdapter(val activity: Activity, val items: MutableList<MetricsParam
                     xAxis.position = XAxis.XAxisPosition.BOTTOM
 
                     val needFormat = lineData.dataSets
-                            .filter { "memory" == it.label.split(".")[0] }.size == lineData.dataSets.size
+                            .filter {
+                                "memory" == it.label.split(".")[0]
+                            }
+                            .size == lineData.dataSets.size
                     if (needFormat) {
                         data.dataSets[0].label = data.dataSets[0].label + " (GB)"
                         if (data.dataSets.size > 1) {
@@ -68,7 +79,8 @@ class MetricsAdapter(val activity: Activity, val items: MutableList<MetricsParam
             }
 
             it.edit.setOnClickListener {
-                val intent = MetricsEditActivity.createIntent(activity, type, id, items[position].id)
+                val intent = MetricsEditActivity
+                        .createIntent(activity, type, id, items[position].id)
                 activity.startActivityForResult(intent, MetricsEditActivity.RequestCode)
             }
 
@@ -80,7 +92,10 @@ class MetricsAdapter(val activity: Activity, val items: MutableList<MetricsParam
                             lock.withLock {
                                 val realm = Realm.getDefaultInstance()
                                 realm.executeTransaction {
-                                    realm.where(UserMetric::class.java).equalTo("id", items[position].id).findFirst().deleteFromRealm()
+                                    realm.where(UserMetric::class.java)
+                                            .equalTo("id", items[position].id)
+                                            .findFirst()
+                                            .deleteFromRealm()
                                 }
                                 realm.close()
                                 items.removeAt(position)
@@ -93,21 +108,26 @@ class MetricsAdapter(val activity: Activity, val items: MutableList<MetricsParam
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder? {
-        val view = LayoutInflater.from(activity).inflate(R.layout.list_item_metrics_chart, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
+        val view = LayoutInflater.from(activity)
+                .inflate(R.layout.list_item_metrics_chart, parent, false)
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return items.size
-    }
+    override fun getItemCount(): Int =
+            items.size
 
     fun refreshRecyclerViewItem(item: Pair<Int, LineData?>, drawCompleteMetrics: Int): Int {
         drawComplete = drawCompleteMetrics
         lock.withLock {
             val idx = items.map { it.id }.indexOf(item.first)
             if (idx != -1 && idx < items.size) {
-                items[idx] = MetricsParameter(item.first, item.second, items[idx].label, item.second == null)
+                items[idx] = MetricsParameter(
+                        item.first,
+                        item.second,
+                        items[idx].label,
+                        item.second == null
+                )
                 notifyDataSetChanged()
                 return ++drawComplete
             }
