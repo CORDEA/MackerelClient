@@ -35,8 +35,8 @@ class MetricsEditActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        id = intent.getIntExtra(UserMetricKey, -1)
-        type = MetricsType.valueOf(intent.getStringExtra(TypeKey))
+        id = intent.getIntExtra(USER_METRIC_KEY, -1)
+        type = MetricsType.valueOf(intent.getStringExtra(TYPE_KEY))
         if (id != -1) {
             val metric = viewModel.getMetric(id)
             contentBinding.labelEditText.setText(metric.label)
@@ -97,20 +97,20 @@ class MetricsEditActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.storeMetric(id, intent.getStringExtra(IdKey), type!!.name,
+        viewModel.storeMetric(id, intent.getStringExtra(ID_KEY), type!!.name,
                 contentBinding.labelEditText.text.toString(), metricFirst, metricSecond)
         return true
     }
 
     companion object {
 
-        const val RequestCode = 0
+        const val REQUEST_CODE = 0
 
-        private const val IdKey = "IdKey"
+        private const val ID_KEY = "IdKey"
 
-        private const val UserMetricKey = "UserMetricKey"
+        private const val USER_METRIC_KEY = "UserMetricKey"
 
-        private const val TypeKey = "TypeKey"
+        private const val TYPE_KEY = "TypeKey"
 
         fun createIntent(
                 context: Context,
@@ -120,10 +120,10 @@ class MetricsEditActivity : AppCompatActivity() {
         ): Intent {
             val intent = Intent(context, MetricsEditActivity::class.java)
             metricId?.let {
-                intent.putExtra(UserMetricKey, metricId)
+                intent.putExtra(USER_METRIC_KEY, metricId)
             }
-            intent.putExtra(IdKey, id)
-            intent.putExtra(TypeKey, type.name)
+            intent.putExtra(ID_KEY, id)
+            intent.putExtra(TYPE_KEY, type.name)
             return intent
         }
     }

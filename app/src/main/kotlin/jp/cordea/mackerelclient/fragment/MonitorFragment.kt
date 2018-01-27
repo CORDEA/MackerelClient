@@ -86,7 +86,7 @@ class MonitorFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == MonitorDetailActivity.RequestCode) {
+        if (requestCode == MonitorDetailActivity.REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 refresh()
             }

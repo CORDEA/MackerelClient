@@ -7,8 +7,6 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import jp.cordea.mackerelclient.ListItemDecoration
@@ -18,7 +16,6 @@ import jp.cordea.mackerelclient.api.response.Monitor
 import jp.cordea.mackerelclient.databinding.ActivityDetailCommonBinding
 import jp.cordea.mackerelclient.fragment.MonitorSettingDeleteDialogFragment
 import jp.cordea.mackerelclient.viewmodel.MonitorDetailViewModel
-import kotterknife.bindView
 import rx.Subscription
 
 class MonitorDetailActivity : AppCompatActivity() {
@@ -39,7 +36,7 @@ class MonitorDetailActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val monitor = intent.getSerializableExtra(MonitorKey) as Monitor
+        val monitor = intent.getSerializableExtra(MONITOR_KEY) as Monitor
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = DetailCommonAdapter(this, viewModel.getDisplayData(monitor))
@@ -82,13 +79,13 @@ class MonitorDetailActivity : AppCompatActivity() {
 
     companion object {
 
-        const val RequestCode = 0
+        const val REQUEST_CODE = 0
 
-        private const val MonitorKey = "MonitorKey"
+        private const val MONITOR_KEY = "MONITOR_KEY"
 
         fun createIntent(context: Context, monitor: Monitor): Intent =
                 Intent(context, MonitorDetailActivity::class.java).apply {
-                    putExtra(MonitorKey, monitor)
+                    putExtra(MONITOR_KEY, monitor)
                 }
     }
 }

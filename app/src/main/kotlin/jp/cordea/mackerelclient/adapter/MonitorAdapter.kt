@@ -22,7 +22,7 @@ class MonitorAdapter(
             items[position].second?.let { item ->
                 root.setOnClickListener {
                     val intent = MonitorDetailActivity.createIntent(context, item)
-                    fragment.startActivityForResult(intent, MonitorDetailActivity.RequestCode)
+                    fragment.startActivityForResult(intent, MonitorDetailActivity.REQUEST_CODE)
                 }
                 if (!item.name.isNullOrBlank()) {
                     nameTextView.text = item.name

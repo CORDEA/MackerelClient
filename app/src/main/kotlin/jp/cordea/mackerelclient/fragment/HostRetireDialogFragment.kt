@@ -18,7 +18,7 @@ class HostRetireDialogFragment : DialogFragment() {
     }
 
     private val host: Host
-        get() = arguments!!.getSerializable(HostKey) as Host
+        get() = arguments!!.getSerializable(HOST_KEY) as Host
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val context = context!!
@@ -52,12 +52,12 @@ class HostRetireDialogFragment : DialogFragment() {
 
     companion object {
 
-        private const val HostKey = "HostKey"
+        private const val HOST_KEY = "HostKey"
 
         fun newInstance(host: Host): HostRetireDialogFragment =
                 HostRetireDialogFragment().apply {
                     arguments = Bundle().apply {
-                        putSerializable(HostKey, host)
+                        putSerializable(HOST_KEY, host)
                     }
                 }
     }

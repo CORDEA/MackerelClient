@@ -12,7 +12,7 @@ class McApplication : Application() {
         Realm.init(this)
 
         Realm.setDefaultConfiguration(RealmConfiguration.Builder()
-                .schemaVersion(SchemaVersion)
+                .schemaVersion(SCHEMA_VERSION)
                 .migration { dynamicRealm, old, _ ->
                     val scheme = dynamicRealm.schema
                     var oldVersion = old
@@ -31,7 +31,7 @@ class McApplication : Application() {
     }
 
     companion object {
-        private const val SchemaVersion = 1L
+        private const val SCHEMA_VERSION = 1L
     }
 
 }

@@ -15,13 +15,6 @@ import rx.subscriptions.Subscriptions
 
 class OtherAlertFragment : Fragment() {
 
-    companion object {
-        const val RequestCode = 0
-
-        fun newInstance(): OtherAlertFragment =
-                OtherAlertFragment()
-    }
-
     private val viewModel by lazy {
         AlertViewModel(context!!)
     }
@@ -75,7 +68,7 @@ class OtherAlertFragment : Fragment() {
         binding.listView.setOnItemClickListener { _, _, i, _ ->
             val intent = AlertDetailActivity
                     .createIntent(context, binding.listView.adapter.getItem(i) as Alert)
-            parentFragment.startActivityForResult(intent, OtherAlertFragment.RequestCode)
+            parentFragment.startActivityForResult(intent, OtherAlertFragment.REQUEST_CODE)
         }
 
         resultSubscription?.unsubscribe()
@@ -118,5 +111,13 @@ class OtherAlertFragment : Fragment() {
         resultSubscription?.let(Subscription::unsubscribe)
         itemSubscription?.let(Subscription::unsubscribe)
         super.onDestroyView()
+    }
+
+    companion object {
+
+        const val REQUEST_CODE = 0
+
+        fun newInstance(): OtherAlertFragment =
+                OtherAlertFragment()
     }
 }

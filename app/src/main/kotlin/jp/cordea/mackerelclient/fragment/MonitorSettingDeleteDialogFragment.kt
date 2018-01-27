@@ -18,7 +18,7 @@ class MonitorSettingDeleteDialogFragment : DialogFragment() {
     }
 
     private val monitor: Monitor
-        get() = arguments!!.getSerializable(MonitorKey) as Monitor
+        get() = arguments!!.getSerializable(MONITOR_KEY) as Monitor
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val context = context!!
@@ -55,12 +55,12 @@ class MonitorSettingDeleteDialogFragment : DialogFragment() {
 
     companion object {
 
-        private const val MonitorKey = "MonitorKey"
+        private const val MONITOR_KEY = "MonitorKey"
 
         fun newInstance(monitor: Monitor): MonitorSettingDeleteDialogFragment =
                 MonitorSettingDeleteDialogFragment().apply {
                     arguments = Bundle().apply {
-                        putSerializable(MonitorKey, monitor)
+                        putSerializable(MONITOR_KEY, monitor)
                     }
                 }
     }

@@ -16,15 +16,16 @@ import rx.Observable
 import rx.schedulers.Schedulers
 
 object MackerelApiClient {
-    private const val baseUrl = "https://mackerel.io"
 
-    private val gson = GsonBuilder()
+    private const val BASE_URL = "https://mackerel.io"
+
+    private val GSON = GsonBuilder()
             .registerTypeAdapter(Tsdbs::class.java, TsdbsDeserializer())
             .create()
 
-    private val builder = Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create(gson))
+    private val BUILDER = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create(GSON))
             .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
 
     private fun <T> getService(
@@ -58,7 +59,7 @@ object MackerelApiClient {
 
         val httpClient = httpClientBuilder.build()
 
-        return builder
+        return BUILDER
                 .client(httpClient)
                 .build()
                 .create(service)

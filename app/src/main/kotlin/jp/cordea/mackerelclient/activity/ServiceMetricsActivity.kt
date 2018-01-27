@@ -51,7 +51,7 @@ class ServiceMetricsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         contentBinding.recyclerView.layoutManager = LinearLayoutManager(this)
-        val serviceName = intent.getStringExtra(ServiceNameKey)
+        val serviceName = intent.getStringExtra(SERVICE_NAME_KEY)
 
         contentBinding.swipeRefresh.setOnRefreshListener {
             if (enableRefresh) {
@@ -128,7 +128,7 @@ class ServiceMetricsActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == MetricsEditActivity.RequestCode) {
+        if (requestCode == MetricsEditActivity.REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 needRefresh = true
             }
@@ -141,7 +141,7 @@ class ServiceMetricsActivity : AppCompatActivity() {
             R.id.action_add -> {
                 val intent = MetricsEditActivity
                         .createIntent(this, MetricsType.SERVICE, serviceName!!)
-                startActivityForResult(intent, MetricsEditActivity.RequestCode)
+                startActivityForResult(intent, MetricsEditActivity.REQUEST_CODE)
             }
         }
         return super.onOptionsItemSelected(item)
@@ -149,11 +149,11 @@ class ServiceMetricsActivity : AppCompatActivity() {
 
     companion object {
 
-        private const val ServiceNameKey = "ServiceNameKey"
+        private const val SERVICE_NAME_KEY = "ServiceNameKey"
 
         fun createIntent(context: Context, name: String): Intent =
                 Intent(context, ServiceMetricsActivity::class.java).apply {
-                    putExtra(ServiceMetricsActivity.ServiceNameKey, name)
+                    putExtra(ServiceMetricsActivity.SERVICE_NAME_KEY, name)
                 }
     }
 

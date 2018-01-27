@@ -71,7 +71,7 @@ class SettingFragment : Fragment() {
         }
 
         binding.contributorLayout.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(ContributorsUrl))
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(CONTRIBUTORS_URL))
             startActivity(intent)
         }
 
@@ -162,7 +162,8 @@ class SettingFragment : Fragment() {
 
     companion object {
 
-        private const val ContributorsUrl = "https://github.com/CORDEA/MackerelClient/graphs/contributors"
+        private const val CONTRIBUTORS_URL =
+                "https://github.com/CORDEA/MackerelClient/graphs/contributors"
 
         fun newInstance(): SettingFragment =
                 SettingFragment()

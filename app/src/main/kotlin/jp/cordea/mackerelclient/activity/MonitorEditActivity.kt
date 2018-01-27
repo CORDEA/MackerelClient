@@ -36,7 +36,7 @@ class MonitorEditActivity : AppCompatActivity() {
 
         contentBinding = binding.content ?: return
         val context: Context = this
-        val monitor = intent.getSerializableExtra(MonitorKey) as Monitor
+        val monitor = intent.getSerializableExtra(MONITOR_KEY) as Monitor
 
         initValues(monitor)
 
@@ -219,11 +219,11 @@ class MonitorEditActivity : AppCompatActivity() {
 
     companion object {
 
-        private const val MonitorKey = "MonitorKey"
+        private const val MONITOR_KEY = "MonitorKey"
 
         fun createIntent(context: Context, monitor: Monitor): Intent =
                 Intent(context, MonitorEditActivity::class.java).apply {
-                    putExtra(MonitorKey, monitor)
+                    putExtra(MONITOR_KEY, monitor)
                 }
     }
 }

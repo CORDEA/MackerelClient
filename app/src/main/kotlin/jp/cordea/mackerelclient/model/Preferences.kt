@@ -9,17 +9,18 @@ class Preferences(context: Context) {
 
     var userId: Int
         get() {
-            return pref.getInt(userIdKey, -1)
+            return pref.getInt(USER_ID_KEY, -1)
         }
         set(value) {
-            pref.edit().putInt(userIdKey, value).apply()
+            pref.edit().putInt(USER_ID_KEY, value).apply()
         }
 
     fun clear() {
-        pref.edit().remove(userIdKey).apply()
+        pref.edit().remove(USER_ID_KEY).apply()
     }
 
     companion object {
-        private const val userIdKey = "UserIdKey"
+
+        private const val USER_ID_KEY = "UserIdKey"
     }
 }

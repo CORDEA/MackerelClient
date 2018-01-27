@@ -74,7 +74,7 @@ class MetricsAdapter(
             it.editButton.setOnClickListener {
                 val intent = MetricsEditActivity
                         .createIntent(activity, type, id, items[position].id)
-                activity.startActivityForResult(intent, MetricsEditActivity.RequestCode)
+                activity.startActivityForResult(intent, MetricsEditActivity.REQUEST_CODE)
             }
 
             it.deleteButton.setOnClickListener {

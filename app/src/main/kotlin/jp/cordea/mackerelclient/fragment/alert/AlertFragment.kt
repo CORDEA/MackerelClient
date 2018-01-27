@@ -66,12 +66,12 @@ class AlertFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            CriticalAlertFragment.RequestCode -> {
+            CriticalAlertFragment.REQUEST_CODE -> {
                 if (resultCode == Activity.RESULT_OK) {
                     onCriticalAlertFragmentResult.post(true)
                 }
             }
-            OtherAlertFragment.RequestCode -> {
+            OtherAlertFragment.REQUEST_CODE -> {
                 if (resultCode == Activity.RESULT_OK) {
                     onOtherAlertFragmentResult.post(true)
                 }

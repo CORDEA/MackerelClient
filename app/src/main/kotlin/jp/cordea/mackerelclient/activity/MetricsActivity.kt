@@ -51,7 +51,7 @@ class MetricsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         contentBinding.recyclerView.layoutManager = LinearLayoutManager(this)
-        val hostId = intent.getStringExtra(HostIdKey)
+        val hostId = intent.getStringExtra(HOST_ID_KEY)
 
         contentBinding.swipeRefresh.setOnRefreshListener {
             if (enableRefresh) {
@@ -129,7 +129,7 @@ class MetricsActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == MetricsEditActivity.RequestCode) {
+        if (requestCode == MetricsEditActivity.REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 needRefresh = true
             }
@@ -141,7 +141,7 @@ class MetricsActivity : AppCompatActivity() {
             android.R.id.home -> finish()
             R.id.action_add -> {
                 val intent = MetricsEditActivity.createIntent(this, MetricsType.HOST, hostId!!)
-                startActivityForResult(intent, MetricsEditActivity.RequestCode)
+                startActivityForResult(intent, MetricsEditActivity.REQUEST_CODE)
             }
         }
         return super.onOptionsItemSelected(item)
@@ -149,11 +149,11 @@ class MetricsActivity : AppCompatActivity() {
 
     companion object {
 
-        private const val HostIdKey = "HostIdKey"
+        private const val HOST_ID_KEY = "HostIdKey"
 
         fun createIntent(context: Context, hostId: String?): Intent =
                 Intent(context, MetricsActivity::class.java).apply {
-                    putExtra(HostIdKey, hostId)
+                    putExtra(HOST_ID_KEY, hostId)
                 }
     }
 }

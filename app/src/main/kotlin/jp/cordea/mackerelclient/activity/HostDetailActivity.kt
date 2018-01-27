@@ -33,7 +33,7 @@ class HostDetailActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val host = intent.getSerializableExtra(HostKey) as Host
+        val host = intent.getSerializableExtra(HOST_KEY) as Host
 
         binding.recyclerView.let {
             it.layoutManager = LinearLayoutManager(this)
@@ -97,13 +97,13 @@ class HostDetailActivity : AppCompatActivity() {
 
     companion object {
 
-        const val RequestCode = 0
+        const val REQUEST_CODE = 0
 
-        private const val HostKey = "HostKey"
+        private const val HOST_KEY = "HostKey"
 
         fun createIntent(context: Context, host: Host): Intent =
                 Intent(context, HostDetailActivity::class.java).apply {
-                    putExtra(HostKey, host)
+                    putExtra(HOST_KEY, host)
                 }
     }
 }

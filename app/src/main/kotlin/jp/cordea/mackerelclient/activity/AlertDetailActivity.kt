@@ -29,7 +29,7 @@ class AlertDetailActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val alert = intent.getSerializableExtra(AlertKey) as Alert
+        val alert = intent.getSerializableExtra(ALERT_KEY) as Alert
 
         binding.recyclerView.let {
             it.layoutManager = LinearLayoutManager(this)
@@ -90,11 +90,11 @@ class AlertDetailActivity : AppCompatActivity() {
 
     companion object {
 
-        private const val AlertKey = "AlertKey"
+        private const val ALERT_KEY = "AlertKey"
 
         fun createIntent(context: Context, alert: Alert): Intent =
                 Intent(context, AlertDetailActivity::class.java).apply {
-                    putExtra(AlertKey, alert)
+                    putExtra(ALERT_KEY, alert)
                 }
     }
 }

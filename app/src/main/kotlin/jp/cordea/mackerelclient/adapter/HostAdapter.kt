@@ -32,7 +32,7 @@ class HostAdapter(
 
             detailButton.setOnClickListener {
                 val intent = HostDetailActivity.createIntent(context, item)
-                fragment.startActivityForResult(intent, HostDetailActivity.RequestCode)
+                fragment.startActivityForResult(intent, HostDetailActivity.REQUEST_CODE)
             }
 
             val metric = metrics[item.id]

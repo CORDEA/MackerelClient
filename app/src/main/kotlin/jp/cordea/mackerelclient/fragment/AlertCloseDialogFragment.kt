@@ -20,7 +20,7 @@ class AlertCloseDialogFragment : DialogFragment() {
     }
 
     private val alert: Alert
-        get() = arguments!!.getSerializable(AlertKey) as Alert
+        get() = arguments!!.getSerializable(ALERT_KEY) as Alert
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val context = context!!
@@ -59,12 +59,12 @@ class AlertCloseDialogFragment : DialogFragment() {
 
     companion object {
 
-        private const val AlertKey = "AlertKey"
+        private const val ALERT_KEY = "AlertKey"
 
         fun newInstance(alert: Alert): AlertCloseDialogFragment =
                 AlertCloseDialogFragment().apply {
                     arguments = Bundle().apply {
-                        putSerializable(AlertKey, alert)
+                        putSerializable(ALERT_KEY, alert)
                     }
                 }
     }

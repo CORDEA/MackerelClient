@@ -29,10 +29,6 @@ import jp.cordea.mackerelclient.utils.GravatarUtils
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    companion object {
-        private const val MackerelUrl = "https://mackerel.io"
-    }
-
     private lateinit var binding: ActivityMainBinding
 
     private val prefs by lazy {
@@ -159,7 +155,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 transaction.replace(R.id.container, fragment).commit()
             }
             R.id.nav_open_mackerel -> {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(MackerelUrl))
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(MACKEREL_URL))
                 startActivity(intent)
             }
             R.id.nav_sign_out -> {
@@ -192,5 +188,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     finish()
                 })
                 .show()
+    }
+
+    companion object {
+
+        private const val MACKEREL_URL = "https://mackerel.io"
     }
 }

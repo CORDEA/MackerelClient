@@ -85,7 +85,7 @@ class HostFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == HostDetailActivity.RequestCode) {
+        if (requestCode == HostDetailActivity.REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 refresh()
             }

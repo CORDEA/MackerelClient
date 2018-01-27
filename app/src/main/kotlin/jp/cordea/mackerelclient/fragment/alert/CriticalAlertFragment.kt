@@ -68,7 +68,7 @@ class CriticalAlertFragment : Fragment() {
         binding.listView.setOnItemClickListener { _, _, i, _ ->
             val intent = AlertDetailActivity
                     .createIntent(context, binding.listView.adapter.getItem(i) as Alert)
-            parentFragment.startActivityForResult(intent, CriticalAlertFragment.RequestCode)
+            parentFragment.startActivityForResult(intent, CriticalAlertFragment.REQUEST_CODE)
         }
 
         resultSubscription?.let(Subscription::unsubscribe)
@@ -114,7 +114,7 @@ class CriticalAlertFragment : Fragment() {
     }
 
     companion object {
-        const val RequestCode = 1
+        const val REQUEST_CODE = 1
 
         fun newInstance(): CriticalAlertFragment =
                 CriticalAlertFragment()
