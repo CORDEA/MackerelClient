@@ -11,13 +11,16 @@ import jp.cordea.mackerelclient.api.response.Alert
 import jp.cordea.mackerelclient.utils.DialogUtils
 import jp.cordea.mackerelclient.viewmodel.AlertCloseViewModel
 
-class AlertCloseDialogFragment(private val alert: Alert) : DialogFragment() {
+class AlertCloseDialogFragment : DialogFragment() {
 
     var onSuccess = { }
 
     private val viewModel by lazy {
         AlertCloseViewModel(context!!)
     }
+
+    private val alert: Alert
+        get() = arguments!!.getSerializable(AlertKey) as Alert
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val context = context!!
@@ -55,9 +58,14 @@ class AlertCloseDialogFragment(private val alert: Alert) : DialogFragment() {
     }
 
     companion object {
-        fun newInstance(alert: Alert): AlertCloseDialogFragment {
-            return AlertCloseDialogFragment(alert)
-        }
-    }
 
+        private const val AlertKey = "AlertKey"
+
+        fun newInstance(alert: Alert): AlertCloseDialogFragment =
+                AlertCloseDialogFragment().apply {
+                    arguments = Bundle().apply {
+                        putSerializable(AlertKey, alert)
+                    }
+                }
+    }
 }
