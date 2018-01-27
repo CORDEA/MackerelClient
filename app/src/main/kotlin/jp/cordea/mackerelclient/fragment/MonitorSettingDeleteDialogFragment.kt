@@ -9,13 +9,16 @@ import jp.cordea.mackerelclient.api.response.Monitor
 import jp.cordea.mackerelclient.utils.DialogUtils
 import jp.cordea.mackerelclient.viewmodel.MonitorSettingViewModel
 
-class MonitorSettingDeleteDialogFragment(private val monitor: Monitor) : DialogFragment() {
+class MonitorSettingDeleteDialogFragment : DialogFragment() {
 
     var onSuccess = { }
 
     private val viewModel by lazy {
         MonitorSettingViewModel(context!!)
     }
+
+    private val monitor: Monitor
+        get() = arguments!!.getSerializable(MonitorKey) as Monitor
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val context = context!!
@@ -51,9 +54,15 @@ class MonitorSettingDeleteDialogFragment(private val monitor: Monitor) : DialogF
     }
 
     companion object {
-        fun newInstance(monitor: Monitor): MonitorSettingDeleteDialogFragment {
-            return MonitorSettingDeleteDialogFragment(monitor)
-        }
+
+        private const val MonitorKey = "MonitorKey"
+
+        fun newInstance(monitor: Monitor): MonitorSettingDeleteDialogFragment =
+                MonitorSettingDeleteDialogFragment().apply {
+                    arguments = Bundle().apply {
+                        putSerializable(MonitorKey, monitor)
+                    }
+                }
     }
 
 }
