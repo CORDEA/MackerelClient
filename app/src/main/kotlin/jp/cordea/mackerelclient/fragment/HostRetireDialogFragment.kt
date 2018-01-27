@@ -9,13 +9,16 @@ import jp.cordea.mackerelclient.api.response.Host
 import jp.cordea.mackerelclient.utils.DialogUtils
 import jp.cordea.mackerelclient.viewmodel.HostRetireViewModel
 
-class HostRetireDialogFragment(private val host: Host) : DialogFragment() {
+class HostRetireDialogFragment : DialogFragment() {
 
     var onSuccess = { }
 
     private val viewModel by lazy {
         HostRetireViewModel(context!!)
     }
+
+    private val host: Host
+        get() = arguments!!.getSerializable(HostKey) as Host
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val context = context!!
@@ -48,9 +51,14 @@ class HostRetireDialogFragment(private val host: Host) : DialogFragment() {
     }
 
     companion object {
-        fun newInstance(host: Host): HostRetireDialogFragment {
-            return HostRetireDialogFragment(host)
-        }
-    }
 
+        private const val HostKey = "HostKey"
+
+        fun newInstance(host: Host): HostRetireDialogFragment =
+                HostRetireDialogFragment().apply {
+                    arguments = Bundle().apply {
+                        putSerializable(HostKey, host)
+                    }
+                }
+    }
 }
