@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_weight="1"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-    <TextView
-        android:id="@+id/title"
-        style="@style/ListText.Detail"
-        android:gravity="center"
-        android:text="test"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/list_item_host_metric_title_height" />
-    <TextView
-        android:id="@+id/value"
-        android:textSize="25sp"
-        android:text="NA"
-        android:textColor="@color/colorPrimaryText"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_item_host_metric_value_height" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title_text_view"
+            style="@style/ListText.Detail"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_item_host_metric_title_height"
+            android:gravity="center"
+            android:text="test" />
+
+        <TextView
+            android:id="@+id/value_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_item_host_metric_value_height"
+            android:gravity="center"
+            android:text="NA"
+            android:textColor="@color/colorPrimaryText"
+            android:textSize="25sp" />
+    </LinearLayout>
+</layout>
