@@ -10,7 +10,11 @@ import android.widget.TextView
 import jp.cordea.mackerelclient.R
 import kotterknife.bindView
 
-class DetailCommonAdapter(val context: Context, val items: List<List<Pair<String, Int>>>, val sections: List<String>? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class DetailCommonAdapter(
+        val context: Context,
+        val items: List<List<Pair<String, Int>>>,
+        private val sections: List<String>? = null
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         (holder as? ViewHolder)?.let {
@@ -25,7 +29,7 @@ class DetailCommonAdapter(val context: Context, val items: List<List<Pair<String
 
                 var divider: View? = null
                 for (item in items[position]) {
-                    if (item.first.isNullOrBlank()) {
+                    if (item.first.isBlank()) {
                         continue
                     }
                     val layout = LayoutInflater.from(context)
@@ -44,15 +48,14 @@ class DetailCommonAdapter(val context: Context, val items: List<List<Pair<String
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder? {
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(context)
                 .inflate(R.layout.list_item_detail_common_card, parent, false)
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return items.filter { it.isNotEmpty() }.size
-    }
+    override fun getItemCount(): Int =
+            items.filter { it.isNotEmpty() }.size
 
     private class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val container: LinearLayout by bindView(R.id.container)
