@@ -1,5 +1,8 @@
 package jp.cordea.mackerelclient.viewmodel
 
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleObserver
+import android.arch.lifecycle.OnLifecycleEvent
 import android.content.Context
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -14,12 +17,12 @@ import jp.cordea.mackerelclient.model.MetricsApiRequestParameter
 import jp.cordea.mackerelclient.model.UserMetric
 import jp.cordea.mackerelclient.utils.DateUtils
 import rx.Observable
-import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.lang.kotlin.onErrorReturnNull
+import rx.subscriptions.SerialSubscription
 import java.util.concurrent.TimeUnit
 
-class MetricsViewModel(val context: Context) {
+class MetricsViewModel(val context: Context) : LifecycleObserver {
 
     private val apiResponses: MutableList<MetricsApiRequestParameter> = arrayListOf()
 
@@ -27,7 +30,7 @@ class MetricsViewModel(val context: Context) {
 
     val onChartDataAlive: RxEvent<Pair<Int, LineData?>> = RxEvent.create()
 
-    var subscription: Subscription? = null
+    private val subscription: SerialSubscription = SerialSubscription()
 
     fun initUserMetrics(parentId: String) {
         val realm = Realm.getDefaultInstance()
@@ -70,6 +73,11 @@ class MetricsViewModel(val context: Context) {
         realm.copyToRealm(metrics)
         realm.commitTransaction()
         realm.close()
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    fun onDestroy() {
+        subscription.unsubscribe()
     }
 
     private fun hostMetrics(
@@ -131,7 +139,7 @@ class MetricsViewModel(val context: Context) {
             metricsObservable = hostMetrics(id, param)
         }
 
-        subscription = metricsObservable
+        subscription.set(metricsObservable
                 .onErrorReturnNull()
                 .delay(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -156,7 +164,7 @@ class MetricsViewModel(val context: Context) {
                     }
 
                     runMetricsApiWithDelay(id, idType, metricsApiRequestParameters, idx + 1)
-                })
+                }))
     }
 
     private fun setData(metricsApiRequestParameters: List<MetricsApiRequestParameter>) {

@@ -27,7 +27,9 @@ class ServiceMetricsActivity : AppCompatActivity() {
 
     private lateinit var contentBinding: ContentServiceMetricsBinding
 
-    private var viewModel: MetricsViewModel? = null
+    private val viewModel by lazy {
+        MetricsViewModel(this)
+    }
 
     private var subscription: Subscription? = null
 
@@ -47,6 +49,7 @@ class ServiceMetricsActivity : AppCompatActivity() {
         )
         contentBinding = binding.content ?: return
         setSupportActionBar(binding.toolbar)
+        lifecycle.addObserver(viewModel)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -59,8 +62,6 @@ class ServiceMetricsActivity : AppCompatActivity() {
             }
             contentBinding.swipeRefresh.isRefreshing = false
         }
-
-        viewModel = MetricsViewModel(this)
 
         needRefresh = true
         this.serviceName = serviceName
@@ -90,7 +91,7 @@ class ServiceMetricsActivity : AppCompatActivity() {
 
         drawCompleteMetrics = 0
         subscription?.let(Subscription::unsubscribe)
-        subscription = viewModel!!
+        subscription = viewModel
                 .onChartDataAlive
                 .asObservable()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -109,14 +110,13 @@ class ServiceMetricsActivity : AppCompatActivity() {
             } else {
                 swipeRefresh.visibility = View.VISIBLE
                 noticeContainer.visibility = View.GONE
-                viewModel!!.requestMetricsApi(metrics, serviceName, MetricsType.SERVICE)
+                viewModel.requestMetricsApi(metrics, serviceName, MetricsType.SERVICE)
             }
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel!!.subscription?.let(Subscription::unsubscribe)
         subscription?.let(Subscription::unsubscribe)
     }
 

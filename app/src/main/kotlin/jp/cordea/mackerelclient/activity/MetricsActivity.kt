@@ -47,6 +47,7 @@ class MetricsActivity : AppCompatActivity() {
                 .setContentView<ActivityMetricsBinding>(this, R.layout.activity_metrics)
         contentBinding = binding.content ?: return
         setSupportActionBar(binding.toolbar)
+        lifecycle.addObserver(viewModel)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -116,8 +117,6 @@ class MetricsActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-
-        viewModel.subscription?.unsubscribe()
         subscription?.unsubscribe()
     }
 
