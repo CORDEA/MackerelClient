@@ -5,10 +5,9 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import jp.cordea.mackerelclient.R
-import kotterknife.bindView
+import jp.cordea.mackerelclient.databinding.ListItemDetailCommonCardBinding
 
 class DetailCommonAdapter(
         val context: Context,
@@ -17,7 +16,7 @@ class DetailCommonAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
-        (holder as? ViewHolder)?.let {
+        (holder as? ViewHolder)?.binding?.let {
             if (items[position].isNotEmpty()) {
                 sections?.let { sections ->
                     val section = LayoutInflater.from(context)
@@ -58,6 +57,7 @@ class DetailCommonAdapter(
             items.filter { it.isNotEmpty() }.size
 
     private class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val container: LinearLayout by bindView(R.id.container)
+
+        val binding: ListItemDetailCommonCardBinding = ListItemDetailCommonCardBinding.bind(view)
     }
 }
