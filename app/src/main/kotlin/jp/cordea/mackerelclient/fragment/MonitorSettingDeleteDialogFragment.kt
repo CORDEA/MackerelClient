@@ -28,29 +28,34 @@ class MonitorSettingDeleteDialogFragment : DialogFragment() {
                 .setPositiveButton(R.string.delete_positive_button, { _, _ ->
                     val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
                     dialog.show()
-                    viewModel.deleteMonitorSetting(monitor,
-                            onResponse = {
-                                dialog.dismiss()
-                                it?.let {
-                                    val success = DialogUtils.switchDialog(context, it,
-                                            R.string.monitor_detail_error_dialog_title,
-                                            R.string.error_403_dialog_message)
-                                    if (success) {
-                                        onSuccess()
-                                    }
-                                    return@deleteMonitorSetting
-                                }
-                                DialogUtils.showDialog(context,
-                                        R.string.monitor_detail_error_dialog_title)
-                            },
-                            onFailure = {
-                                dialog.dismiss()
-                                DialogUtils.showDialog(context,
-                                        R.string.monitor_detail_error_dialog_title)
-                            }
-                    )
+                    deleteMonitorSetting()
                 })
                 .create()
+    }
+
+    private fun deleteMonitorSetting() {
+        val context = context ?: return
+        viewModel.deleteMonitorSetting(monitor,
+                onResponse = {
+                    dialog.dismiss()
+                    if (it != null) {
+                        val success = DialogUtils.switchDialog(context, it,
+                                R.string.monitor_detail_error_dialog_title,
+                                R.string.error_403_dialog_message)
+                        if (success) {
+                            onSuccess()
+                        }
+                    } else {
+                        DialogUtils.showDialog(context,
+                                R.string.monitor_detail_error_dialog_title)
+                    }
+                },
+                onFailure = {
+                    dialog.dismiss()
+                    DialogUtils.showDialog(context,
+                            R.string.monitor_detail_error_dialog_title)
+                }
+        )
     }
 
     companion object {

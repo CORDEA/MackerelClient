@@ -32,29 +32,36 @@ class AlertCloseDialogFragment : DialogFragment() {
                 .setPositiveButton(R.string.alert_detail_close_positive_button, { _, _ ->
                     val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
                     dialog.show()
-                    viewModel.closeAlert(alert, editText.text.toString(),
-                            onResponse = {
-                                dialog.dismiss()
-                                it?.let {
-                                    val success = DialogUtils.switchDialog(context, it,
-                                            R.string.alert_detail_error_close_dialog_title,
-                                            R.string.error_403_dialog_message)
-                                    if (success) {
-                                        onSuccess()
-                                    }
-                                    return@closeAlert
-                                }
-                                DialogUtils.showDialog(context,
-                                        R.string.alert_detail_error_close_dialog_title)
-                            },
-                            onFailure = {
-                                dialog.dismiss()
-                                DialogUtils.showDialog(context,
-                                        R.string.alert_detail_error_close_dialog_title)
-                            }
-                    )
+                    closeAlert(editText.text.toString())
                 })
                 .create()
+    }
+
+    private fun closeAlert(text: String) {
+        val context = context ?: return
+        viewModel.closeAlert(
+                alert,
+                text,
+                onResponse = {
+                    dialog.dismiss()
+                    if (it != null) {
+                        val success = DialogUtils.switchDialog(context, it,
+                                R.string.alert_detail_error_close_dialog_title,
+                                R.string.error_403_dialog_message)
+                        if (success) {
+                            onSuccess()
+                        }
+                    } else {
+                        DialogUtils.showDialog(context,
+                                R.string.alert_detail_error_close_dialog_title)
+                    }
+                },
+                onFailure = {
+                    dialog.dismiss()
+                    DialogUtils.showDialog(context,
+                            R.string.alert_detail_error_close_dialog_title)
+                }
+        )
     }
 
     companion object {

@@ -27,27 +27,35 @@ class HostRetireDialogFragment : DialogFragment() {
                 .setPositiveButton(R.string.retire_positive_button, { _, _ ->
                     val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
                     dialog.show()
-                    viewModel.retireHost(host,
-                            onResponse = {
-                                dialog.dismiss()
-                                it?.let {
-                                    val success = DialogUtils.switchDialog(context, it,
-                                            R.string.host_detail_retire_error_dialog_title,
-                                            R.string.error_403_dialog_message)
-                                    if (success) {
-                                        onSuccess()
-                                    }
-                                    return@retireHost
-                                }
-                                DialogUtils.showDialog(context, R.string.host_detail_retire_error_dialog_title)
-                            },
-                            onFailure = {
-                                dialog.dismiss()
-                                DialogUtils.showDialog(context, R.string.host_detail_retire_error_dialog_title)
-                            }
-                    )
+                    retireHost()
                 })
                 .create()
+    }
+
+    private fun retireHost() {
+        val context = context ?: return
+        viewModel.retireHost(
+                host,
+                onResponse = {
+                    dialog.dismiss()
+                    if (it != null) {
+                        val success = DialogUtils.switchDialog(context, it,
+                                R.string.host_detail_retire_error_dialog_title,
+                                R.string.error_403_dialog_message)
+                        if (success) {
+                            onSuccess()
+                        }
+                    } else {
+                        DialogUtils.showDialog(context,
+                                R.string.host_detail_retire_error_dialog_title)
+                    }
+                },
+                onFailure = {
+                    dialog.dismiss()
+                    DialogUtils.showDialog(context,
+                            R.string.host_detail_retire_error_dialog_title)
+                }
+        )
     }
 
     companion object {
