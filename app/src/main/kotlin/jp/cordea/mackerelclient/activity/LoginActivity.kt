@@ -49,16 +49,16 @@ class LoginActivity : AppCompatActivity() {
         }
         realm.close()
 
-        userKey?.let { it0 ->
+        userKey?.let {
             contentBinding.progressBar.visibility = View.VISIBLE
             contentBinding.container.visibility = View.GONE
-            contentBinding.apiKeyEditText.text = with(it0.key, { SpannableStringBuilder(this) })
-            it0.email?.let {
+            contentBinding.apiKeyEditText.text = with(it.key, { SpannableStringBuilder(this) })
+            it.email?.let {
                 contentBinding.emailEditText.text = with(it, { SpannableStringBuilder(this) })
             }
 
             compositeSubscription.add(
-                    viewModel.logIn(it0.key!!, it0.email, true,
+                    viewModel.logIn(it.key!!, it.email, true,
                             onSuccess = {
                                 onLoginSucceeded(it)
                             },
@@ -88,32 +88,35 @@ class LoginActivity : AppCompatActivity() {
             true
         })
 
-        val context: Context = this
         contentBinding.button.setOnClickListener {
-            val t = contentBinding.apiKeyEditText.text
-            if (t.isEmpty()) {
-                AlertDialog
-                        .Builder(context)
-                        .setTitle(R.string.sign_in_error_dialog_title)
-                        .setMessage(R.string.sign_in_error_dialog_message_key)
-                        .show()
-            } else {
-                contentBinding.progressBar.visibility = View.VISIBLE
-                contentBinding.container.visibility = View.GONE
-                compositeSubscription.add(
-                        viewModel.logIn(
-                                t.toString().trim(),
-                                contentBinding.emailEditText.text.toString(),
-                                false,
-                                onSuccess = {
-                                    onLoginSucceeded(it)
-                                },
-                                onFailure = {
-                                    onLoginFailure()
-                                }
-                        )
-                )
-            }
+            login()
+        }
+    }
+
+    private fun login() {
+        val apiKey = contentBinding.apiKeyEditText.text
+        if (apiKey.isEmpty()) {
+            AlertDialog
+                    .Builder(this)
+                    .setTitle(R.string.sign_in_error_dialog_title)
+                    .setMessage(R.string.sign_in_error_dialog_message_key)
+                    .show()
+        } else {
+            contentBinding.progressBar.visibility = View.VISIBLE
+            contentBinding.container.visibility = View.GONE
+            compositeSubscription.add(
+                    viewModel.logIn(
+                            apiKey.toString().trim(),
+                            contentBinding.emailEditText.text.toString(),
+                            false,
+                            onSuccess = {
+                                onLoginSucceeded(it)
+                            },
+                            onFailure = {
+                                onLoginFailure()
+                            }
+                    )
+            )
         }
     }
 

@@ -46,27 +46,7 @@ class MetricsAdapter(
                     it.error?.root?.visibility = View.VISIBLE
                 }
             } else {
-                it.lineChart.apply {
-                    data = lineData
-                    setDescription("")
-                    xAxis.position = XAxis.XAxisPosition.BOTTOM
-
-                    if (data.needFormat) {
-                        val format = context.resources.getString(R.string.metrics_data_gb_format)
-                        data.dataSets[0].label = format.format(data.dataSets[0].label)
-                        if (data.dataSets.size > 1) {
-                            data.dataSets[1].label = format.format(data.dataSets[1].label)
-                        }
-                        axisRight.valueFormatter = MemoryValueFormatter()
-                        axisLeft.valueFormatter = MemoryValueFormatter()
-                    }
-
-                    axisRight.setLabelCount(3, false)
-                    axisLeft.setLabelCount(3, false)
-                    visibility = View.VISIBLE
-                    it.progressLayout.visibility = View.GONE
-                    invalidate()
-                }
+                setLineData(it)
                 ++visibles
                 canRefresh = visibles == itemCount
             }
@@ -80,6 +60,30 @@ class MetricsAdapter(
             it.deleteButton.setOnClickListener {
                 showDeleteConfirmDialog(position)
             }
+        }
+    }
+
+    private fun setLineData(binding: ListItemMetricsChartBinding) {
+        binding.lineChart.apply {
+            data = lineData
+            setDescription("")
+            xAxis.position = XAxis.XAxisPosition.BOTTOM
+
+            if (data.needFormat) {
+                val format = context.resources.getString(R.string.metrics_data_gb_format)
+                data.dataSets[0].label = format.format(data.dataSets[0].label)
+                if (data.dataSets.size > 1) {
+                    data.dataSets[1].label = format.format(data.dataSets[1].label)
+                }
+                axisRight.valueFormatter = MemoryValueFormatter()
+                axisLeft.valueFormatter = MemoryValueFormatter()
+            }
+
+            axisRight.setLabelCount(3, false)
+            axisLeft.setLabelCount(3, false)
+            visibility = View.VISIBLE
+            binding.progressLayout.visibility = View.GONE
+            invalidate()
         }
     }
 

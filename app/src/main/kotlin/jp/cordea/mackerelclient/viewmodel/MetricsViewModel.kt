@@ -171,7 +171,7 @@ class MetricsViewModel(val context: Context) : LifecycleObserver {
         val color = ColorTemplate.COLORFUL_COLORS
         var data: LineData? = null
 
-        if (metricsApiRequestParameters.filter { it.response != null }.isEmpty()) {
+        if (metricsApiRequestParameters.none { it.response != null }) {
             onChartDataAlive.post(Pair(metricsApiRequestParameters.first().id, null))
         } else {
             for ((j, param) in metricsApiRequestParameters.withIndex()) {

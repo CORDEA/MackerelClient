@@ -35,7 +35,6 @@ class MonitorEditActivity : AppCompatActivity() {
         }
 
         contentBinding = binding.content ?: return
-        val context: Context = this
         val monitor = intent.getSerializableExtra(MONITOR_KEY) as Monitor
 
         initValues(monitor)
@@ -71,36 +70,43 @@ class MonitorEditActivity : AppCompatActivity() {
                 }
 
         binding.doneButton.setOnClickListener {
-            val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
-            dialog.show()
-
-            val ref = checkValues(monitor)
-            MackerelApiClient
-                    .refreshMonitor(this, ref.id, ref)
-                    .enqueue(object : Callback<RefreshMonitor> {
-                        override fun onResponse(p0: Call<RefreshMonitor>?, response: Response<RefreshMonitor>?) {
-                            dialog.dismiss()
-                            response?.let {
-                                if (it.isSuccessful) {
-                                    finish()
-                                } else {
-                                    DialogUtils.switchDialog(context, it,
-                                            R.string.monitor_refresh_error_dialog_title,
-                                            R.string.error_403_dialog_message)
-                                }
-                                return
-                            }
-                            DialogUtils.showDialog(context,
-                                    R.string.monitor_refresh_error_dialog_title)
-                        }
-
-                        override fun onFailure(p0: Call<RefreshMonitor>?, p1: Throwable?) {
-                            dialog.dismiss()
-                            DialogUtils.showDialog(context,
-                                    R.string.monitor_refresh_error_dialog_title)
-                        }
-                    })
+            refreshMonitor(monitor)
         }
+    }
+
+    private fun refreshMonitor(monitor: Monitor) {
+        val context = this
+        val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
+        dialog.show()
+        val ref = checkValues(monitor)
+        MackerelApiClient
+                .refreshMonitor(this, ref.id, ref)
+                .enqueue(object : Callback<RefreshMonitor> {
+                    override fun onResponse(
+                            call: Call<RefreshMonitor>?,
+                            response: Response<RefreshMonitor>?
+                    ) {
+                        dialog.dismiss()
+                        response?.let {
+                            if (it.isSuccessful) {
+                                finish()
+                            } else {
+                                DialogUtils.switchDialog(context, it,
+                                        R.string.monitor_refresh_error_dialog_title,
+                                        R.string.error_403_dialog_message)
+                            }
+                            return
+                        }
+                        DialogUtils.showDialog(context,
+                                R.string.monitor_refresh_error_dialog_title)
+                    }
+
+                    override fun onFailure(p0: Call<RefreshMonitor>?, p1: Throwable?) {
+                        dialog.dismiss()
+                        DialogUtils.showDialog(context,
+                                R.string.monitor_refresh_error_dialog_title)
+                    }
+                })
     }
 
     private fun initValues(monitor: Monitor) {
