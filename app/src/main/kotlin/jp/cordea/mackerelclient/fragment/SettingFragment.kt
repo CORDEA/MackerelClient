@@ -106,12 +106,12 @@ class SettingFragment : Fragment() {
                     .setOnDismissListener {
                         val inRealm = Realm.getDefaultInstance()
                         val all = inRealm.where(DisplayHostState::class.java).findAll()
-                        if (all.filter { it.isDisplay!! }.isEmpty()) {
+                        if (all.none { it.isDisplay!! }) {
                             AlertDialog
                                     .Builder(context)
                                     .setMessage(R.string.setting_status_select_limit_dialog_message)
                                     .show()
-                            val wk = all.filter { it.name == items[lastItem].name }.first()
+                            val wk = all.first { it.name == items[lastItem].name }
                             inRealm.executeTransaction {
                                 wk.isDisplay = true
                             }
@@ -148,8 +148,7 @@ class SettingFragment : Fragment() {
         binding.hostTextView.text = realm.where(DisplayHostState::class.java).findAll()
                 .filter { it.isDisplay!! }
                 .map { it.name }
-                .map { StatusUtils.requestNameToString(it) }
-                .joinToString(", ")
+                .joinToString(", ") { StatusUtils.requestNameToString(it) }
         if (needClose) {
             realm.close()
         }
