@@ -51,15 +51,15 @@ class HostAdapter(
                     ContextCompat.getColor(context, StatusUtils.stringToStatusColor(item.status))
             )
 
-            loadavg?.run {
+            loadavg.run {
                 titleTextView.text = fragment.resources.getString(R.string.host_card_loadavg_title)
                 valueTextView.text = viewModel.loadavgText
             }
-            cpu?.run {
+            cpu.run {
                 titleTextView.text = fragment.resources.getString(R.string.host_card_cpu_title)
                 valueTextView.text = viewModel.cpuText
             }
-            memory?.run {
+            memory.run {
                 titleTextView.text = fragment.resources.getString(R.string.host_card_memory_title)
                 valueTextView.text = viewModel.memoryText
             }

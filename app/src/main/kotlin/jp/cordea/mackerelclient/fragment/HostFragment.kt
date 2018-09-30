@@ -47,9 +47,9 @@ class HostFragment : Fragment() {
             refresh()
         }
 
-        binding.error?.retryButton?.setOnClickListener {
+        binding.error.retryButton.setOnClickListener {
             binding.progressLayout.visibility = View.VISIBLE
-            binding.error?.root?.visibility = View.GONE
+            binding.error.root.visibility = View.GONE
             refresh()
         }
     }
@@ -67,17 +67,17 @@ class HostFragment : Fragment() {
                 .subscribe({
                     viewModel
                             .getLatestMetrics(it)
-                            .subscribe({ it2 ->
-                                binding.recyclerView.adapter = HostAdapter(this, it.hosts, it2.tsdbs)
+                            .subscribe { tsdbs ->
+                                binding.recyclerView.adapter = HostAdapter(this, it.hosts, tsdbs.tsdbs)
                                 binding.recyclerView.addItemDecoration(ListItemDecoration(context))
                                 binding.progressLayout.visibility = View.GONE
                                 binding.swipeRefresh.visibility = View.VISIBLE
                                 binding.swipeRefresh.isRefreshing = false
-                            })
+                            }
                 }, {
                     it.printStackTrace()
                     binding.swipeRefresh.isRefreshing = false
-                    binding.error?.root?.visibility = View.VISIBLE
+                    binding.error.root.visibility = View.VISIBLE
                     binding.progressLayout.visibility = View.GONE
                     binding.swipeRefresh.visibility = View.GONE
                 })
@@ -98,7 +98,6 @@ class HostFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(): HostFragment =
-                HostFragment()
+        fun newInstance(): HostFragment = HostFragment()
     }
 }

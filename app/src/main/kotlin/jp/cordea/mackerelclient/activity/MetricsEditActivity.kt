@@ -31,7 +31,7 @@ class MetricsEditActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil
                 .setContentView<ActivityMetricsEditBinding>(this, R.layout.activity_metrics_edit)
-        contentBinding = binding.content ?: return
+        contentBinding = binding.content
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 

@@ -50,9 +50,9 @@ class ServiceFragment : Fragment() {
             refresh()
         }
 
-        binding.error?.retryButton?.setOnClickListener {
+        binding.error.retryButton.setOnClickListener {
             binding.progressLayout.visibility = View.VISIBLE
-            binding.error?.root?.visibility = View.GONE
+            binding.error.root.visibility = View.GONE
             refresh()
         }
     }
@@ -75,7 +75,7 @@ class ServiceFragment : Fragment() {
                 }, {
                     it.printStackTrace()
                     binding.swipeRefresh.isRefreshing = false
-                    binding.error?.root?.visibility = View.VISIBLE
+                    binding.error.root.visibility = View.VISIBLE
                     binding.progressLayout.visibility = View.GONE
                 })
     }
@@ -86,7 +86,6 @@ class ServiceFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(): ServiceFragment =
-                ServiceFragment()
+        fun newInstance(): ServiceFragment = ServiceFragment()
     }
 }

@@ -34,7 +34,7 @@ class MonitorEditActivity : AppCompatActivity() {
             finish()
         }
 
-        contentBinding = binding.content ?: return
+        contentBinding = binding.content
         val monitor = intent.getSerializableExtra(MONITOR_KEY) as Monitor
 
         initValues(monitor)
@@ -91,20 +91,27 @@ class MonitorEditActivity : AppCompatActivity() {
                             if (it.isSuccessful) {
                                 finish()
                             } else {
-                                DialogUtils.switchDialog(context, it,
+                                DialogUtils.switchDialog(
+                                        context,
+                                        it,
                                         R.string.monitor_refresh_error_dialog_title,
-                                        R.string.error_403_dialog_message)
+                                        R.string.error_403_dialog_message
+                                )
                             }
                             return
                         }
-                        DialogUtils.showDialog(context,
-                                R.string.monitor_refresh_error_dialog_title)
+                        DialogUtils.showDialog(
+                                context,
+                                R.string.monitor_refresh_error_dialog_title
+                        )
                     }
 
                     override fun onFailure(p0: Call<RefreshMonitor>?, p1: Throwable?) {
                         dialog.dismiss()
-                        DialogUtils.showDialog(context,
-                                R.string.monitor_refresh_error_dialog_title)
+                        DialogUtils.showDialog(
+                                context,
+                                R.string.monitor_refresh_error_dialog_title
+                        )
                     }
                 })
     }
@@ -115,21 +122,17 @@ class MonitorEditActivity : AppCompatActivity() {
             contentBinding.optionContainer.visibility = View.GONE
         } else {
             contentBinding.nameEditText.text = with(
-                    monitor.name ?: "",
-                    { SpannableStringBuilder(this) }
-            )
+                    monitor.name ?: ""
+            ) { SpannableStringBuilder(this) }
             contentBinding.serviceEditText.text = with(
-                    monitor.service ?: "",
-                    { SpannableStringBuilder(this) }
-            )
+                    monitor.service ?: ""
+            ) { SpannableStringBuilder(this) }
             contentBinding.durationEditText.text = with(
-                    monitor.duration ?: "",
-                    { SpannableStringBuilder(this.toString()) }
-            )
+                    monitor.duration ?: ""
+            ) { SpannableStringBuilder(this.toString()) }
             contentBinding.metricEditText.text = with(
-                    monitor.metric ?: "",
-                    { SpannableStringBuilder(this) }
-            )
+                    monitor.metric ?: ""
+            ) { SpannableStringBuilder(this) }
 
             val adapter = ArrayAdapter<String>(
                     this,
@@ -147,26 +150,21 @@ class MonitorEditActivity : AppCompatActivity() {
                     contentBinding.operatorSpinner.selectedItemPosition
             )
             contentBinding.warningEditText.text = with(
-                    monitor.warning ?: "",
-                    { SpannableStringBuilder(this.toString()) }
-            )
+                    monitor.warning ?: ""
+            ) { SpannableStringBuilder(this.toString()) }
             contentBinding.criticalEditText.text = with(
-                    monitor.critical ?: "",
-                    { SpannableStringBuilder(this.toString()) }
-            )
+                    monitor.critical ?: ""
+            ) { SpannableStringBuilder(this.toString()) }
             contentBinding.notificationIntervalEditText.text = with(
-                    monitor.notificationInterval ?: "",
-                    { SpannableStringBuilder(this.toString()) }
-            )
+                    monitor.notificationInterval ?: ""
+            ) { SpannableStringBuilder(this.toString()) }
         }
         contentBinding.scopesEditText.text = with(
-                monitor.scopes.joinToString(", "),
-                { SpannableStringBuilder(this) }
-        )
+                monitor.scopes.joinToString(", ")
+        ) { SpannableStringBuilder(this) }
         contentBinding.excludeScopesEditText.text = with(
-                monitor.excludeScopes.joinToString(", "),
-                { SpannableStringBuilder(this) }
-        )
+                monitor.excludeScopes.joinToString(", ")
+        ) { SpannableStringBuilder(this) }
     }
 
     private fun checkValues(monitor: Monitor): Monitor {

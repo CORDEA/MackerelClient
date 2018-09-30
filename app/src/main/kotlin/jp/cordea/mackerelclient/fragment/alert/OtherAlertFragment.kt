@@ -47,17 +47,17 @@ class OtherAlertFragment : Fragment() {
         itemSubscription = (parentFragment as AlertFragment)
                 .onAlertItemChanged
                 .asObservable()
-                .subscribe({
-                    alerts = it?.alerts?.filter { !it.status.equals("CRITICAL") }
+                .subscribe({ alert ->
+                    alerts = alert?.alerts?.filter { it.status != "CRITICAL" }
                     refresh()
                 }, {
                     alerts = null
                     refresh()
                 })
 
-        binding.error?.retryButton?.setOnClickListener {
+        binding.error.retryButton.setOnClickListener {
             binding.progressLayout.visibility = View.VISIBLE
-            binding.error?.root?.visibility = View.GONE
+            binding.error.root.visibility = View.GONE
             refresh()
         }
 
@@ -72,9 +72,9 @@ class OtherAlertFragment : Fragment() {
         }
 
         resultSubscription?.unsubscribe()
-        (parentFragment as? AlertFragment)?.let {
+        (parentFragment as? AlertFragment)?.let { fragment ->
             resultSubscription =
-                    it.onOtherAlertFragmentResult
+                    fragment.onOtherAlertFragmentResult
                             .asObservable()
                             .filter { it }
                             .subscribe({
@@ -92,7 +92,7 @@ class OtherAlertFragment : Fragment() {
     private fun getAlert(): Subscription {
         val context = context ?: return Subscriptions.empty()
         return viewModel
-                .getAlerts(alerts, { !it.status.equals("CRITICAL") })
+                .getAlerts(alerts) { it.status != "CRITICAL" }
                 .subscribe({
                     binding.listView.adapter = OtherAlertAdapter(context, it)
                     binding.swipeRefresh.isRefreshing = false
@@ -101,7 +101,7 @@ class OtherAlertFragment : Fragment() {
                 }, {
                     it.printStackTrace()
                     binding.swipeRefresh.isRefreshing = false
-                    binding.error?.root?.visibility = View.VISIBLE
+                    binding.error.root.visibility = View.VISIBLE
                     binding.progressLayout.visibility = View.GONE
                 })
     }
@@ -117,7 +117,6 @@ class OtherAlertFragment : Fragment() {
 
         const val REQUEST_CODE = 0
 
-        fun newInstance(): OtherAlertFragment =
-                OtherAlertFragment()
+        fun newInstance(): OtherAlertFragment = OtherAlertFragment()
     }
 }

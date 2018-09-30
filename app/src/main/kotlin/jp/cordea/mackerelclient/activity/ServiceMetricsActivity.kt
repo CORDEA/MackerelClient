@@ -47,7 +47,7 @@ class ServiceMetricsActivity : AppCompatActivity() {
                 this,
                 R.layout.activity_service_metrics
         )
-        contentBinding = binding.content ?: return
+        contentBinding = binding.content
         setSupportActionBar(binding.toolbar)
         lifecycle.addObserver(viewModel)
 
@@ -156,5 +156,4 @@ class ServiceMetricsActivity : AppCompatActivity() {
                     putExtra(ServiceMetricsActivity.SERVICE_NAME_KEY, name)
                 }
     }
-
 }

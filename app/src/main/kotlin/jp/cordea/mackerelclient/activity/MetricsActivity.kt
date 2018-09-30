@@ -45,7 +45,7 @@ class MetricsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil
                 .setContentView<ActivityMetricsBinding>(this, R.layout.activity_metrics)
-        contentBinding = binding.content ?: return
+        contentBinding = binding.content
         setSupportActionBar(binding.toolbar)
         lifecycle.addObserver(viewModel)
 
@@ -83,7 +83,8 @@ class MetricsActivity : AppCompatActivity() {
         val item = metrics.map { MetricsParameter(it.id, null, it.label!!) }
         realm.close()
 
-        contentBinding.recyclerView.adapter = MetricsAdapter(this, item as MutableList, MetricsType.HOST, hostId)
+        contentBinding.recyclerView.adapter =
+                MetricsAdapter(this, item as MutableList, MetricsType.HOST, hostId)
         contentBinding.recyclerView.addItemDecoration(ListItemDecoration(this))
 
         drawCompleteMetrics = 0

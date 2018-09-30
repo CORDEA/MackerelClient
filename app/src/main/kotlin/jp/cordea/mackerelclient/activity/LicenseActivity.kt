@@ -20,14 +20,14 @@ class LicenseActivity : AppCompatActivity() {
                 .setContentView<ActivityLicenseBinding>(this, R.layout.activity_license)
         setSupportActionBar(binding.toolbar)
 
-        val content = binding.content ?: return
+        val content = binding.content
         viewModel.licensesObservable
                 .subscribe({
                     content.licenseTextView.text = it
                     content.container.visibility = View.VISIBLE
                     content.progressLayout.visibility = View.GONE
                 }, {
-                    content.errorLayout?.root?.visibility = View.VISIBLE
+                    content.errorLayout.root.visibility = View.VISIBLE
                     content.progressLayout.visibility = View.GONE
                     it.printStackTrace()
                 })

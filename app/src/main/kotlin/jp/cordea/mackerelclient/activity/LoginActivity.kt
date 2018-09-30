@@ -39,7 +39,7 @@ class LoginActivity : AppCompatActivity() {
                 .setContentView<ActivityLoginBinding>(this, R.layout.activity_login)
         setSupportActionBar(binding.toolbar)
 
-        contentBinding = binding.content ?: return
+        contentBinding = binding.content
 
         var userKey: UserKey? = null
         val userId = prefs.userId
@@ -49,16 +49,16 @@ class LoginActivity : AppCompatActivity() {
         }
         realm.close()
 
-        userKey?.let {
+        userKey?.let { key ->
             contentBinding.progressBar.visibility = View.VISIBLE
             contentBinding.container.visibility = View.GONE
-            contentBinding.apiKeyEditText.text = with(it.key, { SpannableStringBuilder(this) })
-            it.email?.let {
-                contentBinding.emailEditText.text = with(it, { SpannableStringBuilder(this) })
+            contentBinding.apiKeyEditText.text = with(key.key) { SpannableStringBuilder(this) }
+            key.email?.let {
+                contentBinding.emailEditText.text = with(it) { SpannableStringBuilder(this) }
             }
 
             compositeSubscription.add(
-                    viewModel.logIn(it.key!!, it.email, true,
+                    viewModel.logIn(key.key!!, key.email, true,
                             onSuccess = {
                                 onLoginSucceeded(it)
                             },
@@ -73,20 +73,20 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setEvents() {
-        contentBinding.apiKeyEditText.setOnEditorActionListener({ _, actionId, _ ->
+        contentBinding.apiKeyEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
                 contentBinding.emailEditText.requestFocus()
             }
             true
-        })
+        }
 
-        contentBinding.emailEditText.setOnEditorActionListener({ _, actionId, _ ->
+        contentBinding.emailEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val im = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-                im?.hideSoftInputFromWindow(this.currentFocus.windowToken, 0)
+                im?.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
             }
             true
-        })
+        }
 
         contentBinding.button.setOnClickListener {
             login()

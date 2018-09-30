@@ -43,9 +43,9 @@ class MonitorFragment : Fragment() {
             refresh()
         }
 
-        binding.error?.retryButton?.setOnClickListener {
+        binding.error.retryButton.setOnClickListener {
             binding.progressLayout.visibility = View.VISIBLE
-            binding.error?.root?.visibility = View.GONE
+            binding.error.root.visibility = View.GONE
             refresh()
         }
     }
@@ -60,16 +60,21 @@ class MonitorFragment : Fragment() {
         val context = context ?: return Subscriptions.empty()
         return MackerelApiClient
                 .getMonitors(context)
-                .map {
-                    val sections = it.monitors.map { it.type }.distinct().sortedBy { it }
-                    val monitors: MutableList<Pair<String, Monitor?>> = arrayListOf()
+                .map { it.monitors }
+                .map { monitors ->
+                    val sections = monitors
+                            .asSequence()
+                            .map { it.type }
+                            .distinct()
+                            .sortedBy { it }
+                    val pairs: MutableList<Pair<String, Monitor?>> = arrayListOf()
                     for (section in sections) {
-                        val items = it.monitors.filter { section == it.type }
+                        val items = monitors.filter { section == it.type }
                         val type = items[0].type
-                        monitors.add(Pair(type, null))
-                        items.map { monitors.add(Pair(type, it)) }
+                        pairs.add(Pair(type, null))
+                        items.map { pairs.add(Pair(type, it)) }
                     }
-                    monitors
+                    pairs
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -79,7 +84,7 @@ class MonitorFragment : Fragment() {
                     binding.swipeRefresh.visibility = View.VISIBLE
                 }, {
                     binding.swipeRefresh.isRefreshing = false
-                    binding.error?.root?.visibility = View.VISIBLE
+                    binding.error.root.visibility = View.VISIBLE
                     binding.progressLayout.visibility = View.GONE
                 })
     }
@@ -99,7 +104,6 @@ class MonitorFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(): MonitorFragment =
-                MonitorFragment()
+        fun newInstance(): MonitorFragment = MonitorFragment()
     }
 }

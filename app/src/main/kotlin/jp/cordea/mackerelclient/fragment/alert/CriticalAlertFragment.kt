@@ -55,9 +55,9 @@ class CriticalAlertFragment : Fragment() {
                     refresh()
                 })
 
-        binding.error?.retryButton?.setOnClickListener {
+        binding.error.retryButton.setOnClickListener {
             binding.progressLayout.visibility = View.VISIBLE
-            binding.error?.root?.visibility = View.GONE
+            binding.error.root.visibility = View.GONE
             refresh()
         }
 
@@ -72,9 +72,9 @@ class CriticalAlertFragment : Fragment() {
         }
 
         resultSubscription?.let(Subscription::unsubscribe)
-        (parentFragment as? AlertFragment)?.let {
+        (parentFragment as? AlertFragment)?.let { fragment ->
             resultSubscription =
-                    it.onCriticalAlertFragmentResult
+                    fragment.onCriticalAlertFragmentResult
                             .asObservable()
                             .filter { it }
                             .subscribe({
@@ -92,7 +92,7 @@ class CriticalAlertFragment : Fragment() {
     private fun getAlert(): Subscription {
         val context = context ?: return Subscriptions.empty()
         return viewModel
-                .getAlerts(alerts, { it.status.equals("CRITICAL") })
+                .getAlerts(alerts) { it.status.equals("CRITICAL") }
                 .subscribe({
                     binding.listView.adapter = AlertAdapter(context, it)
                     binding.swipeRefresh.visibility = View.VISIBLE
@@ -101,7 +101,7 @@ class CriticalAlertFragment : Fragment() {
                 }, {
                     it.printStackTrace()
                     binding.swipeRefresh.isRefreshing = false
-                    binding.error?.root?.visibility = View.VISIBLE
+                    binding.error.root.visibility = View.VISIBLE
                     binding.progressLayout.visibility = View.GONE
                 })
     }
@@ -116,7 +116,6 @@ class CriticalAlertFragment : Fragment() {
     companion object {
         const val REQUEST_CODE = 1
 
-        fun newInstance(): CriticalAlertFragment =
-                CriticalAlertFragment()
+        fun newInstance(): CriticalAlertFragment = CriticalAlertFragment()
     }
 }

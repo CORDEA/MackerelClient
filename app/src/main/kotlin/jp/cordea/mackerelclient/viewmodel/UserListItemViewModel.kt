@@ -20,11 +20,11 @@ class UserListItemViewModel(private val context: Context, private val item: User
         AlertDialog
                 .Builder(context)
                 .setMessage(R.string.user_delete_dialog_title)
-                .setPositiveButton(R.string.delete_positive_button, { _, _ ->
+                .setPositiveButton(R.string.delete_positive_button) { _, _ ->
                     val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
                     dialog.show()
                     deleteUser(dialog)
-                })
+                }
                 .show()
     }
 
@@ -34,23 +34,30 @@ class UserListItemViewModel(private val context: Context, private val item: User
                 .enqueue(object : Callback<User> {
                     override fun onResponse(p0: Call<User>?, response: Response<User>?) {
                         dialog.dismiss()
-                        response?.let {
-                            val success = DialogUtils.switchDialog(context, it,
+                        response?.let { resp ->
+                            val success = DialogUtils.switchDialog(
+                                    context,
+                                    resp,
                                     R.string.user_delete_error_dialog_title,
-                                    R.string.error_403_dialog_message)
+                                    R.string.error_403_dialog_message
+                            )
                             if (success) {
                                 onUserDeleteSucceeded()
                             }
                             return
                         }
-                        DialogUtils.showDialog(context,
-                                R.string.user_delete_error_dialog_title)
+                        DialogUtils.showDialog(
+                                context,
+                                R.string.user_delete_error_dialog_title
+                        )
                     }
 
                     override fun onFailure(p0: Call<User>?, p1: Throwable?) {
                         dialog.dismiss()
-                        DialogUtils.showDialog(context,
-                                R.string.user_delete_error_dialog_title)
+                        DialogUtils.showDialog(
+                                context,
+                                R.string.user_delete_error_dialog_title
+                        )
                     }
                 })
     }
