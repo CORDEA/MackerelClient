@@ -7,7 +7,9 @@ class MetricsEditViewModel {
 
     fun getMetric(id: Int): UserMetric {
         val realm = Realm.getDefaultInstance()
-        val metric = realm.copyFromRealm(realm.where(UserMetric::class.java).equalTo("id", id).findFirst())
+        val metric = realm.copyFromRealm(
+                realm.where(UserMetric::class.java).equalTo("id", id).findFirst()!!
+        )
         realm.close()
         return metric
     }

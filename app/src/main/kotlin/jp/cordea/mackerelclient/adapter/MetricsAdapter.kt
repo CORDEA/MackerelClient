@@ -32,32 +32,32 @@ class MetricsAdapter(
 
     private var drawComplete: Int = 0
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
-        (holder as? ViewHolder)?.binding?.let {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        (holder as? ViewHolder)?.binding?.let { binding ->
             if (items[position].label.isEmpty()) {
-                it.titleTextView.visibility = View.GONE
+                binding.titleTextView.visibility = View.GONE
             } else {
-                it.titleTextView.text = items[position].label
+                binding.titleTextView.text = items[position].label
             }
             val lineData = items[position].data
             if (lineData == null) {
                 if (items[position].isError) {
-                    it.progressLayout.visibility = View.GONE
-                    it.error?.root?.visibility = View.VISIBLE
+                    binding.progressLayout.visibility = View.GONE
+                    binding.error.root.visibility = View.VISIBLE
                 }
             } else {
-                setLineData(it)
+                setLineData(binding)
                 ++visibles
                 canRefresh = visibles == itemCount
             }
 
-            it.editButton.setOnClickListener {
+            binding.editButton.setOnClickListener {
                 val intent = MetricsEditActivity
                         .createIntent(activity, type, id, items[position].id)
                 activity.startActivityForResult(intent, MetricsEditActivity.REQUEST_CODE)
             }
 
-            it.deleteButton.setOnClickListener {
+            binding.deleteButton.setOnClickListener {
                 showDeleteConfirmDialog(position)
             }
         }
@@ -87,14 +87,13 @@ class MetricsAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(activity)
                 .inflate(R.layout.list_item_metrics_chart, parent, false)
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int =
-            items.size
+    override fun getItemCount(): Int = items.size
 
     fun refreshRecyclerViewItem(item: Pair<Int, LineData?>, drawCompleteMetrics: Int): Int {
         drawComplete = drawCompleteMetrics
@@ -118,13 +117,13 @@ class MetricsAdapter(
         AlertDialog
                 .Builder(activity)
                 .setMessage(R.string.metrics_card_delete_dialog_title)
-                .setPositiveButton(R.string.button_positive, { _, _ ->
+                .setPositiveButton(R.string.button_positive) { _, _ ->
                     lock.withLock {
                         val realm = Realm.getDefaultInstance()
                         realm.executeTransaction {
                             realm.where(UserMetric::class.java)
                                     .equalTo("id", items[position].id)
-                                    .findFirst()
+                                    .findFirst()!!
                                     .deleteFromRealm()
                         }
                         realm.close()
@@ -133,19 +132,16 @@ class MetricsAdapter(
                         notifyItemRangeRemoved(position, items.size)
                         --drawComplete
                     }
-                }).show()
+                }.show()
     }
 
     private val LineData.needFormat: Boolean
         get() =
             this.dataSets
-                    .filter {
-                        "memory" == it.label.split(".")[0]
-                    }
+                    .filter { "memory" == it.label.split(".")[0] }
                     .size == this.dataSets.size
 
     private class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
         val binding: ListItemMetricsChartBinding = ListItemMetricsChartBinding.bind(view)
     }
 }

@@ -15,7 +15,7 @@ class DetailCommonAdapter(
         private val sections: List<String>? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as? ViewHolder)?.binding?.let {
             if (items[position].isNotEmpty()) {
                 sections?.let { sections ->
@@ -47,17 +47,15 @@ class DetailCommonAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(context)
                 .inflate(R.layout.list_item_detail_common_card, parent, false)
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int =
-            items.filter { it.isNotEmpty() }.size
+    override fun getItemCount(): Int = items.filter { it.isNotEmpty() }.size
 
     private class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
         val binding: ListItemDetailCommonCardBinding = ListItemDetailCommonCardBinding.bind(view)
     }
 }

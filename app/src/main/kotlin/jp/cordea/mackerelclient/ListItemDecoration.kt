@@ -8,23 +8,17 @@ import android.view.View
 class ListItemDecoration(private val context: Context) : RecyclerView.ItemDecoration() {
 
     override fun getItemOffsets(
-            outRect: Rect?,
-            view: View?,
-            parent: RecyclerView?,
-            state: RecyclerView.State?
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State
     ) {
-        view?.let {
-            parent?.let { parent ->
-                val lp = it.layoutParams as RecyclerView.LayoutParams
+        val lp = view.layoutParams as RecyclerView.LayoutParams
 
-                if (parent.getChildAdapterPosition(it) == 0) {
-                    lp.topMargin = context.resources.getDimension(R.dimen.card_margin).toInt()
-                } else {
-                    lp.topMargin = 0
-                }
-            }
-
+        if (parent.getChildAdapterPosition(view) == 0) {
+            lp.topMargin = context.resources.getDimension(R.dimen.card_margin).toInt()
+        } else {
+            lp.topMargin = 0
         }
     }
-
 }

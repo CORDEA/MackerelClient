@@ -16,7 +16,7 @@ class MonitorAdapter(
         val items: List<Pair<String, Monitor?>>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val context = fragment.context ?: return
         (holder as? ViewHolder)?.binding?.run {
             items[position].second?.let { item ->
@@ -36,7 +36,7 @@ class MonitorAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == 1) {
             val view = LayoutInflater.from(fragment.context)
                     .inflate(R.layout.list_item_monitor_section, parent, false)
@@ -47,21 +47,15 @@ class MonitorAdapter(
         return ViewHolder(view)
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return if (items[position].second == null) 1 else 0
-    }
+    override fun getItemViewType(position: Int): Int = if (items[position].second == null) 1 else 0
 
-    override fun getItemCount(): Int {
-        return items.size
-    }
+    override fun getItemCount(): Int = items.size
 
     private class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
         val binding: ListItemMonitorBinding = ListItemMonitorBinding.bind(view)
     }
 
     private class SectionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
         val binding: ListItemMonitorSectionBinding = ListItemMonitorSectionBinding.bind(view)
     }
 }

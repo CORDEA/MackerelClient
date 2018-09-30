@@ -47,14 +47,16 @@ class UserFragment : Fragment() {
         return MackerelApiClient
                 .getUsers(context)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
+                .subscribe({ users ->
                     binding.swipeRefresh.isRefreshing = false
                     val userId = Preferences(context).userId
                     val realm = Realm.getDefaultInstance()
-                    val user = realm.copyFromRealm(realm.where(UserKey::class.java).equalTo("id", userId).findFirst())
+                    val user = realm.copyFromRealm(
+                            realm.where(UserKey::class.java).equalTo("id", userId).findFirst()!!
+                    )
                     realm.close()
 
-                    val adapter = UserAdapter(context, it.users, user.email)
+                    val adapter = UserAdapter(context, users.users, user.email)
                     binding.listView.adapter = adapter
                     adapter.onUserDeleteSucceeded
                             .asObservable()
@@ -67,7 +69,7 @@ class UserFragment : Fragment() {
                     binding.swipeRefresh.visibility = View.VISIBLE
                 }, {
                     binding.swipeRefresh.isRefreshing = false
-                    binding.error?.root?.visibility = View.VISIBLE
+                    binding.error.root.visibility = View.VISIBLE
                     binding.progressLayout.visibility = View.GONE
                     binding.swipeRefresh.visibility = View.GONE
                 })
@@ -79,7 +81,6 @@ class UserFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(): UserFragment =
-                UserFragment()
+        fun newInstance(): UserFragment = UserFragment()
     }
 }

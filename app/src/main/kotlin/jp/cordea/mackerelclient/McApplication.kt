@@ -17,7 +17,7 @@ class McApplication : Application() {
                     val scheme = dynamicRealm.schema
                     var oldVersion = old
                     if (old == 0L) {
-                        scheme[DisplayHostState::class.java.simpleName]
+                        scheme[DisplayHostState::class.java.simpleName]!!
                                 .addField("new_name", String::class.java)
                                 .transform {
                                     it.setString("new_name", it.getString("name"))
@@ -33,5 +33,4 @@ class McApplication : Application() {
     companion object {
         private const val SCHEMA_VERSION = 1L
     }
-
 }

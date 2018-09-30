@@ -21,7 +21,7 @@ class HostAdapter(
         private val metrics: Map<String, Map<String, Tsdb>>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val context = fragment.context ?: return
         val item = items[position]
         (holder as? ViewHolder)?.binding?.run {
@@ -66,17 +66,15 @@ class HostAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(fragment.context)
                 .inflate(R.layout.list_item_host, parent, false)
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int =
-            items.size
+    override fun getItemCount(): Int = items.size
 
     private class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
         val binding: ListItemHostBinding = ListItemHostBinding.bind(view)
     }
 }

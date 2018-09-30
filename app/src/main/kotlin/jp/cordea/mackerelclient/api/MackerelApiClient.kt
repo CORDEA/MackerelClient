@@ -38,7 +38,8 @@ object MackerelApiClient {
             val userId = Preferences(context).userId
             val realm = Realm.getDefaultInstance()
             key = realm.copyFromRealm(
-                    realm.where(UserKey::class.java).equalTo("id", userId).findFirst()).key
+                    realm.where(UserKey::class.java).equalTo("id", userId).findFirst()!!
+            ).key!!
             realm.close()
         }
         var httpClientBuilder =
@@ -65,76 +66,78 @@ object MackerelApiClient {
                 .create(service)
     }
 
-    fun getServices(context: Context): Observable<Services> {
-        return getService(MackerelApi::class.java, context)
-                .getService()
-                .subscribeOn(Schedulers.newThread())
-    }
+    fun getServices(context: Context): Observable<Services> =
+            getService(MackerelApi::class.java, context)
+                    .getService()
+                    .subscribeOn(Schedulers.newThread())
 
-    fun getHosts(context: Context, status: List<String>): Observable<Hosts> {
-        return getService(MackerelApi::class.java, context)
-                .getAllHosts(status)
-                .subscribeOn(Schedulers.newThread())
-    }
+    fun getHosts(context: Context, status: List<String>): Observable<Hosts> =
+            getService(MackerelApi::class.java, context)
+                    .getAllHosts(status)
+                    .subscribeOn(Schedulers.newThread())
 
-    fun getAlerts(context: Context): Observable<Alerts> {
-        return getService(MackerelApi::class.java, context)
-                .getAlerts()
-                .subscribeOn(Schedulers.newThread())
-    }
+    fun getAlerts(context: Context): Observable<Alerts> =
+            getService(MackerelApi::class.java, context)
+                    .getAlerts()
+                    .subscribeOn(Schedulers.newThread())
 
-    fun getMonitors(context: Context): Observable<Monitors> {
-        return getService(MackerelApi::class.java, context)
-                .getMonitors()
-                .subscribeOn(Schedulers.newThread())
-    }
+    fun getMonitors(context: Context): Observable<Monitors> =
+            getService(MackerelApi::class.java, context)
+                    .getMonitors()
+                    .subscribeOn(Schedulers.newThread())
 
-    fun getUsers(context: Context, key: String? = null): Observable<Users> {
-        return getService(MackerelApi::class.java, context, key)
-                .getUsers()
-                .subscribeOn(Schedulers.newThread())
-    }
+    fun getUsers(context: Context, key: String? = null): Observable<Users> =
+            getService(MackerelApi::class.java, context, key)
+                    .getUsers()
+                    .subscribeOn(Schedulers.newThread())
 
-    fun getMetrics(context: Context, hostId: String, name: String, from: Long, to: Long): Observable<Metrics> {
-        return getService(MackerelApi::class.java, context)
-                .getMetrics(hostId, name, from, to)
-                .subscribeOn(Schedulers.newThread())
-    }
+    fun getMetrics(
+            context: Context,
+            hostId: String,
+            name: String,
+            from: Long,
+            to: Long
+    ): Observable<Metrics> =
+            getService(MackerelApi::class.java, context)
+                    .getMetrics(hostId, name, from, to)
+                    .subscribeOn(Schedulers.newThread())
 
-    fun getLatestMetrics(context: Context, hostId: List<String>, name: List<String>): Observable<Tsdbs> {
-        return getService(MackerelApi::class.java, context)
-                .getLatestMetric(hostId, name)
-                .subscribeOn(Schedulers.newThread())
-    }
+    fun getLatestMetrics(
+            context: Context,
+            hostId: List<String>,
+            name: List<String>
+    ): Observable<Tsdbs> =
+            getService(MackerelApi::class.java, context)
+                    .getLatestMetric(hostId, name)
+                    .subscribeOn(Schedulers.newThread())
 
-    fun getServiceMetrics(context: Context, serviceName: String, name: String, from: Long, to: Long): Observable<Metrics> {
-        return getService(MackerelApi::class.java, context)
-                .getServiceMetrics(serviceName, name, from, to)
-                .subscribeOn(Schedulers.newThread())
-    }
+    fun getServiceMetrics(
+            context: Context,
+            serviceName: String,
+            name: String,
+            from: Long,
+            to: Long
+    ): Observable<Metrics> =
+            getService(MackerelApi::class.java, context)
+                    .getServiceMetrics(serviceName, name, from, to)
+                    .subscribeOn(Schedulers.newThread())
 
-    fun deleteUser(context: Context, userId: String): Call<User> {
-        return getService(MackerelApi::class.java, context)
-                .deleteUser(userId)
-    }
+    fun deleteUser(context: Context, userId: String): Call<User> =
+            getService(MackerelApi::class.java, context).deleteUser(userId)
 
-    fun closeAlert(context: Context, alertId: String, close: CloseAlert): Call<Alert> {
-        return getService(MackerelApi::class.java, context)
-                .postCloseAlert(alertId, close)
-    }
+    fun closeAlert(context: Context, alertId: String, close: CloseAlert): Call<Alert> =
+            getService(MackerelApi::class.java, context).postCloseAlert(alertId, close)
 
-    fun retireHost(context: Context, hostId: String): Call<RetireHost> {
-        return getService(MackerelApi::class.java, context)
-                .postRetireHost(hostId)
-    }
+    fun retireHost(context: Context, hostId: String): Call<RetireHost> =
+            getService(MackerelApi::class.java, context).postRetireHost(hostId)
 
-    fun deleteMonitor(context: Context, monitorId: String): Call<Monitor> {
-        return getService(MackerelApi::class.java, context)
-                .deleteMonitor(monitorId)
-    }
+    fun deleteMonitor(context: Context, monitorId: String): Call<Monitor> =
+            getService(MackerelApi::class.java, context).deleteMonitor(monitorId)
 
-    fun refreshMonitor(context: Context, monitorId: String, monitor: Monitor): Call<RefreshMonitor> {
-        return getService(MackerelApi::class.java, context)
-                .putRefreshMonitor(monitorId, monitor)
-    }
+    fun refreshMonitor(
+            context: Context,
+            monitorId: String,
+            monitor: Monitor
+    ): Call<RefreshMonitor> =
+            getService(MackerelApi::class.java, context).putRefreshMonitor(monitorId, monitor)
 }
