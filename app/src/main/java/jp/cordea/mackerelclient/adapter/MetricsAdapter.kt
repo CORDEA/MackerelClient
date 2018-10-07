@@ -46,7 +46,7 @@ class MetricsAdapter(
                     binding.error.root.visibility = View.VISIBLE
                 }
             } else {
-                setLineData(binding)
+                setLineData(binding, lineData)
                 ++visibles
                 canRefresh = visibles == itemCount
             }
@@ -63,7 +63,7 @@ class MetricsAdapter(
         }
     }
 
-    private fun setLineData(binding: ListItemMetricsChartBinding) {
+    private fun setLineData(binding: ListItemMetricsChartBinding, lineData: LineData) {
         binding.lineChart.apply {
             data = lineData
             setDescription("")
