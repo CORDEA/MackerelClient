@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
+import android.widget.Toast
 import io.realm.Realm
 import io.realm.RealmResults
 import jp.cordea.mackerelclient.R
@@ -52,10 +53,11 @@ class SettingStatusSelectionDialogFragment : DialogFragment() {
         if (items.any { it.isDisplay!! }) {
             return
         }
-        AlertDialog
-                .Builder(context!!)
-                .setMessage(R.string.setting_status_select_limit_dialog_message)
-                .show()
+        Toast.makeText(
+                context!!,
+                R.string.setting_status_select_limit_dialog_message,
+                Toast.LENGTH_SHORT
+        ).show()
         val item = items.first { it.name == items[lastItem]!!.name }
         realm.executeTransaction {
             item.isDisplay = true
