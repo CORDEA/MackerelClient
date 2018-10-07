@@ -1,125 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_view"
-        style="@style/CardDefault"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/card_margin"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:cardBackgroundColor="@android:color/white">
+    <androidx.cardview.widget.CardView
+            android:id="@+id/card_view"
+            style="@style/CardDefault"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/card_margin"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:cardBackgroundColor="@android:color/white">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <View
-                android:id="@+id/health_view"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/list_item_host_status_height"
-                android:layout_marginBottom="@dimen/list_item_host_status_margin_bottom"
-                android:background="@color/statusPoweroff" />
-
-            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/list_item_host_content_margin_top"
                 android:orientation="vertical">
 
-                <RelativeLayout
+            <View
+                    android:id="@+id/health_view"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/list_item_host_metrics_height"
-                    android:layout_marginLeft="@dimen/list_item_host_content_margin_side"
-                    android:layout_marginRight="@dimen/list_item_host_content_margin_side">
+                    android:layout_height="@dimen/list_item_host_status_height"
+                    android:layout_marginBottom="@dimen/list_item_host_status_margin_bottom"
+                    android:background="@color/statusPoweroff"/>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/list_item_host_content_margin_top"
+                    android:orientation="vertical">
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/list_item_host_metrics_height"
+                        android:layout_marginLeft="@dimen/list_item_host_content_margin_side"
+                        android:layout_marginRight="@dimen/list_item_host_content_margin_side">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/list_item_host_detail_margin_side"
-                        android:layout_marginRight="@dimen/list_item_host_detail_margin_side"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical">
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/list_item_host_detail_margin_side"
+                            android:layout_marginRight="@dimen/list_item_host_detail_margin_side"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical">
 
                         <FrameLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:id="@+id/name_text_view"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="@dimen/list_item_host_detail_role_max_width"
-                                android:ellipsize="end"
-                                android:gravity="left"
-                                android:maxLines="1"
-                                android:text="@string/na_text"
-                                android:textColor="@color/colorPrimaryText"
-                                android:textSize="24sp" />
+                                android:layout_height="wrap_content">
 
                             <TextView
-                                android:id="@+id/role_text_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="right"
-                                android:gravity="right|center_vertical"
-                                android:maxWidth="@dimen/list_item_host_detail_role_max_width"
-                                android:text="@string/na_text"
-                                android:textColor="@color/colorSecondaryText" />
+                                    android:id="@+id/name_text_view"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="@dimen/list_item_host_detail_role_max_width"
+                                    android:ellipsize="end"
+                                    android:gravity="left"
+                                    android:maxLines="1"
+                                    android:text="@string/na_text"
+                                    android:textColor="@color/colorPrimaryText"
+                                    android:textSize="24sp"/>
+
+                            <TextView
+                                    android:id="@+id/role_text_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="right"
+                                    android:gravity="right|center_vertical"
+                                    android:maxWidth="@dimen/list_item_host_detail_role_max_width"
+                                    android:text="@string/na_text"
+                                    android:textColor="@color/colorSecondaryText"/>
                         </FrameLayout>
 
                         <TextView
-                            android:id="@+id/detail_text_view"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/list_item_host_detail_margin_left"
-                            android:layout_marginTop="@dimen/list_item_host_detail_margin_top"
-                            android:text="@string/na_text"
-                            android:textColor="@color/colorSecondaryText"
-                            android:textSize="14sp" />
+                                android:id="@+id/detail_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/list_item_host_detail_margin_left"
+                                android:layout_marginTop="@dimen/list_item_host_detail_margin_top"
+                                android:text="@string/na_text"
+                                android:textColor="@color/colorSecondaryText"
+                                android:textSize="14sp"/>
                     </LinearLayout>
                 </RelativeLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/list_item_host_metrics_height"
-                    android:layout_marginLeft="@dimen/list_item_host_content_margin_side"
-                    android:layout_marginRight="@dimen/list_item_host_content_margin_side"
-                    android:orientation="horizontal">
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/list_item_host_metrics_height"
+                        android:layout_marginLeft="@dimen/list_item_host_content_margin_side"
+                        android:layout_marginRight="@dimen/list_item_host_content_margin_side"
+                        android:orientation="horizontal">
 
                     <include
-                        android:id="@+id/loadavg"
-                        layout="@layout/list_item_host_metric" />
+                            android:id="@+id/loadavg"
+                            layout="@layout/list_item_host_metric"/>
 
                     <include
-                        android:id="@+id/cpu"
-                        layout="@layout/list_item_host_metric" />
+                            android:id="@+id/cpu"
+                            layout="@layout/list_item_host_metric"/>
 
                     <include
-                        android:id="@+id/memory"
-                        layout="@layout/list_item_host_metric" />
+                            android:id="@+id/memory"
+                            layout="@layout/list_item_host_metric"/>
                 </LinearLayout>
 
                 <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/list_item_host_bottom_bar_margin_bottom">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/list_item_host_bottom_bar_margin_bottom">
 
                     <Button
-                        android:id="@+id/detail_button"
-                        style="?attr/buttonBarButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left"
-                        android:layout_marginLeft="@dimen/list_item_host_bottom_bar_button_margin_left"
-                        android:minWidth="@dimen/list_item_host_bottom_bar_button_min_width"
-                        android:text="@string/detail" />
+                            android:id="@+id/detail_button"
+                            style="?attr/buttonBarButtonStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_marginLeft="@dimen/list_item_host_bottom_bar_button_margin_left"
+                            android:minWidth="@dimen/list_item_host_bottom_bar_button_min_width"
+                            android:text="@string/detail"/>
 
                 </FrameLayout>
             </LinearLayout>
 
         </LinearLayout>
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 </layout>

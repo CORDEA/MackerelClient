@@ -1,10 +1,10 @@
 package jp.cordea.mackerelclient.fragment.alert
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import jp.cordea.mackerelclient.activity.AlertDetailActivity
 import jp.cordea.mackerelclient.adapter.AlertAdapter
 import jp.cordea.mackerelclient.api.response.Alert

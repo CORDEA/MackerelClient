@@ -11,23 +11,24 @@ class McApplication : Application() {
         super.onCreate()
         Realm.init(this)
 
-        Realm.setDefaultConfiguration(RealmConfiguration.Builder()
-            .schemaVersion(SCHEMA_VERSION)
-            .migration { dynamicRealm, old, _ ->
-                val scheme = dynamicRealm.schema
-                var oldVersion = old
-                if (old == 0L) {
-                    scheme[DisplayHostState::class.java.simpleName]!!
-                        .addField("new_name", String::class.java)
-                        .transform {
-                            it.setString("new_name", it.getString("name"))
-                        }
-                        .removeField("name")
-                        .addPrimaryKey("new_name")
-                        .renameField("new_name", "name")
-                    ++oldVersion
-                }
-            }.build()
+        Realm.setDefaultConfiguration(
+            RealmConfiguration.Builder()
+                .schemaVersion(SCHEMA_VERSION)
+                .migration { dynamicRealm, old, _ ->
+                    val scheme = dynamicRealm.schema
+                    var oldVersion = old
+                    if (old == 0L) {
+                        scheme[DisplayHostState::class.java.simpleName]!!
+                            .addField("new_name", String::class.java)
+                            .transform {
+                                it.setString("new_name", it.getString("name"))
+                            }
+                            .removeField("name")
+                            .addPrimaryKey("new_name")
+                            .renameField("new_name", "name")
+                        ++oldVersion
+                    }
+                }.build()
         )
     }
 

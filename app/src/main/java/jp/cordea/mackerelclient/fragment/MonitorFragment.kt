@@ -3,11 +3,11 @@ package jp.cordea.mackerelclient.fragment
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import jp.cordea.mackerelclient.activity.MonitorDetailActivity
 import jp.cordea.mackerelclient.adapter.MonitorAdapter
 import jp.cordea.mackerelclient.api.MackerelApiClient

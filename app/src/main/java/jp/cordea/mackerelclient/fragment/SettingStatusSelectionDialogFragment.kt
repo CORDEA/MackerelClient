@@ -4,9 +4,9 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v7.app.AlertDialog
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import io.realm.Realm
 import io.realm.RealmResults
 import jp.cordea.mackerelclient.R

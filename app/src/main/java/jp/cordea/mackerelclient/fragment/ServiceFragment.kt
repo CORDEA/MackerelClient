@@ -1,10 +1,10 @@
 package jp.cordea.mackerelclient.fragment
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import jp.cordea.mackerelclient.activity.ServiceMetricsActivity
 import jp.cordea.mackerelclient.adapter.ServiceAdapter
 import jp.cordea.mackerelclient.api.response.Service

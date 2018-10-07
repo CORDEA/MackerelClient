@@ -2,57 +2,57 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/common_cell_height">
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_cell_height">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/list_item_user_margin_side"
-            android:layout_marginRight="@dimen/list_item_user_margin_side"
-            android:orientation="horizontal">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/list_item_user_margin_side"
+                android:layout_marginRight="@dimen/list_item_user_margin_side"
+                android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/user_thumbnail_image_view"
-                android:layout_width="@dimen/user_thumbnail_size_small"
-                android:layout_height="@dimen/user_thumbnail_size_small"
-                android:layout_centerVertical="true" />
+                    android:id="@+id/user_thumbnail_image_view"
+                    android:layout_width="@dimen/user_thumbnail_size_small"
+                    android:layout_height="@dimen/user_thumbnail_size_small"
+                    android:layout_centerVertical="true"/>
 
             <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/list_item_user_text_margin_left"
-                    android:layout_marginRight="@dimen/list_item_user_text_margin_right"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/name_text_view"
-                        style="@style/ListText.Title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="left"
-                        android:text="@string/na_text" />
+                        android:layout_marginLeft="@dimen/list_item_user_text_margin_left"
+                        android:layout_marginRight="@dimen/list_item_user_text_margin_right"
+                        android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/email_text_view"
-                        style="@style/ListText.Detail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/na_text" />
+                            android:id="@+id/name_text_view"
+                            style="@style/ListText.Title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:text="@string/na_text"/>
+
+                    <TextView
+                            android:id="@+id/email_text_view"
+                            style="@style/ListText.Detail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/na_text"/>
                 </LinearLayout>
 
                 <ImageView
-                    android:id="@+id/delete_image_view"
-                    style="@style/IconActive"
-                    android:layout_width="@dimen/common_icon_size"
-                    android:layout_height="@dimen/common_icon_size"
-                    android:layout_gravity="right|center_vertical"
-                    android:src="@drawable/ic_delete_black_24dp" />
+                        android:id="@+id/delete_image_view"
+                        style="@style/IconActive"
+                        android:layout_width="@dimen/common_icon_size"
+                        android:layout_height="@dimen/common_icon_size"
+                        android:layout_gravity="right|center_vertical"
+                        android:src="@drawable/ic_delete_black_24dp"/>
             </FrameLayout>
         </LinearLayout>
     </FrameLayout>

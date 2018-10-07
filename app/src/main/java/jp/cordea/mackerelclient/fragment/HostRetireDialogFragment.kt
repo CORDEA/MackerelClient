@@ -2,8 +2,8 @@ package jp.cordea.mackerelclient.fragment
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.response.Host
 import jp.cordea.mackerelclient.utils.DialogUtils

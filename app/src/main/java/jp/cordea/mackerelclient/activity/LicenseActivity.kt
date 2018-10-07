@@ -1,9 +1,9 @@
 package jp.cordea.mackerelclient.activity
 
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.databinding.ActivityLicenseBinding
 import jp.cordea.mackerelclient.viewmodel.LicenseViewModel

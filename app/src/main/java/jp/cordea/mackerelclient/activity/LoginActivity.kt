@@ -2,14 +2,14 @@ package jp.cordea.mackerelclient.activity
 
 import android.content.Context
 import android.content.Intent
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
 import android.text.SpannableStringBuilder
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import io.realm.Realm
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.databinding.ActivityLoginBinding

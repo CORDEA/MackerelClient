@@ -1,96 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.v7.widget.CardView
-        style="@style/CardDefault"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/card_margin"
-        app:cardBackgroundColor="@android:color/white">
+    <androidx.cardview.widget.CardView
+            style="@style/CardDefault"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/card_margin"
+            app:cardBackgroundColor="@android:color/white">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
             <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/card_metrics_chart_height">
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/card_metrics_chart_height">
 
                 <FrameLayout
-                    android:id="@+id/progress_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                        android:id="@+id/progress_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
                     <ProgressBar
-                        style="?android:attr/progressBarStyleLarge"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center" />
+                            style="?android:attr/progressBarStyleLarge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"/>
 
                 </FrameLayout>
 
                 <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/line_chart"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone" />
+                        android:id="@+id/line_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone"/>
 
                 <include
-                    android:id="@+id/error"
-                    layout="@layout/content_error" />
+                        android:id="@+id/error"
+                        layout="@layout/content_error"/>
             </FrameLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                 <View
-                    style="@style/DividerDefault"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/common_divider_height"
-                    android:layout_marginLeft="@dimen/card_metrics_content_margin"
-                    android:layout_marginRight="@dimen/card_metrics_content_margin" />
+                        style="@style/DividerDefault"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/common_divider_height"
+                        android:layout_marginLeft="@dimen/card_metrics_content_margin"
+                        android:layout_marginRight="@dimen/card_metrics_content_margin"/>
 
                 <TextView
-                    android:id="@+id/title_text_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/card_metrics_content_margin"
-                    android:layout_marginLeft="@dimen/card_metrics_content_margin"
-                    android:layout_marginRight="@dimen/card_metrics_content_margin"
-                    android:layout_marginTop="@dimen/card_metrics_title_margin_top"
-                    android:textColor="@color/colorPrimaryText"
-                    android:textSize="24sp" />
+                        android:id="@+id/title_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/card_metrics_content_margin"
+                        android:layout_marginLeft="@dimen/card_metrics_content_margin"
+                        android:layout_marginRight="@dimen/card_metrics_content_margin"
+                        android:layout_marginTop="@dimen/card_metrics_title_margin_top"
+                        android:textColor="@color/colorPrimaryText"
+                        android:textSize="24sp"/>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/card_metrics_button_bar_margin_bottom"
-                    android:orientation="horizontal">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/card_metrics_button_bar_margin_bottom"
+                        android:orientation="horizontal">
 
                     <Button
-                        android:id="@+id/edit_button"
-                        style="?attr/buttonBarButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/card_metrics_button_bar_button_margin_left"
-                        android:minWidth="@dimen/card_metrics_button_bar_button_min_width"
-                        android:text="@string/edit" />
+                            android:id="@+id/edit_button"
+                            style="?attr/buttonBarButtonStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/card_metrics_button_bar_button_margin_left"
+                            android:minWidth="@dimen/card_metrics_button_bar_button_min_width"
+                            android:text="@string/edit"/>
 
                     <Button
-                        android:id="@+id/delete_button"
-                        style="?attr/buttonBarButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:minWidth="@dimen/card_metrics_button_bar_button_min_width"
-                        android:text="@string/delete" />
+                            android:id="@+id/delete_button"
+                            style="?attr/buttonBarButtonStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minWidth="@dimen/card_metrics_button_bar_button_min_width"
+                            android:text="@string/delete"/>
 
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 </layout>

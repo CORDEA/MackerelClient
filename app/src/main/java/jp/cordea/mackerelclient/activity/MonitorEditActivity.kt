@@ -3,11 +3,11 @@ package jp.cordea.mackerelclient.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.text.SpannableStringBuilder
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AppCompatActivity
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Monitor

@@ -1,9 +1,9 @@
 package jp.cordea.mackerelclient.adapter
 
 import android.content.Context
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.fragment.alert.CriticalAlertFragment
 import jp.cordea.mackerelclient.fragment.alert.OtherAlertFragment
