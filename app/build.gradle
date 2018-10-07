@@ -1,7 +1,16 @@
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'realm-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: "org.jlleitschuh.gradle.ktlint"
+
+ktlint {
+    android = true
+    outputToConsole = true
+    reporters = [ReporterType.PLAIN]
+}
 
 android {
     compileSdkVersion 28
