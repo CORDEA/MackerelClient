@@ -43,7 +43,7 @@ class CriticalAlertFragment : Fragment() {
         val context = context ?: return
         val parentFragment = parentFragment ?: return
 
-        itemSubscription?.let(Subscription::unsubscribe)
+        itemSubscription?.unsubscribe()
         itemSubscription = (parentFragment as AlertFragment)
                 .onAlertItemChanged
                 .asObservable()
@@ -71,7 +71,7 @@ class CriticalAlertFragment : Fragment() {
             parentFragment.startActivityForResult(intent, CriticalAlertFragment.REQUEST_CODE)
         }
 
-        resultSubscription?.let(Subscription::unsubscribe)
+        resultSubscription?.unsubscribe()
         (parentFragment as? AlertFragment)?.let { fragment ->
             resultSubscription =
                     fragment.onCriticalAlertFragmentResult
@@ -85,7 +85,7 @@ class CriticalAlertFragment : Fragment() {
 
     private fun refresh() {
         binding.swipeRefresh.isRefreshing = true
-        subscription?.let(Subscription::unsubscribe)
+        subscription?.unsubscribe()
         subscription = getAlert()
     }
 
@@ -107,9 +107,9 @@ class CriticalAlertFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        subscription?.let(Subscription::unsubscribe)
-        resultSubscription?.let(Subscription::unsubscribe)
-        itemSubscription?.let(Subscription::unsubscribe)
+        subscription?.unsubscribe()
+        resultSubscription?.unsubscribe()
+        itemSubscription?.unsubscribe()
         super.onDestroyView()
     }
 

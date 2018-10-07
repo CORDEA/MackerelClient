@@ -39,7 +39,7 @@ class SettingFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        subscription?.let(Subscription::unsubscribe)
+        subscription?.unsubscribe()
         subscription = Observable
                 .just(Unit)
                 .subscribeOn(Schedulers.newThread())
@@ -147,7 +147,7 @@ class SettingFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        subscription?.let(Subscription::unsubscribe)
+        subscription?.unsubscribe()
         super.onDestroy()
     }
 

@@ -88,7 +88,7 @@ class ServiceMetricsActivity : AppCompatActivity() {
         contentBinding.recyclerView.addItemDecoration(ListItemDecoration(this))
 
         drawCompleteMetrics = 0
-        subscription?.let(Subscription::unsubscribe)
+        subscription?.unsubscribe()
         subscription = viewModel
                 .onChartDataAlive
                 .asObservable()
@@ -115,7 +115,7 @@ class ServiceMetricsActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        subscription?.let(Subscription::unsubscribe)
+        subscription?.unsubscribe()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

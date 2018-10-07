@@ -86,7 +86,7 @@ class MetricsActivity : AppCompatActivity() {
         contentBinding.recyclerView.addItemDecoration(ListItemDecoration(this))
 
         drawCompleteMetrics = 0
-        subscription?.let(Subscription::unsubscribe)
+        subscription?.unsubscribe()
         subscription = viewModel
                 .onChartDataAlive
                 .asObservable()

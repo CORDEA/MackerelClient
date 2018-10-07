@@ -58,7 +58,7 @@ class ServiceFragment : Fragment() {
     }
 
     private fun refresh() {
-        subscription?.let(Subscription::unsubscribe)
+        subscription?.unsubscribe()
         subscription = getServices()
     }
 
@@ -81,7 +81,7 @@ class ServiceFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        subscription?.let(Subscription::unsubscribe)
+        subscription?.unsubscribe()
         super.onDestroyView()
     }
 

@@ -43,7 +43,7 @@ class OtherAlertFragment : Fragment() {
         val context = context ?: return
         val parentFragment = parentFragment ?: return
 
-        itemSubscription?.let(Subscription::unsubscribe)
+        itemSubscription?.unsubscribe()
         itemSubscription = (parentFragment as AlertFragment)
                 .onAlertItemChanged
                 .asObservable()
@@ -108,8 +108,8 @@ class OtherAlertFragment : Fragment() {
 
     override fun onDestroyView() {
         subscription?.unsubscribe()
-        resultSubscription?.let(Subscription::unsubscribe)
-        itemSubscription?.let(Subscription::unsubscribe)
+        resultSubscription?.unsubscribe()
+        itemSubscription?.unsubscribe()
         super.onDestroyView()
     }
 

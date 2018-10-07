@@ -80,7 +80,7 @@ class AlertFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        subscription?.let(Subscription::unsubscribe)
+        subscription?.unsubscribe()
         super.onDestroyView()
     }
 
