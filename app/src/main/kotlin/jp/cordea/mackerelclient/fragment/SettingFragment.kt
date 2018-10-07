@@ -21,7 +21,9 @@ import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
-class SettingFragment : Fragment() {
+class SettingFragment : Fragment(), SettingStatusSelectionDialogFragment.OnUpdateStatusListener {
+
+    private val realm = Realm.getDefaultInstance()
 
     private var subscription: Subscription? = null
 
@@ -38,7 +40,6 @@ class SettingFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         subscription?.unsubscribe()
         subscription = Observable
                 .just(Unit)
@@ -56,7 +57,7 @@ class SettingFragment : Fragment() {
                     realm.close()
                 }
                 .observeOn(AndroidSchedulers.mainThread())
-                .map { updateStatus() }
+                .map { onUpdateStatus() }
                 .subscribe({ addEvents() }, {})
 
         binding.licenseLayout.setOnClickListener {
@@ -72,45 +73,25 @@ class SettingFragment : Fragment() {
         binding.versionTextView.text = BuildConfig.VERSION_NAME
     }
 
-    private fun addEvents() {
-        var realm: Realm
-        binding.hostLayout.setOnClickListener { _ ->
-            realm = Realm.getDefaultInstance()
-            val items = realm.copyFromRealm(realm.where(DisplayHostState::class.java).findAll())
-            realm.close()
-            var lastItem = 0
-            AlertDialog.Builder(context)
-                    .setMultiChoiceItems(
-                            items.map { StatusUtils.requestNameToString(it.name) }.toTypedArray(),
-                            BooleanArray(items.size) { i -> items[i].isDisplay!! }
-                    ) { _, which, flag ->
-                        val inRealm = Realm.getDefaultInstance()
-                        val item = items[which]
-                        item.isDisplay = flag
-                        inRealm.executeTransaction {
-                            it.copyToRealmOrUpdate(item)
-                        }
+    override fun onDestroy() {
+        super.onDestroy()
+        subscription?.unsubscribe()
+        realm.close()
+    }
 
-                        lastItem = which
-                        updateStatus(inRealm)
-                        inRealm.close()
-                    }
-                    .setOnDismissListener { _ ->
-                        val inRealm = Realm.getDefaultInstance()
-                        val all = inRealm.where(DisplayHostState::class.java).findAll()
-                        if (all.none { it.isDisplay!! }) {
-                            AlertDialog
-                                    .Builder(context)
-                                    .setMessage(R.string.setting_status_select_limit_dialog_message)
-                                    .show()
-                            val wk = all.first { it.name == items[lastItem].name }
-                            inRealm.executeTransaction {
-                                wk.isDisplay = true
-                            }
-                            updateStatus(inRealm)
-                        }
-                        inRealm.close()
-                    }.show()
+    override fun onUpdateStatus() {
+        binding.hostTextView.text = realm.where(DisplayHostState::class.java).findAll()
+                .filter { it.isDisplay!! }
+                .map { it.name }
+                .joinToString(", ") { StatusUtils.requestNameToString(it) }
+    }
+
+    private fun addEvents() {
+        binding.hostLayout.setOnClickListener { _ ->
+            SettingStatusSelectionDialogFragment().show(
+                    childFragmentManager,
+                    SettingStatusSelectionDialogFragment.TAG
+            )
         }
 
         binding.initLayout.setOnClickListener { _ ->
@@ -118,37 +99,12 @@ class SettingFragment : Fragment() {
                     .Builder(context)
                     .setMessage(R.string.setting_init_dialog_title)
                     .setPositiveButton(R.string.setting_init_dialog_positive_button) { _, _ ->
-                        realm = Realm.getDefaultInstance()
                         realm.executeTransaction {
                             it.delete(UserMetric::class.java)
                         }
-                        realm.close()
                     }
                     .show()
         }
-    }
-
-    private fun updateStatus(r: Realm? = null) {
-        var needClose = false
-        val realm: Realm
-        if (r == null) {
-            realm = Realm.getDefaultInstance()
-            needClose = true
-        } else {
-            realm = r
-        }
-        binding.hostTextView.text = realm.where(DisplayHostState::class.java).findAll()
-                .filter { it.isDisplay!! }
-                .map { it.name }
-                .joinToString(", ") { StatusUtils.requestNameToString(it) }
-        if (needClose) {
-            realm.close()
-        }
-    }
-
-    override fun onDestroy() {
-        subscription?.unsubscribe()
-        super.onDestroy()
     }
 
     companion object {
@@ -156,7 +112,6 @@ class SettingFragment : Fragment() {
         private const val CONTRIBUTORS_URL =
                 "https://github.com/CORDEA/MackerelClient/graphs/contributors"
 
-        fun newInstance(): SettingFragment =
-                SettingFragment()
+        fun newInstance(): SettingFragment = SettingFragment()
     }
 }
