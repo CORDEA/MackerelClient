@@ -69,27 +69,27 @@ object MackerelApiClient {
     fun getServices(context: Context): Observable<Services> =
             getService(MackerelApi::class.java, context)
                     .getService()
-                    .subscribeOn(Schedulers.newThread())
+                    .subscribeOn(Schedulers.io())
 
     fun getHosts(context: Context, status: List<String>): Observable<Hosts> =
             getService(MackerelApi::class.java, context)
                     .getAllHosts(status)
-                    .subscribeOn(Schedulers.newThread())
+                    .subscribeOn(Schedulers.io())
 
     fun getAlerts(context: Context): Observable<Alerts> =
             getService(MackerelApi::class.java, context)
                     .getAlerts()
-                    .subscribeOn(Schedulers.newThread())
+                    .subscribeOn(Schedulers.io())
 
     fun getMonitors(context: Context): Observable<Monitors> =
             getService(MackerelApi::class.java, context)
                     .getMonitors()
-                    .subscribeOn(Schedulers.newThread())
+                    .subscribeOn(Schedulers.io())
 
     fun getUsers(context: Context, key: String? = null): Observable<Users> =
             getService(MackerelApi::class.java, context, key)
                     .getUsers()
-                    .subscribeOn(Schedulers.newThread())
+                    .subscribeOn(Schedulers.io())
 
     fun getMetrics(
             context: Context,
@@ -100,7 +100,7 @@ object MackerelApiClient {
     ): Observable<Metrics> =
             getService(MackerelApi::class.java, context)
                     .getMetrics(hostId, name, from, to)
-                    .subscribeOn(Schedulers.newThread())
+                    .subscribeOn(Schedulers.io())
 
     fun getLatestMetrics(
             context: Context,
@@ -109,7 +109,7 @@ object MackerelApiClient {
     ): Observable<Tsdbs> =
             getService(MackerelApi::class.java, context)
                     .getLatestMetric(hostId, name)
-                    .subscribeOn(Schedulers.newThread())
+                    .subscribeOn(Schedulers.io())
 
     fun getServiceMetrics(
             context: Context,
@@ -120,7 +120,7 @@ object MackerelApiClient {
     ): Observable<Metrics> =
             getService(MackerelApi::class.java, context)
                     .getServiceMetrics(serviceName, name, from, to)
-                    .subscribeOn(Schedulers.newThread())
+                    .subscribeOn(Schedulers.io())
 
     fun deleteUser(context: Context, userId: String): Call<User> =
             getService(MackerelApi::class.java, context).deleteUser(userId)

@@ -16,7 +16,7 @@ class LicenseViewModel(private val context: Context) {
     val licensesObservable: Observable<SpannableStringBuilder>
         get() = Observable
                 .just(R.raw.licenses)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .map {
                     BufferedReader(InputStreamReader(context.resources.openRawResource(it)))
                 }

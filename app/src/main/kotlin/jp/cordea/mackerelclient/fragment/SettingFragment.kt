@@ -43,7 +43,7 @@ class SettingFragment : Fragment(), SettingStatusSelectionDialogFragment.OnUpdat
         subscription?.unsubscribe()
         subscription = Observable
                 .just(Unit)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .map { Realm.getDefaultInstance() }
                 .map { realm ->
                     if (realm.where(DisplayHostState::class.java).findAll().size == 0) {
