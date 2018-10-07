@@ -9,24 +9,24 @@ import jp.cordea.mackerelclient.fragment.alert.CriticalAlertFragment
 import jp.cordea.mackerelclient.fragment.alert.OtherAlertFragment
 
 class AlertFragmentPagerAdapter(
-        manager: FragmentManager,
-        val context: Context
+    manager: FragmentManager,
+    val context: Context
 ) : FragmentPagerAdapter(manager) {
 
     override fun getCount(): Int =
-            2
+        2
 
     override fun getItem(position: Int): Fragment? =
-            when (position) {
-                0 -> CriticalAlertFragment.newInstance()
-                1 -> OtherAlertFragment.newInstance()
-                else -> null
-            }
+        when (position) {
+            0 -> CriticalAlertFragment.newInstance()
+            1 -> OtherAlertFragment.newInstance()
+            else -> null
+        }
 
     override fun getPageTitle(position: Int): CharSequence? =
-            when (position) {
-                0 -> context.getString(R.string.in_progress_alert_title)
-                1 -> context.getString(R.string.closed_alert_title)
-                else -> null
-            }
+        when (position) {
+            0 -> context.getString(R.string.in_progress_alert_title)
+            1 -> context.getString(R.string.closed_alert_title)
+            else -> null
+        }
 }

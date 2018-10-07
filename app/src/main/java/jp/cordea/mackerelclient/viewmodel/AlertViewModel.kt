@@ -9,22 +9,22 @@ import rx.android.schedulers.AndroidSchedulers
 class AlertViewModel(private val context: Context) {
 
     fun getAlerts(
-            alerts: List<Alert>?,
-            filter: (Alert) -> Boolean = { true }
+        alerts: List<Alert>?,
+        filter: (Alert) -> Boolean = { true }
     ): Observable<List<Alert>> {
         val observable = if (alerts == null) {
             MackerelApiClient
-                    .getAlerts(context)
-                    .flatMap {
-                        Observable.from(it.alerts)
-                                .filter(filter)
-                    }
+                .getAlerts(context)
+                .flatMap {
+                    Observable.from(it.alerts)
+                        .filter(filter)
+                }
         } else {
             Observable.from(alerts)
         }
 
         return observable
-                .toList()
-                .observeOn(AndroidSchedulers.mainThread())
+            .toList()
+            .observeOn(AndroidSchedulers.mainThread())
     }
 }

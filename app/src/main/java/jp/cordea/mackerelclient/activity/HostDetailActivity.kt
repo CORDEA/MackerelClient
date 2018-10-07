@@ -28,7 +28,7 @@ class HostDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil
-                .setContentView<ActivityDetailCommonBinding>(this, R.layout.activity_detail_common)
+            .setContentView<ActivityDetailCommonBinding>(this, R.layout.activity_detail_common)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val host = intent.getSerializableExtra(HOST_KEY) as Host
@@ -46,21 +46,21 @@ class HostDetailActivity : AppCompatActivity() {
         val list: MutableList<MutableList<Pair<String, Int>>> = arrayListOf()
         var inner: MutableList<Pair<String, Int>> = arrayListOf()
 
-        inner.add(Pair(StatusUtils.requestNameToString(host.status), R.string.host_detail_status))
-        inner.add(Pair(host.memo, R.string.host_detail_memo))
+        inner.add(StatusUtils.requestNameToString(host.status) to R.string.host_detail_status)
+        inner.add(host.memo to R.string.host_detail_memo)
         list.add(inner)
 
         inner = arrayListOf()
-        inner.add(Pair(
-                host.roles.size.let {
-                    if (it <= 1) resources.getString(R.string.format_role).format(it)
-                    else
-                        if (it > 99) resources.getString(R.string.format_roles_ex)
-                        else resources.getString(R.string.format_roles).format(it)
-                },
-                R.string.host_detail_roles
-        ))
-        inner.add(Pair(DateUtils.stringDateFromEpoch(host.createdAt), R.string.host_detail_created_at))
+        inner.add(
+            host.roles.size.let {
+                if (it <= 1) resources.getString(R.string.format_role).format(it)
+                else if (it > 99) resources.getString(R.string.format_roles_ex)
+                else resources.getString(R.string.format_roles).format(it)
+            } to R.string.host_detail_roles
+        )
+        inner.add(
+            DateUtils.stringDateFromEpoch(host.createdAt) to R.string.host_detail_created_at
+        )
         list.add(inner)
         return list
     }
@@ -80,14 +80,14 @@ class HostDetailActivity : AppCompatActivity() {
             android.R.id.home -> finish()
             R.id.action_retire -> {
                 HostRetireDialogFragment
-                        .newInstance(host!!)
-                        .apply {
-                            onSuccess = {
-                                setResult(Activity.RESULT_OK)
-                                finish()
-                            }
+                    .newInstance(host!!)
+                    .apply {
+                        onSuccess = {
+                            setResult(Activity.RESULT_OK)
+                            finish()
                         }
-                        .show(supportFragmentManager, "")
+                    }
+                    .show(supportFragmentManager, "")
             }
         }
         return super.onOptionsItemSelected(item)
@@ -100,8 +100,8 @@ class HostDetailActivity : AppCompatActivity() {
         private const val HOST_KEY = "HostKey"
 
         fun createIntent(context: Context, host: Host): Intent =
-                Intent(context, HostDetailActivity::class.java).apply {
-                    putExtra(HOST_KEY, host)
-                }
+            Intent(context, HostDetailActivity::class.java).apply {
+                putExtra(HOST_KEY, host)
+            }
     }
 }

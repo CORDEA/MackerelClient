@@ -18,10 +18,10 @@ class CharCircleView(context: Context, attrs: AttributeSet?) : View(context, att
         }
 
     private val colorSet: Map<Char, Int> = mapOf(
-            Pair('C', R.color.statusCritical),
-            Pair('O', R.color.statusOk),
-            Pair('W', R.color.statusWarning),
-            Pair('U', R.color.statusUnknown)
+        'C' to R.color.statusCritical,
+        'O' to R.color.statusOk,
+        'W' to R.color.statusWarning,
+        'U' to R.color.statusUnknown
     )
 
     private val paint = Paint()
@@ -45,10 +45,10 @@ class CharCircleView(context: Context, attrs: AttributeSet?) : View(context, att
         paint.color = ContextCompat.getColor(context, android.R.color.white)
 
         canvas.drawText(
-                char.toString(),
-                size,
-                size - ((paint.ascent() + paint.descent()) / 2.0f),
-                paint
+            char.toString(),
+            size,
+            size - ((paint.ascent() + paint.descent()) / 2.0f),
+            paint
         )
     }
 }

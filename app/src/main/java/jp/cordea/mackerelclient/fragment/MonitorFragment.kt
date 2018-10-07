@@ -24,13 +24,13 @@ class MonitorFragment : Fragment() {
     private lateinit var binding: FragmentMonitorBinding
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View =
-            FragmentMonitorBinding.inflate(inflater, container, false).also {
-                binding = it
-            }.root
+        FragmentMonitorBinding.inflate(inflater, container, false).also {
+            binding = it
+        }.root
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -59,34 +59,34 @@ class MonitorFragment : Fragment() {
     private fun requestApi(): Subscription {
         val context = context ?: return Subscriptions.empty()
         return MackerelApiClient
-                .getMonitors(context)
-                .map { it.monitors }
-                .map { monitors ->
-                    val sections = monitors
-                            .asSequence()
-                            .map { it.type }
-                            .distinct()
-                            .sortedBy { it }
-                    val pairs: MutableList<Pair<String, Monitor?>> = arrayListOf()
-                    for (section in sections) {
-                        val items = monitors.filter { section == it.type }
-                        val type = items[0].type
-                        pairs.add(Pair(type, null))
-                        items.map { pairs.add(Pair(type, it)) }
-                    }
-                    pairs
+            .getMonitors(context)
+            .map { it.monitors }
+            .map { monitors ->
+                val sections = monitors
+                    .asSequence()
+                    .map { it.type }
+                    .distinct()
+                    .sortedBy { it }
+                val pairs: MutableList<Pair<String, Monitor?>> = arrayListOf()
+                for (section in sections) {
+                    val items = monitors.filter { section == it.type }
+                    val type = items[0].type
+                    pairs.add(type to null)
+                    items.map { pairs.add(type to it) }
                 }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    binding.swipeRefresh.isRefreshing = false
-                    binding.recyclerView.adapter = MonitorAdapter(this, it)
-                    binding.progressLayout.visibility = View.GONE
-                    binding.swipeRefresh.visibility = View.VISIBLE
-                }, {
-                    binding.swipeRefresh.isRefreshing = false
-                    binding.error.root.visibility = View.VISIBLE
-                    binding.progressLayout.visibility = View.GONE
-                })
+                pairs
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                binding.swipeRefresh.isRefreshing = false
+                binding.recyclerView.adapter = MonitorAdapter(this, it)
+                binding.progressLayout.visibility = View.GONE
+                binding.swipeRefresh.visibility = View.VISIBLE
+            }, {
+                binding.swipeRefresh.isRefreshing = false
+                binding.error.root.visibility = View.VISIBLE
+                binding.progressLayout.visibility = View.GONE
+            })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -35,8 +35,8 @@ class MetricsViewModel(val context: Context) : LifecycleObserver {
     fun initUserMetrics(parentId: String) {
         val realm = Realm.getDefaultInstance()
         val c = realm.where(UserMetric::class.java)
-                .equalTo("type", MetricsType.HOST.name)
-                .equalTo("parentId", parentId).findAll().size
+            .equalTo("type", MetricsType.HOST.name)
+            .equalTo("parentId", parentId).findAll().size
         if (c > 0) {
             realm.close()
             return
@@ -81,28 +81,28 @@ class MetricsViewModel(val context: Context) : LifecycleObserver {
     }
 
     private fun hostMetrics(
-            hostId: String,
-            param: MetricsApiRequestParameter
+        hostId: String,
+        param: MetricsApiRequestParameter
     ): Observable<Metrics> =
-            MackerelApiClient.getMetrics(
-                    context,
-                    hostId,
-                    param.metricsName,
-                    DateUtils.getEpochSec(1),
-                    DateUtils.getEpochSec(0)
-            )
+        MackerelApiClient.getMetrics(
+            context,
+            hostId,
+            param.metricsName,
+            DateUtils.getEpochSec(1),
+            DateUtils.getEpochSec(0)
+        )
 
     private fun serviceMetrics(
-            serviceName: String,
-            param: MetricsApiRequestParameter
+        serviceName: String,
+        param: MetricsApiRequestParameter
     ): Observable<Metrics> =
-            MackerelApiClient.getServiceMetrics(
-                    context,
-                    serviceName,
-                    param.metricsName,
-                    DateUtils.getEpochSec(1),
-                    DateUtils.getEpochSec(0)
-            )
+        MackerelApiClient.getServiceMetrics(
+            context,
+            serviceName,
+            param.metricsName,
+            DateUtils.getEpochSec(1),
+            DateUtils.getEpochSec(0)
+        )
 
     fun requestMetricsApi(metrics: List<UserMetric>, id: String, idType: MetricsType) {
         val requests: MutableList<MetricsApiRequestParameter> = arrayListOf()
@@ -121,10 +121,10 @@ class MetricsViewModel(val context: Context) : LifecycleObserver {
     }
 
     private fun runMetricsApiWithDelay(
-            id: String,
-            idType: MetricsType,
-            metricsApiRequestParameters: List<MetricsApiRequestParameter>,
-            idx: Int = 0
+        id: String,
+        idType: MetricsType,
+        metricsApiRequestParameters: List<MetricsApiRequestParameter>,
+        idx: Int = 0
     ) {
         if (metricsApiRequestParameters.size <= idx) {
             return
@@ -139,7 +139,8 @@ class MetricsViewModel(val context: Context) : LifecycleObserver {
             metricsObservable = hostMetrics(id, param)
         }
 
-        subscription.set(metricsObservable
+        subscription.set(
+            metricsObservable
                 .onErrorReturnNull()
                 .delay(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -164,7 +165,8 @@ class MetricsViewModel(val context: Context) : LifecycleObserver {
                     }
 
                     runMetricsApiWithDelay(id, idType, metricsApiRequestParameters, idx + 1)
-                }))
+                })
+        )
     }
 
     private fun setData(metricsApiRequestParameters: List<MetricsApiRequestParameter>) {
@@ -172,7 +174,7 @@ class MetricsViewModel(val context: Context) : LifecycleObserver {
         var data: LineData? = null
 
         if (metricsApiRequestParameters.none { it.response != null }) {
-            onChartDataAlive.post(Pair(metricsApiRequestParameters.first().id, null))
+            onChartDataAlive.post(metricsApiRequestParameters.first().id to null)
         } else {
             for ((j, param) in metricsApiRequestParameters.withIndex()) {
                 val vals = param.response?.metrics ?: continue
@@ -200,7 +202,7 @@ class MetricsViewModel(val context: Context) : LifecycleObserver {
                 }
             }
 
-            onChartDataAlive.post(Pair(metricsApiRequestParameters.first().id, data))
+            onChartDataAlive.post(metricsApiRequestParameters.first().id to data)
         }
     }
 }

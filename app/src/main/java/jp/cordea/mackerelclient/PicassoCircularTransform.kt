@@ -1,6 +1,10 @@
 package jp.cordea.mackerelclient
 
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapShader
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Shader
 import com.squareup.picasso.Transformation
 
 class PicassoCircularTransform : Transformation {
@@ -20,6 +24,5 @@ class PicassoCircularTransform : Transformation {
         return bitmap
     }
 
-    override fun key(): String =
-            "circular"
+    override fun key(): String = "circular"
 }

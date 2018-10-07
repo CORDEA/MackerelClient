@@ -11,21 +11,21 @@ import retrofit2.Response
 class AlertCloseViewModel(private val context: Context) {
 
     fun closeAlert(
-            alert: Alert,
-            reason: String,
-            onResponse: (Response<Alert>?) -> Unit,
-            onFailure: () -> Unit
+        alert: Alert,
+        reason: String,
+        onResponse: (Response<Alert>?) -> Unit,
+        onFailure: () -> Unit
     ) {
         MackerelApiClient
-                .closeAlert(context, alert.id, CloseAlert(reason))
-                .enqueue(object : Callback<Alert> {
-                    override fun onResponse(p0: Call<Alert>?, response: Response<Alert>?) {
-                        onResponse(response)
-                    }
+            .closeAlert(context, alert.id, CloseAlert(reason))
+            .enqueue(object : Callback<Alert> {
+                override fun onResponse(p0: Call<Alert>?, response: Response<Alert>?) {
+                    onResponse(response)
+                }
 
-                    override fun onFailure(p0: Call<Alert>?, p1: Throwable?) {
-                        onFailure()
-                    }
-                })
+                override fun onFailure(p0: Call<Alert>?, p1: Throwable?) {
+                    onFailure()
+                }
+            })
     }
 }

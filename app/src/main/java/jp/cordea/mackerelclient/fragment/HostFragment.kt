@@ -26,13 +26,13 @@ class HostFragment : Fragment() {
     private lateinit var binding: FragmentHostBinding
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View =
-            FragmentHostBinding.inflate(inflater, container, false).also {
-                binding = it
-            }.root
+        FragmentHostBinding.inflate(inflater, container, false).also {
+            binding = it
+        }.root
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -59,20 +59,20 @@ class HostFragment : Fragment() {
 
     private fun getHosts(items: List<DisplayHostState>): Subscription {
         return viewModel
-                .getHosts(items)
-                .flatMap({ viewModel.getLatestMetrics(it) }, { hosts, tsdbs ->
-                    adapter.update(hosts.hosts, tsdbs.tsdbs)
-                })
-                .subscribe({
-                    binding.progressLayout.visibility = View.GONE
-                    binding.swipeRefresh.visibility = View.VISIBLE
-                    binding.swipeRefresh.isRefreshing = false
-                }, {
-                    binding.swipeRefresh.isRefreshing = false
-                    binding.error.root.visibility = View.VISIBLE
-                    binding.progressLayout.visibility = View.GONE
-                    binding.swipeRefresh.visibility = View.GONE
-                })
+            .getHosts(items)
+            .flatMap({ viewModel.getLatestMetrics(it) }, { hosts, tsdbs ->
+                adapter.update(hosts.hosts, tsdbs.tsdbs)
+            })
+            .subscribe({
+                binding.progressLayout.visibility = View.GONE
+                binding.swipeRefresh.visibility = View.VISIBLE
+                binding.swipeRefresh.isRefreshing = false
+            }, {
+                binding.swipeRefresh.isRefreshing = false
+                binding.error.root.visibility = View.VISIBLE
+                binding.progressLayout.visibility = View.GONE
+                binding.swipeRefresh.visibility = View.GONE
+            })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

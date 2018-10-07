@@ -30,35 +30,35 @@ class SettingFragment : Fragment(), SettingStatusSelectionDialogFragment.OnUpdat
     private lateinit var binding: FragmentSettingBinding
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View =
-            FragmentSettingBinding.inflate(inflater, container, false).also {
-                binding = it
-            }.root
+        FragmentSettingBinding.inflate(inflater, container, false).also {
+            binding = it
+        }.root
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         subscription?.unsubscribe()
         subscription = Observable
-                .just(Unit)
-                .subscribeOn(Schedulers.io())
-                .map { Realm.getDefaultInstance() }
-                .map { realm ->
-                    if (realm.where(DisplayHostState::class.java).findAll().size == 0) {
-                        realm.executeTransaction {
-                            for (key in resources.getStringArray(R.array.setting_host_cell_arr)) {
-                                val item = it.createObject(DisplayHostState::class.java, key)
-                                item.isDisplay = (key == "standby" || key == "working")
-                            }
+            .just(Unit)
+            .subscribeOn(Schedulers.io())
+            .map { Realm.getDefaultInstance() }
+            .map { realm ->
+                if (realm.where(DisplayHostState::class.java).findAll().size == 0) {
+                    realm.executeTransaction {
+                        for (key in resources.getStringArray(R.array.setting_host_cell_arr)) {
+                            val item = it.createObject(DisplayHostState::class.java, key)
+                            item.isDisplay = (key == "standby" || key == "working")
                         }
                     }
-                    realm.close()
                 }
-                .observeOn(AndroidSchedulers.mainThread())
-                .map { onUpdateStatus() }
-                .subscribe({ addEvents() }, {})
+                realm.close()
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .map { onUpdateStatus() }
+            .subscribe({ addEvents() }, {})
 
         binding.licenseLayout.setOnClickListener {
             val intent = Intent(context, LicenseActivity::class.java)
@@ -81,36 +81,36 @@ class SettingFragment : Fragment(), SettingStatusSelectionDialogFragment.OnUpdat
 
     override fun onUpdateStatus() {
         binding.hostTextView.text = realm.where(DisplayHostState::class.java).findAll()
-                .filter { it.isDisplay!! }
-                .map { it.name }
-                .joinToString(", ") { StatusUtils.requestNameToString(it) }
+            .filter { it.isDisplay!! }
+            .map { it.name }
+            .joinToString(", ") { StatusUtils.requestNameToString(it) }
     }
 
     private fun addEvents() {
         binding.hostLayout.setOnClickListener { _ ->
             SettingStatusSelectionDialogFragment().show(
-                    childFragmentManager,
-                    SettingStatusSelectionDialogFragment.TAG
+                childFragmentManager,
+                SettingStatusSelectionDialogFragment.TAG
             )
         }
 
         binding.initLayout.setOnClickListener { _ ->
             AlertDialog
-                    .Builder(context)
-                    .setMessage(R.string.setting_init_dialog_title)
-                    .setPositiveButton(R.string.setting_init_dialog_positive_button) { _, _ ->
-                        realm.executeTransaction {
-                            it.delete(UserMetric::class.java)
-                        }
+                .Builder(context)
+                .setMessage(R.string.setting_init_dialog_title)
+                .setPositiveButton(R.string.setting_init_dialog_positive_button) { _, _ ->
+                    realm.executeTransaction {
+                        it.delete(UserMetric::class.java)
                     }
-                    .show()
+                }
+                .show()
         }
     }
 
     companion object {
 
         private const val CONTRIBUTORS_URL =
-                "https://github.com/CORDEA/MackerelClient/graphs/contributors"
+            "https://github.com/CORDEA/MackerelClient/graphs/contributors"
 
         fun newInstance(): SettingFragment = SettingFragment()
     }

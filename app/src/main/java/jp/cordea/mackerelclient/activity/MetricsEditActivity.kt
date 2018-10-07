@@ -30,7 +30,7 @@ class MetricsEditActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil
-                .setContentView<ActivityMetricsEditBinding>(this, R.layout.activity_metrics_edit)
+            .setContentView<ActivityMetricsEditBinding>(this, R.layout.activity_metrics_edit)
         contentBinding = binding.content
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -90,15 +90,17 @@ class MetricsEditActivity : AppCompatActivity() {
                 false
             } else {
                 AlertDialog
-                        .Builder(this)
-                        .setMessage(R.string.metrics_edit_dialog_title)
-                        .show()
+                    .Builder(this)
+                    .setMessage(R.string.metrics_edit_dialog_title)
+                    .show()
                 null
             }
         }
 
-        viewModel.storeMetric(id, intent.getStringExtra(ID_KEY), type!!.name,
-                contentBinding.labelEditText.text.toString(), metricFirst, metricSecond)
+        viewModel.storeMetric(
+            id, intent.getStringExtra(ID_KEY), type!!.name,
+            contentBinding.labelEditText.text.toString(), metricFirst, metricSecond
+        )
         return true
     }
 
@@ -113,10 +115,10 @@ class MetricsEditActivity : AppCompatActivity() {
         private const val TYPE_KEY = "TypeKey"
 
         fun createIntent(
-                context: Context,
-                type: MetricsType,
-                id: String,
-                metricId: Int? = null
+            context: Context,
+            type: MetricsType,
+            id: String,
+            metricId: Int? = null
         ): Intent {
             val intent = Intent(context, MetricsEditActivity::class.java)
             metricId?.let {

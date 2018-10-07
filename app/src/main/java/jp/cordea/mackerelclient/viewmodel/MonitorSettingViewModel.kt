@@ -10,21 +10,20 @@ import retrofit2.Response
 class MonitorSettingViewModel(private val context: Context) {
 
     fun deleteMonitorSetting(
-            monitor: Monitor,
-            onResponse: (Response<Monitor>?) -> Unit,
-            onFailure: () -> Unit
+        monitor: Monitor,
+        onResponse: (Response<Monitor>?) -> Unit,
+        onFailure: () -> Unit
     ) {
         MackerelApiClient
-                .deleteMonitor(context, monitor.id)
-                .enqueue(object : Callback<Monitor> {
-                    override fun onResponse(p0: Call<Monitor>?, response: Response<Monitor>?) {
-                        onResponse(response)
-                    }
+            .deleteMonitor(context, monitor.id)
+            .enqueue(object : Callback<Monitor> {
+                override fun onResponse(p0: Call<Monitor>?, response: Response<Monitor>?) {
+                    onResponse(response)
+                }
 
-                    override fun onFailure(p0: Call<Monitor>?, p1: Throwable?) {
-                        onFailure()
-                    }
-                })
+                override fun onFailure(p0: Call<Monitor>?, p1: Throwable?) {
+                    onFailure()
+                }
+            })
     }
-
 }

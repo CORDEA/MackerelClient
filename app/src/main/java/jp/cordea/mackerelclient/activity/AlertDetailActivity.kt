@@ -24,7 +24,7 @@ class AlertDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil
-                .setContentView<ActivityDetailCommonBinding>(this, R.layout.activity_detail_common)
+            .setContentView<ActivityDetailCommonBinding>(this, R.layout.activity_detail_common)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         val alert = intent.getSerializableExtra(ALERT_KEY) as Alert
 
@@ -40,23 +40,25 @@ class AlertDetailActivity : AppCompatActivity() {
     private fun insertInfo(alert: Alert): List<List<Pair<String, Int>>> {
         val list: MutableList<MutableList<Pair<String, Int>>> = arrayListOf()
         var inner: MutableList<Pair<String, Int>> = arrayListOf()
-        inner.add(Pair(alert.status, R.string.alert_detail_status))
-        inner.add(Pair(DateUtils.stringDateFromEpoch(alert.openedAt), R.string.alert_detail_opened_at))
+        inner.add(alert.status to R.string.alert_detail_status)
+        inner.add(
+            DateUtils.stringDateFromEpoch(alert.openedAt) to R.string.alert_detail_opened_at
+        )
         alert.closedAt?.let {
-            inner.add(Pair(DateUtils.stringDateFromEpoch(it), R.string.alert_detail_closed_at))
+            inner.add(DateUtils.stringDateFromEpoch(it) to R.string.alert_detail_closed_at)
         }
         list.add(inner)
 
         inner = arrayListOf()
         alert.reason?.let {
-            inner.add(Pair(it, R.string.alert_detail_reason))
+            inner.add(it to R.string.alert_detail_reason)
         }
-        inner.add(Pair(alert.type, R.string.alert_detail_type))
+        inner.add(alert.type to R.string.alert_detail_type)
         alert.value?.let {
-            inner.add(Pair(it.toString(), R.string.alert_detail_value))
+            inner.add(it.toString() to R.string.alert_detail_value)
         }
         alert.message?.let {
-            inner.add(Pair(it, R.string.alert_detail_message))
+            inner.add(it to R.string.alert_detail_message)
         }
         list.add(inner)
         return list
@@ -72,14 +74,14 @@ class AlertDetailActivity : AppCompatActivity() {
             android.R.id.home -> finish()
             R.id.action_close -> {
                 AlertCloseDialogFragment
-                        .newInstance(alert!!)
-                        .apply {
-                            onSuccess = {
-                                setResult(Activity.RESULT_OK)
-                                finish()
-                            }
+                    .newInstance(alert!!)
+                    .apply {
+                        onSuccess = {
+                            setResult(Activity.RESULT_OK)
+                            finish()
                         }
-                        .show(supportFragmentManager, "")
+                    }
+                    .show(supportFragmentManager, "")
             }
         }
         return super.onOptionsItemSelected(item)
@@ -90,8 +92,8 @@ class AlertDetailActivity : AppCompatActivity() {
         private const val ALERT_KEY = "AlertKey"
 
         fun createIntent(context: Context, alert: Alert): Intent =
-                Intent(context, AlertDetailActivity::class.java).apply {
-                    putExtra(ALERT_KEY, alert)
-                }
+            Intent(context, AlertDetailActivity::class.java).apply {
+                putExtra(ALERT_KEY, alert)
+            }
     }
 }

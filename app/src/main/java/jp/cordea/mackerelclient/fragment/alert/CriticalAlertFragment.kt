@@ -30,13 +30,13 @@ class CriticalAlertFragment : Fragment() {
     private lateinit var binding: FragmentInsideAlertBinding
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View =
-            FragmentInsideAlertBinding.inflate(inflater, container, false).also {
-                binding = it
-            }.root
+        FragmentInsideAlertBinding.inflate(inflater, container, false).also {
+            binding = it
+        }.root
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -45,15 +45,15 @@ class CriticalAlertFragment : Fragment() {
 
         itemSubscription?.unsubscribe()
         itemSubscription = (parentFragment as AlertFragment)
-                .onAlertItemChanged
-                .asObservable()
-                .subscribe({
-                    alerts = it?.alerts?.filter { it.status.equals("CRITICAL") }
-                    refresh()
-                }, {
-                    alerts = null
-                    refresh()
-                })
+            .onAlertItemChanged
+            .asObservable()
+            .subscribe({
+                alerts = it?.alerts?.filter { it.status.equals("CRITICAL") }
+                refresh()
+            }, {
+                alerts = null
+                refresh()
+            })
 
         binding.error.retryButton.setOnClickListener {
             binding.progressLayout.visibility = View.VISIBLE
@@ -67,19 +67,19 @@ class CriticalAlertFragment : Fragment() {
 
         binding.listView.setOnItemClickListener { _, _, i, _ ->
             val intent = AlertDetailActivity
-                    .createIntent(context, binding.listView.adapter.getItem(i) as Alert)
+                .createIntent(context, binding.listView.adapter.getItem(i) as Alert)
             parentFragment.startActivityForResult(intent, CriticalAlertFragment.REQUEST_CODE)
         }
 
         resultSubscription?.unsubscribe()
         (parentFragment as? AlertFragment)?.let { fragment ->
             resultSubscription =
-                    fragment.onCriticalAlertFragmentResult
-                            .asObservable()
-                            .filter { it }
-                            .subscribe({
-                                refresh()
-                            }, {})
+                fragment.onCriticalAlertFragmentResult
+                    .asObservable()
+                    .filter { it }
+                    .subscribe({
+                        refresh()
+                    }, {})
         }
     }
 
@@ -92,18 +92,18 @@ class CriticalAlertFragment : Fragment() {
     private fun getAlert(): Subscription {
         val context = context ?: return Subscriptions.empty()
         return viewModel
-                .getAlerts(alerts) { it.status.equals("CRITICAL") }
-                .subscribe({
-                    binding.listView.adapter = AlertAdapter(context, it)
-                    binding.swipeRefresh.visibility = View.VISIBLE
-                    binding.swipeRefresh.isRefreshing = false
-                    binding.progressLayout.visibility = View.GONE
-                }, {
-                    it.printStackTrace()
-                    binding.swipeRefresh.isRefreshing = false
-                    binding.error.root.visibility = View.VISIBLE
-                    binding.progressLayout.visibility = View.GONE
-                })
+            .getAlerts(alerts) { it.status.equals("CRITICAL") }
+            .subscribe({
+                binding.listView.adapter = AlertAdapter(context, it)
+                binding.swipeRefresh.visibility = View.VISIBLE
+                binding.swipeRefresh.isRefreshing = false
+                binding.progressLayout.visibility = View.GONE
+            }, {
+                it.printStackTrace()
+                binding.swipeRefresh.isRefreshing = false
+                binding.error.root.visibility = View.VISIBLE
+                binding.progressLayout.visibility = View.GONE
+            })
     }
 
     override fun onDestroyView() {

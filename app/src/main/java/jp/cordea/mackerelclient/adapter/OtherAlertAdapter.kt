@@ -10,25 +10,25 @@ import jp.cordea.mackerelclient.api.response.Alert
 import jp.cordea.mackerelclient.databinding.ListItemOtherAlartBinding
 
 class OtherAlertAdapter(
-        context: Context,
-        val items: List<Alert>
+    context: Context,
+    val items: List<Alert>
 ) : ArrayAdapter<Alert>(
-        context,
-        R.layout.list_item_other_alart
+    context,
+    R.layout.list_item_other_alart
 ) {
 
     override fun getItem(position: Int): Alert =
-            items[position]
+        items[position]
 
     override fun getCount(): Int =
-            items.size
+        items.size
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         var view = convertView
         val viewHolder: ViewHolder
         if (view == null) {
             view = LayoutInflater.from(context)
-                    .inflate(R.layout.list_item_other_alart, parent, false)
+                .inflate(R.layout.list_item_other_alart, parent, false)
             viewHolder = ViewHolder(view)
             view.tag = viewHolder
         } else {

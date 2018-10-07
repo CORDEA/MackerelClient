@@ -44,8 +44,8 @@ class ServiceMetricsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil.setContentView<ActivityServiceMetricsBinding>(
-                this,
-                R.layout.activity_service_metrics
+            this,
+            R.layout.activity_service_metrics
         )
         contentBinding = binding.content
         lifecycle.addObserver(viewModel)
@@ -77,29 +77,30 @@ class ServiceMetricsActivity : AppCompatActivity() {
         enableRefresh = false
         val realm = Realm.getDefaultInstance()
         val metrics = realm.copyFromRealm(
-                realm.where(UserMetric::class.java)
-                        .equalTo("type", MetricsType.SERVICE.name)
-                        .equalTo("parentId", serviceName).findAll())
+            realm.where(UserMetric::class.java)
+                .equalTo("type", MetricsType.SERVICE.name)
+                .equalTo("parentId", serviceName).findAll()
+        )
         realm.close()
 
         val item = metrics.map { MetricsParameter(it.id, null, it.label!!) }
         contentBinding.recyclerView.adapter =
-                MetricsAdapter(this, item as MutableList, MetricsType.SERVICE, serviceName)
+            MetricsAdapter(this, item as MutableList, MetricsType.SERVICE, serviceName)
         contentBinding.recyclerView.addItemDecoration(ListItemDecoration(this))
 
         drawCompleteMetrics = 0
         subscription?.unsubscribe()
         subscription = viewModel
-                .onChartDataAlive
-                .asObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ it0 ->
-                    val adapter = contentBinding.recyclerView.adapter as MetricsAdapter
-                    drawCompleteMetrics = adapter.refreshRecyclerViewItem(it0, drawCompleteMetrics)
-                    if (adapter.itemCount == drawCompleteMetrics) {
-                        enableRefresh = true
-                    }
-                }, {})
+            .onChartDataAlive
+            .asObservable()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ it0 ->
+                val adapter = contentBinding.recyclerView.adapter as MetricsAdapter
+                drawCompleteMetrics = adapter.refreshRecyclerViewItem(it0, drawCompleteMetrics)
+                if (adapter.itemCount == drawCompleteMetrics) {
+                    enableRefresh = true
+                }
+            }, {})
 
         contentBinding.run {
             if (metrics.size == 0) {
@@ -138,7 +139,7 @@ class ServiceMetricsActivity : AppCompatActivity() {
             android.R.id.home -> finish()
             R.id.action_add -> {
                 val intent = MetricsEditActivity
-                        .createIntent(this, MetricsType.SERVICE, serviceName!!)
+                    .createIntent(this, MetricsType.SERVICE, serviceName!!)
                 startActivityForResult(intent, MetricsEditActivity.REQUEST_CODE)
             }
         }
@@ -150,8 +151,8 @@ class ServiceMetricsActivity : AppCompatActivity() {
         private const val SERVICE_NAME_KEY = "ServiceNameKey"
 
         fun createIntent(context: Context, name: String): Intent =
-                Intent(context, ServiceMetricsActivity::class.java).apply {
-                    putExtra(ServiceMetricsActivity.SERVICE_NAME_KEY, name)
-                }
+            Intent(context, ServiceMetricsActivity::class.java).apply {
+                putExtra(ServiceMetricsActivity.SERVICE_NAME_KEY, name)
+            }
     }
 }

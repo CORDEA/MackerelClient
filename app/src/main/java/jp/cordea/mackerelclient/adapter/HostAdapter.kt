@@ -16,7 +16,7 @@ import jp.cordea.mackerelclient.utils.StatusUtils
 import jp.cordea.mackerelclient.viewmodel.HostListItemViewModel
 
 class HostAdapter(
-        val fragment: Fragment
+    val fragment: Fragment
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var items = emptyList<Host>()
@@ -49,7 +49,7 @@ class HostAdapter(
             roleTextView.text = viewModel.roleText
 
             healthView.setBackgroundColor(
-                    ContextCompat.getColor(context, StatusUtils.stringToStatusColor(item.status))
+                ContextCompat.getColor(context, StatusUtils.stringToStatusColor(item.status))
             )
 
             loadavg.run {
@@ -69,7 +69,7 @@ class HostAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(fragment.context)
-                .inflate(R.layout.list_item_host, parent, false)
+            .inflate(R.layout.list_item_host, parent, false)
         return ViewHolder(view)
     }
 

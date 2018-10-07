@@ -8,19 +8,19 @@ class MetricsEditViewModel {
     fun getMetric(id: Int): UserMetric {
         val realm = Realm.getDefaultInstance()
         val metric = realm.copyFromRealm(
-                realm.where(UserMetric::class.java).equalTo("id", id).findFirst()!!
+            realm.where(UserMetric::class.java).equalTo("id", id).findFirst()!!
         )
         realm.close()
         return metric
     }
 
     fun storeMetric(
-            id: Int,
-            parentId: String,
-            type: String,
-            label: String,
-            metric0: String,
-            metric1: String?
+        id: Int,
+        parentId: String,
+        type: String,
+        label: String,
+        metric0: String,
+        metric1: String?
     ) {
         val realm = Realm.getDefaultInstance()
         val maxId = realm.where(UserMetric::class.java).max("id")

@@ -10,18 +10,18 @@ import jp.cordea.mackerelclient.api.response.Service
 import jp.cordea.mackerelclient.databinding.ListItemServiceBinding
 
 class ServiceAdapter(
-        context: Context,
-        val items: List<Service>
+    context: Context,
+    val items: List<Service>
 ) : ArrayAdapter<Service>(
-        context,
-        R.layout.list_item_service
+    context,
+    R.layout.list_item_service
 ) {
 
     override fun getItem(position: Int): Service =
-            items[position]
+        items[position]
 
     override fun getCount(): Int =
-            items.size
+        items.size
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         var view = convertView
@@ -38,17 +38,17 @@ class ServiceAdapter(
         viewHolder.binding.apply {
             nameTextView.text = item.name
             roleTextView.text =
-                    item.roles.size.let {
-                        if (it <= 1) {
-                            context.resources.getString(R.string.format_role).format(it)
+                item.roles.size.let {
+                    if (it <= 1) {
+                        context.resources.getString(R.string.format_role).format(it)
+                    } else {
+                        if (it > 99) {
+                            context.resources.getString(R.string.format_roles_ex)
                         } else {
-                            if (it > 99) {
-                                context.resources.getString(R.string.format_roles_ex)
-                            } else {
-                                context.resources.getString(R.string.format_roles).format(it)
-                            }
+                            context.resources.getString(R.string.format_roles).format(it)
                         }
                     }
+                }
             detailTextView.text = item.memo
         }
 

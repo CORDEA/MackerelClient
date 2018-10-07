@@ -2,7 +2,8 @@ package jp.cordea.mackerelclient.utils
 
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
 object DateUtils {

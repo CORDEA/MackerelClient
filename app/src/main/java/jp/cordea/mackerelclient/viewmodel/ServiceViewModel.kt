@@ -12,28 +12,27 @@ import rx.android.schedulers.AndroidSchedulers
 class ServiceViewModel(private val context: Context) {
 
     fun getServices(): Observable<Services> =
-            MackerelApiClient
-                    .getServices(context)
-                    .filter {
-                        deleteOldMetricData(it.services.map { it.name })
-                        true
-                    }
-                    .observeOn(AndroidSchedulers.mainThread())
+        MackerelApiClient
+            .getServices(context)
+            .filter {
+                deleteOldMetricData(it.services.map { it.name })
+                true
+            }
+            .observeOn(AndroidSchedulers.mainThread())
 
     private fun deleteOldMetricData(hosts: List<String>) {
         val realm = Realm.getDefaultInstance()
         val results = realm.where(UserMetric::class.java)
-                .equalTo("type", MetricsType.SERVICE.name).findAll()
+            .equalTo("type", MetricsType.SERVICE.name).findAll()
         realm.executeTransaction {
             val olds = results.map { it.parentId }.distinct().filter { !hosts.contains(it) }
             for (old in olds) {
                 realm.where(UserMetric::class.java)
-                        .equalTo("parentId", old)
-                        .findAll()
-                        .deleteAllFromRealm()
+                    .equalTo("parentId", old)
+                    .findAll()
+                    .deleteAllFromRealm()
             }
         }
         realm.close()
     }
-
 }

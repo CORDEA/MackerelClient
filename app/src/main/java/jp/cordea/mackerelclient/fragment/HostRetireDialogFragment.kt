@@ -23,38 +23,44 @@ class HostRetireDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val context = context!!
         return AlertDialog.Builder(context)
-                .setMessage(R.string.host_detail_retire_dialog_title)
-                .setPositiveButton(R.string.retire_positive_button, { _, _ ->
-                    val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
-                    dialog.show()
-                    retireHost()
-                })
-                .create()
+            .setMessage(R.string.host_detail_retire_dialog_title)
+            .setPositiveButton(R.string.retire_positive_button, { _, _ ->
+                val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
+                dialog.show()
+                retireHost()
+            })
+            .create()
     }
 
     private fun retireHost() {
         val context = context ?: return
         viewModel.retireHost(
-                host,
-                onResponse = {
-                    dialog.dismiss()
-                    if (it != null) {
-                        val success = DialogUtils.switchDialog(context, it,
-                                R.string.host_detail_retire_error_dialog_title,
-                                R.string.error_403_dialog_message)
-                        if (success) {
-                            onSuccess()
-                        }
-                    } else {
-                        DialogUtils.showDialog(context,
-                                R.string.host_detail_retire_error_dialog_title)
+            host,
+            onResponse = {
+                dialog.dismiss()
+                if (it != null) {
+                    val success = DialogUtils.switchDialog(
+                        context, it,
+                        R.string.host_detail_retire_error_dialog_title,
+                        R.string.error_403_dialog_message
+                    )
+                    if (success) {
+                        onSuccess()
                     }
-                },
-                onFailure = {
-                    dialog.dismiss()
-                    DialogUtils.showDialog(context,
-                            R.string.host_detail_retire_error_dialog_title)
+                } else {
+                    DialogUtils.showDialog(
+                        context,
+                        R.string.host_detail_retire_error_dialog_title
+                    )
                 }
+            },
+            onFailure = {
+                dialog.dismiss()
+                DialogUtils.showDialog(
+                    context,
+                    R.string.host_detail_retire_error_dialog_title
+                )
+            }
         )
     }
 
@@ -63,10 +69,10 @@ class HostRetireDialogFragment : DialogFragment() {
         private const val HOST_KEY = "HostKey"
 
         fun newInstance(host: Host): HostRetireDialogFragment =
-                HostRetireDialogFragment().apply {
-                    arguments = Bundle().apply {
-                        putSerializable(HOST_KEY, host)
-                    }
+            HostRetireDialogFragment().apply {
+                arguments = Bundle().apply {
+                    putSerializable(HOST_KEY, host)
                 }
+            }
     }
 }

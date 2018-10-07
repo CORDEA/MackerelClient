@@ -40,34 +40,34 @@ class MonitorEditActivity : AppCompatActivity() {
         initValues(monitor)
 
         contentBinding.operatorSpinner.onItemSelectedListener =
-                object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(
-                            parent: AdapterView<*>,
-                            view: View?,
-                            position: Int,
-                            id: Long
-                    ) {
-                        contentBinding.operatorPairSpinner.setSelection(position)
-                    }
-
-                    override fun onNothingSelected(parent: AdapterView<*>?) {
-                    }
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    contentBinding.operatorPairSpinner.setSelection(position)
                 }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+            }
 
         contentBinding.operatorPairSpinner.onItemSelectedListener =
-                object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(
-                            parent: AdapterView<*>,
-                            view: View?,
-                            position: Int,
-                            id: Long
-                    ) {
-                        contentBinding.operatorSpinner.setSelection(position)
-                    }
-
-                    override fun onNothingSelected(parent: AdapterView<*>?) {
-                    }
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    contentBinding.operatorSpinner.setSelection(position)
                 }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+            }
 
         binding.doneButton.setOnClickListener {
             refreshMonitor(monitor)
@@ -80,40 +80,40 @@ class MonitorEditActivity : AppCompatActivity() {
         dialog.show()
         val ref = checkValues(monitor)
         MackerelApiClient
-                .refreshMonitor(this, ref.id, ref)
-                .enqueue(object : Callback<RefreshMonitor> {
-                    override fun onResponse(
-                            call: Call<RefreshMonitor>?,
-                            response: Response<RefreshMonitor>?
-                    ) {
-                        dialog.dismiss()
-                        response?.let {
-                            if (it.isSuccessful) {
-                                finish()
-                            } else {
-                                DialogUtils.switchDialog(
-                                        context,
-                                        it,
-                                        R.string.monitor_refresh_error_dialog_title,
-                                        R.string.error_403_dialog_message
-                                )
-                            }
-                            return
+            .refreshMonitor(this, ref.id, ref)
+            .enqueue(object : Callback<RefreshMonitor> {
+                override fun onResponse(
+                    call: Call<RefreshMonitor>?,
+                    response: Response<RefreshMonitor>?
+                ) {
+                    dialog.dismiss()
+                    response?.let {
+                        if (it.isSuccessful) {
+                            finish()
+                        } else {
+                            DialogUtils.switchDialog(
+                                context,
+                                it,
+                                R.string.monitor_refresh_error_dialog_title,
+                                R.string.error_403_dialog_message
+                            )
                         }
-                        DialogUtils.showDialog(
-                                context,
-                                R.string.monitor_refresh_error_dialog_title
-                        )
+                        return
                     }
+                    DialogUtils.showDialog(
+                        context,
+                        R.string.monitor_refresh_error_dialog_title
+                    )
+                }
 
-                    override fun onFailure(p0: Call<RefreshMonitor>?, p1: Throwable?) {
-                        dialog.dismiss()
-                        DialogUtils.showDialog(
-                                context,
-                                R.string.monitor_refresh_error_dialog_title
-                        )
-                    }
-                })
+                override fun onFailure(p0: Call<RefreshMonitor>?, p1: Throwable?) {
+                    dialog.dismiss()
+                    DialogUtils.showDialog(
+                        context,
+                        R.string.monitor_refresh_error_dialog_title
+                    )
+                }
+            })
     }
 
     private fun initValues(monitor: Monitor) {
@@ -122,48 +122,48 @@ class MonitorEditActivity : AppCompatActivity() {
             contentBinding.optionContainer.visibility = View.GONE
         } else {
             contentBinding.nameEditText.text = with(
-                    monitor.name ?: ""
+                monitor.name ?: ""
             ) { SpannableStringBuilder(this) }
             contentBinding.serviceEditText.text = with(
-                    monitor.service ?: ""
+                monitor.service ?: ""
             ) { SpannableStringBuilder(this) }
             contentBinding.durationEditText.text = with(
-                    monitor.duration ?: ""
+                monitor.duration ?: ""
             ) { SpannableStringBuilder(this.toString()) }
             contentBinding.metricEditText.text = with(
-                    monitor.metric ?: ""
+                monitor.metric ?: ""
             ) { SpannableStringBuilder(this) }
 
             val adapter = ArrayAdapter<String>(
-                    this,
-                    android.R.layout.simple_spinner_item,
-                    arrayOf("<", ">")
+                this,
+                android.R.layout.simple_spinner_item,
+                arrayOf("<", ">")
             )
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
             contentBinding.operatorSpinner.adapter = adapter
             contentBinding.operatorPairSpinner.adapter = adapter
             contentBinding.operatorSpinner.setSelection(
-                    if ("<" == monitor.operator) 0 else 1
+                if ("<" == monitor.operator) 0 else 1
             )
             contentBinding.operatorPairSpinner.setSelection(
-                    contentBinding.operatorSpinner.selectedItemPosition
+                contentBinding.operatorSpinner.selectedItemPosition
             )
             contentBinding.warningEditText.text = with(
-                    monitor.warning ?: ""
+                monitor.warning ?: ""
             ) { SpannableStringBuilder(this.toString()) }
             contentBinding.criticalEditText.text = with(
-                    monitor.critical ?: ""
+                monitor.critical ?: ""
             ) { SpannableStringBuilder(this.toString()) }
             contentBinding.notificationIntervalEditText.text = with(
-                    monitor.notificationInterval ?: ""
+                monitor.notificationInterval ?: ""
             ) { SpannableStringBuilder(this.toString()) }
         }
         contentBinding.scopesEditText.text = with(
-                monitor.scopes.joinToString(", ")
+            monitor.scopes.joinToString(", ")
         ) { SpannableStringBuilder(this) }
         contentBinding.excludeScopesEditText.text = with(
-                monitor.excludeScopes.joinToString(", ")
+            monitor.excludeScopes.joinToString(", ")
         ) { SpannableStringBuilder(this) }
     }
 
@@ -188,29 +188,29 @@ class MonitorEditActivity : AppCompatActivity() {
 
         val interval = try {
             checkValue(
-                    monitor.notificationInterval,
-                    contentBinding.notificationIntervalEditText.text.toString().toInt()
+                monitor.notificationInterval,
+                contentBinding.notificationIntervalEditText.text.toString().toInt()
             )
         } catch (_: NumberFormatException) {
             null
         }
 
         return Monitor(
-                monitor.id,
-                monitor.type,
-                checkValue(monitor.name, contentBinding.nameEditText.text.toString()),
-                checkValue(monitor.service, contentBinding.serviceEditText.text.toString()),
-                duration,
-                checkValue(monitor.metric, contentBinding.metricEditText.text.toString()),
-                checkValue(monitor.operator, contentBinding.operatorSpinner.selectedItem as String),
-                warning,
-                critical,
-                interval,
-                monitor.url,
-                contentBinding.scopesEditText.text.toString()
-                        .split(",").map(String::trim).toTypedArray(),
-                contentBinding.excludeScopesEditText.text.toString()
-                        .split(",").map(String::trim).toTypedArray()
+            monitor.id,
+            monitor.type,
+            checkValue(monitor.name, contentBinding.nameEditText.text.toString()),
+            checkValue(monitor.service, contentBinding.serviceEditText.text.toString()),
+            duration,
+            checkValue(monitor.metric, contentBinding.metricEditText.text.toString()),
+            checkValue(monitor.operator, contentBinding.operatorSpinner.selectedItem as String),
+            warning,
+            critical,
+            interval,
+            monitor.url,
+            contentBinding.scopesEditText.text.toString()
+                .split(",").map(String::trim).toTypedArray(),
+            contentBinding.excludeScopesEditText.text.toString()
+                .split(",").map(String::trim).toTypedArray()
         )
     }
 
@@ -226,8 +226,8 @@ class MonitorEditActivity : AppCompatActivity() {
         private const val MONITOR_KEY = "MonitorKey"
 
         fun createIntent(context: Context, monitor: Monitor): Intent =
-                Intent(context, MonitorEditActivity::class.java).apply {
-                    putExtra(MONITOR_KEY, monitor)
-                }
+            Intent(context, MonitorEditActivity::class.java).apply {
+                putExtra(MONITOR_KEY, monitor)
+            }
     }
 }

@@ -11,21 +11,26 @@ import retrofit2.Response
 class HostRetireViewModel(private val context: Context) {
 
     fun retireHost(
-            host: Host,
-            onResponse: (Response<RetireHost>?) -> Unit,
-            onFailure: () -> Unit
+        host: Host,
+        onResponse: (Response<RetireHost>?) -> Unit,
+        onFailure: () -> Unit
     ) {
         MackerelApiClient
-                .retireHost(context, host.id)
-                .enqueue(object : Callback<RetireHost> {
-                    override fun onResponse(p0: Call<RetireHost>?, response: Response<RetireHost>?) {
-                        onResponse(response)
-                    }
+            .retireHost(context, host.id)
+            .enqueue(object : Callback<RetireHost> {
+                override fun onResponse(
+                    call: Call<RetireHost>?,
+                    response: Response<RetireHost>?
+                ) {
+                    onResponse(response)
+                }
 
-                    override fun onFailure(p0: Call<RetireHost>?, p1: Throwable?) {
-                        onFailure()
-                    }
-                })
+                override fun onFailure(
+                    call: Call<RetireHost>?,
+                    throwable: Throwable?
+                ) {
+                    onFailure()
+                }
+            })
     }
-
 }

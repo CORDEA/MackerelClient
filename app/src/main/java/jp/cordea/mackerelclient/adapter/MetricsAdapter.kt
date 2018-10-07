@@ -20,12 +20,12 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 class MetricsAdapter(
-        val activity: Activity,
-        val items: MutableList<MetricsParameter>,
-        val type: MetricsType,
-        val id: String,
-        private var visibles: Int = 0,
-        private var canRefresh: Boolean = false
+    val activity: Activity,
+    val items: MutableList<MetricsParameter>,
+    val type: MetricsType,
+    val id: String,
+    private var visibles: Int = 0,
+    private var canRefresh: Boolean = false
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val lock = ReentrantLock()
@@ -53,7 +53,7 @@ class MetricsAdapter(
 
             binding.editButton.setOnClickListener {
                 val intent = MetricsEditActivity
-                        .createIntent(activity, type, id, items[position].id)
+                    .createIntent(activity, type, id, items[position].id)
                 activity.startActivityForResult(intent, MetricsEditActivity.REQUEST_CODE)
             }
 
@@ -89,7 +89,7 @@ class MetricsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(activity)
-                .inflate(R.layout.list_item_metrics_chart, parent, false)
+            .inflate(R.layout.list_item_metrics_chart, parent, false)
         return ViewHolder(view)
     }
 
@@ -101,10 +101,10 @@ class MetricsAdapter(
             val idx = items.map { it.id }.indexOf(item.first)
             if (idx != -1 && idx < items.size) {
                 items[idx] = MetricsParameter(
-                        item.first,
-                        item.second,
-                        items[idx].label,
-                        item.second == null
+                    item.first,
+                    item.second,
+                    items[idx].label,
+                    item.second == null
                 )
                 notifyDataSetChanged()
                 return ++drawComplete
@@ -115,31 +115,31 @@ class MetricsAdapter(
 
     private fun showDeleteConfirmDialog(position: Int) {
         AlertDialog
-                .Builder(activity)
-                .setMessage(R.string.metrics_card_delete_dialog_title)
-                .setPositiveButton(R.string.button_positive) { _, _ ->
-                    lock.withLock {
-                        val realm = Realm.getDefaultInstance()
-                        realm.executeTransaction {
-                            realm.where(UserMetric::class.java)
-                                    .equalTo("id", items[position].id)
-                                    .findFirst()!!
-                                    .deleteFromRealm()
-                        }
-                        realm.close()
-                        items.removeAt(position)
-                        notifyItemRemoved(position)
-                        notifyItemRangeRemoved(position, items.size)
-                        --drawComplete
+            .Builder(activity)
+            .setMessage(R.string.metrics_card_delete_dialog_title)
+            .setPositiveButton(R.string.button_positive) { _, _ ->
+                lock.withLock {
+                    val realm = Realm.getDefaultInstance()
+                    realm.executeTransaction {
+                        realm.where(UserMetric::class.java)
+                            .equalTo("id", items[position].id)
+                            .findFirst()!!
+                            .deleteFromRealm()
                     }
-                }.show()
+                    realm.close()
+                    items.removeAt(position)
+                    notifyItemRemoved(position)
+                    notifyItemRangeRemoved(position, items.size)
+                    --drawComplete
+                }
+            }.show()
     }
 
     private val LineData.needFormat: Boolean
         get() =
             this.dataSets
-                    .filter { "memory" == it.label.split(".")[0] }
-                    .size == this.dataSets.size
+                .filter { "memory" == it.label.split(".")[0] }
+                .size == this.dataSets.size
 
     private class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val binding: ListItemMetricsChartBinding = ListItemMetricsChartBinding.bind(view)

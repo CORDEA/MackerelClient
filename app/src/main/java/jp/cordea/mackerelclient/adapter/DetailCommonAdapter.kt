@@ -10,9 +10,9 @@ import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.databinding.ListItemDetailCommonCardBinding
 
 class DetailCommonAdapter(
-        val context: Context,
-        val items: List<List<Pair<String, Int>>>,
-        private val sections: List<String>? = null
+    val context: Context,
+    val items: List<List<Pair<String, Int>>>,
+    private val sections: List<String>? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -20,7 +20,7 @@ class DetailCommonAdapter(
             if (items[position].isNotEmpty()) {
                 sections?.let { sections ->
                     val section = LayoutInflater.from(context)
-                            .inflate(R.layout.list_item_detail_common_section, it.container, false)
+                        .inflate(R.layout.list_item_detail_common_section, it.container, false)
                     val name: TextView = section.findViewById(R.id.title) as TextView
                     it.container.addView(section)
                     name.text = sections[position]
@@ -32,7 +32,7 @@ class DetailCommonAdapter(
                         continue
                     }
                     val layout = LayoutInflater.from(context)
-                            .inflate(R.layout.list_item_detail_common_content, it.container, false)
+                        .inflate(R.layout.list_item_detail_common_content, it.container, false)
                     val title: TextView = layout.findViewById(R.id.title) as TextView
                     val detail: TextView = layout.findViewById(R.id.detail) as TextView
                     divider = layout.findViewById(R.id.divider)
@@ -49,7 +49,7 @@ class DetailCommonAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(context)
-                .inflate(R.layout.list_item_detail_common_card, parent, false)
+            .inflate(R.layout.list_item_detail_common_card, parent, false)
         return ViewHolder(view)
     }
 

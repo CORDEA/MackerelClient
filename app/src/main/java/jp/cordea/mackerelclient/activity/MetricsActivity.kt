@@ -44,7 +44,7 @@ class MetricsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil
-                .setContentView<ActivityMetricsBinding>(this, R.layout.activity_metrics)
+            .setContentView<ActivityMetricsBinding>(this, R.layout.activity_metrics)
         contentBinding = binding.content
         lifecycle.addObserver(viewModel)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -75,29 +75,30 @@ class MetricsActivity : AppCompatActivity() {
         enableRefresh = false
         val realm = Realm.getDefaultInstance()
         val metrics = realm.copyFromRealm(
-                realm.where(UserMetric::class.java)
-                        .equalTo("type", MetricsType.HOST.name)
-                        .equalTo("parentId", hostId).findAll())
+            realm.where(UserMetric::class.java)
+                .equalTo("type", MetricsType.HOST.name)
+                .equalTo("parentId", hostId).findAll()
+        )
         val item = metrics.map { MetricsParameter(it.id, null, it.label!!) }
         realm.close()
 
         contentBinding.recyclerView.adapter =
-                MetricsAdapter(this, item as MutableList, MetricsType.HOST, hostId)
+            MetricsAdapter(this, item as MutableList, MetricsType.HOST, hostId)
         contentBinding.recyclerView.addItemDecoration(ListItemDecoration(this))
 
         drawCompleteMetrics = 0
         subscription?.unsubscribe()
         subscription = viewModel
-                .onChartDataAlive
-                .asObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ it0 ->
-                    val adapter = contentBinding.recyclerView.adapter as MetricsAdapter
-                    drawCompleteMetrics = adapter.refreshRecyclerViewItem(it0, drawCompleteMetrics)
-                    if (adapter.itemCount == drawCompleteMetrics) {
-                        enableRefresh = true
-                    }
-                }, {})
+            .onChartDataAlive
+            .asObservable()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ it0 ->
+                val adapter = contentBinding.recyclerView.adapter as MetricsAdapter
+                drawCompleteMetrics = adapter.refreshRecyclerViewItem(it0, drawCompleteMetrics)
+                if (adapter.itemCount == drawCompleteMetrics) {
+                    enableRefresh = true
+                }
+            }, {})
 
         if (metrics.size == 0) {
             contentBinding.noticeContainer.visibility = View.VISIBLE
@@ -150,8 +151,8 @@ class MetricsActivity : AppCompatActivity() {
         private const val HOST_ID_KEY = "HostIdKey"
 
         fun createIntent(context: Context, hostId: String?): Intent =
-                Intent(context, MetricsActivity::class.java).apply {
-                    putExtra(HOST_ID_KEY, hostId)
-                }
+            Intent(context, MetricsActivity::class.java).apply {
+                putExtra(HOST_ID_KEY, hostId)
+            }
     }
 }

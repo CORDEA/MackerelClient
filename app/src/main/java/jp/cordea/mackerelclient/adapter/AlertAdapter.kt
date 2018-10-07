@@ -9,15 +9,14 @@ import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.response.Alert
 import jp.cordea.mackerelclient.databinding.ListItemAlertBinding
 
-class AlertAdapter(context: Context, val items: List<Alert>) : ArrayAdapter<Alert>(context, R.layout.list_item_alert) {
+class AlertAdapter(
+    context: Context,
+    val items: List<Alert>
+) : ArrayAdapter<Alert>(context, R.layout.list_item_alert) {
 
-    override fun getItem(position: Int): Alert {
-        return items[position]
-    }
+    override fun getItem(position: Int): Alert = items[position]
 
-    override fun getCount(): Int {
-        return items.size
-    }
+    override fun getCount(): Int = items.size
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         var view = convertView
@@ -48,7 +47,6 @@ class AlertAdapter(context: Context, val items: List<Alert>) : ArrayAdapter<Aler
     }
 
     class ViewHolder(view: View) {
-
         val binding: ListItemAlertBinding = ListItemAlertBinding.bind(view)
     }
 }

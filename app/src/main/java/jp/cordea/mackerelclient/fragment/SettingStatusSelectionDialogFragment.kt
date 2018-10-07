@@ -35,17 +35,17 @@ class SettingStatusSelectionDialogFragment : DialogFragment() {
         val context = context!!
         items = realm.where(DisplayHostState::class.java).findAll()
         return AlertDialog.Builder(context)
-                .setMultiChoiceItems(
-                        items.map { StatusUtils.requestNameToString(it.name) }.toTypedArray(),
-                        BooleanArray(items.size) { i -> items[i]!!.isDisplay!! }
-                ) { _, which, flag ->
-                    val item = items[which]!!
-                    realm.executeTransaction {
-                        item.isDisplay = flag
-                    }
-                    lastItem = which
-                    listener.onUpdateStatus()
-                }.show()
+            .setMultiChoiceItems(
+                items.map { StatusUtils.requestNameToString(it.name) }.toTypedArray(),
+                BooleanArray(items.size) { i -> items[i]!!.isDisplay!! }
+            ) { _, which, flag ->
+                val item = items[which]!!
+                realm.executeTransaction {
+                    item.isDisplay = flag
+                }
+                lastItem = which
+                listener.onUpdateStatus()
+            }.show()
     }
 
     override fun onDismiss(dialog: DialogInterface?) {
@@ -54,9 +54,9 @@ class SettingStatusSelectionDialogFragment : DialogFragment() {
             return
         }
         Toast.makeText(
-                context!!,
-                R.string.setting_status_select_limit_dialog_message,
-                Toast.LENGTH_SHORT
+            context!!,
+            R.string.setting_status_select_limit_dialog_message,
+            Toast.LENGTH_SHORT
         ).show()
         val item = items.first { it.name == items[lastItem]!!.name }
         realm.executeTransaction {

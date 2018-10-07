@@ -30,13 +30,13 @@ class AlertFragment : Fragment() {
     private lateinit var binding: FragmentAlertBinding
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View =
-            FragmentAlertBinding.inflate(inflater, container, false).also {
-                binding = it
-            }.root
+        FragmentAlertBinding.inflate(inflater, container, false).also {
+            binding = it
+        }.root
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -53,14 +53,14 @@ class AlertFragment : Fragment() {
     private fun requestApi(): Subscription {
         val context = context ?: return Subscriptions.empty()
         return MackerelApiClient
-                .getAlerts(context)
-                .delay(100, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    onAlertItemChanged.post(it)
-                }, {
-                    onAlertItemChanged.post(null)
-                })
+            .getAlerts(context)
+            .delay(100, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                onAlertItemChanged.post(it)
+            }, {
+                onAlertItemChanged.post(null)
+            })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -86,6 +86,6 @@ class AlertFragment : Fragment() {
 
     companion object {
         fun newInstance(): AlertFragment =
-                AlertFragment()
+            AlertFragment()
     }
 }

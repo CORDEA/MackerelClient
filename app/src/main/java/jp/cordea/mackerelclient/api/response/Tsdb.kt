@@ -5,14 +5,17 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import java.lang.reflect.Type
-import java.util.*
 
 class Tsdbs(val tsdbs: Map<String, Map<String, Tsdb>>)
 
 class Tsdb(val metricValue: Float?)
 
 class TsdbsDeserializer : JsonDeserializer<Tsdbs> {
-    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): Tsdbs {
+    override fun deserialize(
+        json: JsonElement?,
+        typeOfT: Type?,
+        context: JsonDeserializationContext?
+    ): Tsdbs {
         val ts = HashMap<String, Map<String, Tsdb>>()
         json ?: return Tsdbs(ts)
         if (json.asJsonObject.has("tsdbLatest")) {
@@ -32,5 +35,3 @@ class TsdbsDeserializer : JsonDeserializer<Tsdbs> {
         return Tsdbs(ts)
     }
 }
-
-

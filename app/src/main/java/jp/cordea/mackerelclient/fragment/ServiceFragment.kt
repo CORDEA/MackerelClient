@@ -26,13 +26,13 @@ class ServiceFragment : Fragment() {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View =
-            FragmentServiceBinding.inflate(inflater, container, false).also {
-                binding = it
-            }.root
+        FragmentServiceBinding.inflate(inflater, container, false).also {
+            binding = it
+        }.root
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -65,19 +65,19 @@ class ServiceFragment : Fragment() {
     private fun getServices(): Subscription {
         val context = context ?: return Subscriptions.empty()
         return viewModel
-                .getServices()
-                .subscribe({
-                    binding.swipeRefresh.isRefreshing = false
-                    binding.listView.adapter = ServiceAdapter(context, it.services)
-                    binding.swipeRefresh.visibility = View.VISIBLE
-                    binding.progressLayout.visibility = View.GONE
-                    services = it.services
-                }, {
-                    it.printStackTrace()
-                    binding.swipeRefresh.isRefreshing = false
-                    binding.error.root.visibility = View.VISIBLE
-                    binding.progressLayout.visibility = View.GONE
-                })
+            .getServices()
+            .subscribe({
+                binding.swipeRefresh.isRefreshing = false
+                binding.listView.adapter = ServiceAdapter(context, it.services)
+                binding.swipeRefresh.visibility = View.VISIBLE
+                binding.progressLayout.visibility = View.GONE
+                services = it.services
+            }, {
+                it.printStackTrace()
+                binding.swipeRefresh.isRefreshing = false
+                binding.error.root.visibility = View.VISIBLE
+                binding.progressLayout.visibility = View.GONE
+            })
     }
 
     override fun onDestroyView() {

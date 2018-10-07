@@ -20,7 +20,11 @@ import jp.cordea.mackerelclient.PicassoCircularTransform
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.databinding.ActivityMainBinding
 import jp.cordea.mackerelclient.databinding.NavHeaderMainBinding
-import jp.cordea.mackerelclient.fragment.*
+import jp.cordea.mackerelclient.fragment.HostFragment
+import jp.cordea.mackerelclient.fragment.MonitorFragment
+import jp.cordea.mackerelclient.fragment.ServiceFragment
+import jp.cordea.mackerelclient.fragment.SettingFragment
+import jp.cordea.mackerelclient.fragment.UserFragment
 import jp.cordea.mackerelclient.fragment.alert.AlertFragment
 import jp.cordea.mackerelclient.model.Preferences
 import jp.cordea.mackerelclient.model.UserKey
@@ -40,11 +44,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(binding.toolbar)
 
         val toggle = ActionBarDrawerToggle(
-                this,
-                binding.drawerLayout,
-                binding.toolbar,
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close
+            this,
+            binding.drawerLayout,
+            binding.toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
         )
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
@@ -63,26 +67,29 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         if (user == null) {
             AlertDialog
-                    .Builder(this)
-                    .setTitle(R.string.nav_bar_sign_out_dialog_title)
-                    .setPositiveButton(R.string.nav_bar_sign_out_dialog_positive_button, { _, _ ->
-                        val intent = Intent(this as Context, LoginActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                        startActivity(intent)
-                    })
-                    .show()
+                .Builder(this)
+                .setTitle(R.string.nav_bar_sign_out_dialog_title)
+                .setPositiveButton(R.string.nav_bar_sign_out_dialog_positive_button) { _, _ ->
+                    val intent = Intent(this as Context, LoginActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                }
+                .show()
         } else {
             val u = user!!
             if (!u.email.isNullOrBlank() && !u.name.isNullOrBlank()) {
-                val thumbnail: ImageView = header.findViewById(R.id.user_thumbnail_image_view) as ImageView
+                val thumbnail: ImageView =
+                    header.findViewById(R.id.user_thumbnail_image_view) as ImageView
                 headerBinding.nameTextView.text = u.name
                 headerBinding.emailTextView.text = u.email
-                GravatarUtils.getGravatarImage(u.email!!,
-                        resources.getDimensionPixelSize(R.dimen.user_thumbnail_size))?.let {
+                GravatarUtils.getGravatarImage(
+                    u.email!!,
+                    resources.getDimensionPixelSize(R.dimen.user_thumbnail_size)
+                )?.let {
                     Picasso.with(this)
-                            .load(it)
-                            .transform(PicassoCircularTransform())
-                            .into(thumbnail)
+                        .load(it)
+                        .transform(PicassoCircularTransform())
+                        .into(thumbnail)
                 }
             } else {
                 headerBinding.nameTextView.text = resources.getString(R.string.anonymous)
@@ -91,9 +98,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
         supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.container, AlertFragment.newInstance())
-                .commit()
+            .beginTransaction()
+            .replace(R.id.container, AlertFragment.newInstance())
+            .commit()
     }
 
     override fun onResume() {
@@ -117,9 +124,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val id = item.itemId
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            binding.appbar.elevation = if (id == R.id.nav_alert
-                    || id == R.id.nav_sign_out
-                    || id == R.id.nav_open_mackerel) {
+            binding.appbar.elevation = if (id == R.id.nav_alert ||
+                id == R.id.nav_sign_out ||
+                id == R.id.nav_open_mackerel
+            ) {
                 0f
             } else {
                 resources.getDimension(R.dimen.app_bar_elevation)
@@ -168,24 +176,27 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun signOut(context: Context) {
         AlertDialog
-                .Builder(context)
-                .setTitle(R.string.nav_bar_sign_out_dialog_title)
-                .setPositiveButton(R.string.nav_bar_sign_out_dialog_positive_button, { _, _ ->
-                    val userId = prefs.userId
-                    val realm = Realm.getDefaultInstance()
-                    realm.executeTransaction {
-                        it.where(UserKey::class.java).equalTo("id", userId).findFirst()?.deleteFromRealm()
-                    }
-                    realm.close()
+            .Builder(context)
+            .setTitle(R.string.nav_bar_sign_out_dialog_title)
+            .setPositiveButton(R.string.nav_bar_sign_out_dialog_positive_button) { _, _ ->
+                val userId = prefs.userId
+                val realm = Realm.getDefaultInstance()
+                realm.executeTransaction {
+                    it.where(UserKey::class.java)
+                        .equalTo("id", userId)
+                        .findFirst()
+                        ?.deleteFromRealm()
+                }
+                realm.close()
 
-                    prefs.clear()
+                prefs.clear()
 
-                    val intent = Intent(context, LoginActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    startActivity(intent)
-                    finish()
-                })
-                .show()
+                val intent = Intent(context, LoginActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(intent)
+                finish()
+            }
+            .show()
     }
 
     companion object {

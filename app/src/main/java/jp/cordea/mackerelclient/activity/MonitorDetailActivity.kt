@@ -31,7 +31,7 @@ class MonitorDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil
-                .setContentView<ActivityDetailCommonBinding>(this, R.layout.activity_detail_common)
+            .setContentView<ActivityDetailCommonBinding>(this, R.layout.activity_detail_common)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val monitor = intent.getSerializableExtra(MONITOR_KEY) as Monitor
@@ -62,14 +62,14 @@ class MonitorDetailActivity : AppCompatActivity() {
             android.R.id.home -> finish()
             R.id.action_delete -> {
                 MonitorSettingDeleteDialogFragment
-                        .newInstance(monitor!!)
-                        .apply {
-                            onSuccess = {
-                                setResult(Activity.RESULT_OK)
-                                finish()
-                            }
+                    .newInstance(monitor!!)
+                    .apply {
+                        onSuccess = {
+                            setResult(Activity.RESULT_OK)
+                            finish()
                         }
-                        .show(supportFragmentManager, "")
+                    }
+                    .show(supportFragmentManager, "")
             }
         }
         return super.onOptionsItemSelected(item)
@@ -82,8 +82,8 @@ class MonitorDetailActivity : AppCompatActivity() {
         private const val MONITOR_KEY = "MONITOR_KEY"
 
         fun createIntent(context: Context, monitor: Monitor): Intent =
-                Intent(context, MonitorDetailActivity::class.java).apply {
-                    putExtra(MONITOR_KEY, monitor)
-                }
+            Intent(context, MonitorDetailActivity::class.java).apply {
+                putExtra(MONITOR_KEY, monitor)
+            }
     }
 }

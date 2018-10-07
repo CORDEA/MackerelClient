@@ -24,23 +24,23 @@ class UserFragment : Fragment() {
     private var subscription: Subscription? = null
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View =
-            FragmentUserBinding.inflate(inflater, container, false).also {
-                setHasOptionsMenu(true)
-                binding = it
-            }.root
+        FragmentUserBinding.inflate(inflater, container, false).also {
+            setHasOptionsMenu(true)
+            binding = it
+        }.root
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.listView.adapter = adapter
 
         subscription = adapter.onUserDeleteSucceeded
-                .asObservable()
-                .filter { it }
-                .subscribe({ refresh() }, { })
+            .asObservable()
+            .filter { it }
+            .subscribe({ refresh() }, { })
 
         refreshSubscription = refresh()
         binding.swipeRefresh.setOnRefreshListener {
@@ -58,26 +58,26 @@ class UserFragment : Fragment() {
     private fun refresh(): Subscription {
         val context = context!!
         return MackerelApiClient
-                .getUsers(context)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ users ->
-                    binding.swipeRefresh.isRefreshing = false
-                    val userId = Preferences(context).userId
-                    val realm = Realm.getDefaultInstance()
-                    val user = realm.copyFromRealm(
-                            realm.where(UserKey::class.java).equalTo("id", userId).findFirst()!!
-                    )
-                    realm.close()
+            .getUsers(context)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ users ->
+                binding.swipeRefresh.isRefreshing = false
+                val userId = Preferences(context).userId
+                val realm = Realm.getDefaultInstance()
+                val user = realm.copyFromRealm(
+                    realm.where(UserKey::class.java).equalTo("id", userId).findFirst()!!
+                )
+                realm.close()
 
-                    adapter.update(users.users, user.email)
-                    binding.progressLayout.visibility = View.GONE
-                    binding.swipeRefresh.visibility = View.VISIBLE
-                }, {
-                    binding.swipeRefresh.isRefreshing = false
-                    binding.error.root.visibility = View.VISIBLE
-                    binding.progressLayout.visibility = View.GONE
-                    binding.swipeRefresh.visibility = View.GONE
-                })
+                adapter.update(users.users, user.email)
+                binding.progressLayout.visibility = View.GONE
+                binding.swipeRefresh.visibility = View.VISIBLE
+            }, {
+                binding.swipeRefresh.isRefreshing = false
+                binding.error.root.visibility = View.VISIBLE
+                binding.progressLayout.visibility = View.GONE
+                binding.swipeRefresh.visibility = View.GONE
+            })
     }
 
     companion object {

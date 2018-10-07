@@ -36,7 +36,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil
-                .setContentView<ActivityLoginBinding>(this, R.layout.activity_login)
+            .setContentView<ActivityLoginBinding>(this, R.layout.activity_login)
         setSupportActionBar(binding.toolbar)
 
         contentBinding = binding.content
@@ -58,14 +58,14 @@ class LoginActivity : AppCompatActivity() {
             }
 
             compositeSubscription.add(
-                    viewModel.logIn(key.key!!, key.email, true,
-                            onSuccess = {
-                                onLoginSucceeded(it)
-                            },
-                            onFailure = {
-                                onLoginFailure()
-                            }
-                    )
+                viewModel.logIn(key.key!!, key.email, true,
+                    onSuccess = {
+                        onLoginSucceeded(it)
+                    },
+                    onFailure = {
+                        onLoginFailure()
+                    }
+                )
             )
         }
 
@@ -97,25 +97,25 @@ class LoginActivity : AppCompatActivity() {
         val apiKey = contentBinding.apiKeyEditText.text
         if (apiKey.isEmpty()) {
             AlertDialog
-                    .Builder(this)
-                    .setTitle(R.string.sign_in_error_dialog_title)
-                    .setMessage(R.string.sign_in_error_dialog_message_key)
-                    .show()
+                .Builder(this)
+                .setTitle(R.string.sign_in_error_dialog_title)
+                .setMessage(R.string.sign_in_error_dialog_message_key)
+                .show()
         } else {
             contentBinding.progressBar.visibility = View.VISIBLE
             contentBinding.container.visibility = View.GONE
             compositeSubscription.add(
-                    viewModel.logIn(
-                            apiKey.toString().trim(),
-                            contentBinding.emailEditText.text.toString(),
-                            false,
-                            onSuccess = {
-                                onLoginSucceeded(it)
-                            },
-                            onFailure = {
-                                onLoginFailure()
-                            }
-                    )
+                viewModel.logIn(
+                    apiKey.toString().trim(),
+                    contentBinding.emailEditText.text.toString(),
+                    false,
+                    onSuccess = {
+                        onLoginSucceeded(it)
+                    },
+                    onFailure = {
+                        onLoginFailure()
+                    }
+                )
             )
         }
     }
@@ -130,10 +130,10 @@ class LoginActivity : AppCompatActivity() {
 
     private fun onLoginFailure() {
         AlertDialog
-                .Builder(this)
-                .setTitle(R.string.sign_in_error_dialog_title)
-                .setMessage(R.string.sign_in_error_dialog_message_mail)
-                .show()
+            .Builder(this)
+            .setTitle(R.string.sign_in_error_dialog_title)
+            .setMessage(R.string.sign_in_error_dialog_message_mail)
+            .show()
         contentBinding.container.visibility = View.VISIBLE
         contentBinding.progressBar.visibility = View.GONE
     }

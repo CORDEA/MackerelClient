@@ -15,10 +15,10 @@ import jp.cordea.mackerelclient.utils.GravatarUtils
 import jp.cordea.mackerelclient.viewmodel.UserListItemViewModel
 
 class UserAdapter(
-        context: Context
+    context: Context
 ) : ArrayAdapter<User>(
-        context,
-        R.layout.list_item_user
+    context,
+    R.layout.list_item_user
 ) {
     val onUserDeleteSucceeded: RxEvent<Boolean> = RxEvent.create<Boolean>()
 
@@ -26,9 +26,9 @@ class UserAdapter(
     private var own: String? = null
 
     override fun getView(
-            position: Int,
-            convertView: View?,
-            parent: ViewGroup?
+        position: Int,
+        convertView: View?,
+        parent: ViewGroup?
     ): View? {
         var view = convertView
         val viewHolder: ViewHolder
@@ -46,13 +46,13 @@ class UserAdapter(
                 onUserDeleteSucceeded.post(true)
             }
             GravatarUtils.getGravatarImage(
-                    items[position].email,
-                    context.resources.getDimensionPixelSize(R.dimen.user_thumbnail_size_small)
+                items[position].email,
+                context.resources.getDimensionPixelSize(R.dimen.user_thumbnail_size_small)
             )?.let { url ->
                 Picasso.with(context)
-                        .load(url)
-                        .transform(PicassoCircularTransform())
-                        .into(userThumbnailImageView)
+                    .load(url)
+                    .transform(PicassoCircularTransform())
+                    .into(userThumbnailImageView)
             }
             nameTextView.text = items[position].screenName
             emailTextView.text = items[position].email

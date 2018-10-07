@@ -23,22 +23,22 @@ object DialogUtils {
 
     fun showDialog(context: Context, title: Int, message: Int = 0) {
         Observable
-                .create<Unit> {
-                    val ad = AlertDialog
-                            .Builder(context)
-                            .setMessage(title)
-                            .create()
-                    if (message != 0) {
-                    } else {
-                        ad.setTitle(title)
-                        ad.setMessage(context.resources.getString(message))
-                    }
-
-                    ad.show()
-                    it.onNext(Unit)
+            .create<Unit> {
+                val ad = AlertDialog
+                    .Builder(context)
+                    .setMessage(title)
+                    .create()
+                if (message != 0) {
+                } else {
+                    ad.setTitle(title)
+                    ad.setMessage(context.resources.getString(message))
                 }
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe()
+
+                ad.show()
+                it.onNext(Unit)
+            }
+            .subscribeOn(AndroidSchedulers.mainThread())
+            .subscribe()
     }
 
     fun progressDialog(context: Context, title: Int, message: Int = 0): ProgressDialog {

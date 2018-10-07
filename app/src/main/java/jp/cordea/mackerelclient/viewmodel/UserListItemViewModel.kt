@@ -18,48 +18,47 @@ class UserListItemViewModel(private val context: Context, private val item: User
 
     val deleteButtonOnClick = View.OnClickListener {
         AlertDialog
-                .Builder(context)
-                .setMessage(R.string.user_delete_dialog_title)
-                .setPositiveButton(R.string.delete_positive_button) { _, _ ->
-                    val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
-                    dialog.show()
-                    deleteUser(dialog)
-                }
-                .show()
+            .Builder(context)
+            .setMessage(R.string.user_delete_dialog_title)
+            .setPositiveButton(R.string.delete_positive_button) { _, _ ->
+                val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
+                dialog.show()
+                deleteUser(dialog)
+            }
+            .show()
     }
 
     private fun deleteUser(dialog: ProgressDialog) {
         MackerelApiClient
-                .deleteUser(context, item.id)
-                .enqueue(object : Callback<User> {
-                    override fun onResponse(p0: Call<User>?, response: Response<User>?) {
-                        dialog.dismiss()
-                        response?.let { resp ->
-                            val success = DialogUtils.switchDialog(
-                                    context,
-                                    resp,
-                                    R.string.user_delete_error_dialog_title,
-                                    R.string.error_403_dialog_message
-                            )
-                            if (success) {
-                                onUserDeleteSucceeded()
-                            }
-                            return
+            .deleteUser(context, item.id)
+            .enqueue(object : Callback<User> {
+                override fun onResponse(p0: Call<User>?, response: Response<User>?) {
+                    dialog.dismiss()
+                    response?.let { resp ->
+                        val success = DialogUtils.switchDialog(
+                            context,
+                            resp,
+                            R.string.user_delete_error_dialog_title,
+                            R.string.error_403_dialog_message
+                        )
+                        if (success) {
+                            onUserDeleteSucceeded()
                         }
-                        DialogUtils.showDialog(
-                                context,
-                                R.string.user_delete_error_dialog_title
-                        )
+                        return
                     }
+                    DialogUtils.showDialog(
+                        context,
+                        R.string.user_delete_error_dialog_title
+                    )
+                }
 
-                    override fun onFailure(p0: Call<User>?, p1: Throwable?) {
-                        dialog.dismiss()
-                        DialogUtils.showDialog(
-                                context,
-                                R.string.user_delete_error_dialog_title
-                        )
-                    }
-                })
+                override fun onFailure(p0: Call<User>?, p1: Throwable?) {
+                    dialog.dismiss()
+                    DialogUtils.showDialog(
+                        context,
+                        R.string.user_delete_error_dialog_title
+                    )
+                }
+            })
     }
-
 }

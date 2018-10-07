@@ -9,9 +9,9 @@ import jp.cordea.mackerelclient.api.response.Host
 import jp.cordea.mackerelclient.api.response.Tsdb
 
 class HostListItemViewModel(
-        private val context: Context,
-        private val item: Host,
-        private val metric: Map<String, Tsdb>?
+    private val context: Context,
+    private val item: Host,
+    private val metric: Map<String, Tsdb>?
 ) {
 
     val roleText: String
@@ -40,8 +40,10 @@ class HostListItemViewModel(
             val sp = SpannableStringBuilder()
             metric?.get(HostViewModel.cpuMetricsKey)?.let { met ->
                 sp.append("%.1f %%".format(met.metricValue))
-                sp.setSpan(TextAppearanceSpan(context, R.style.HostMetricUnit),
-                        sp.length - 1, sp.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                sp.setSpan(
+                    TextAppearanceSpan(context, R.style.HostMetricUnit),
+                    sp.length - 1, sp.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
             }
             return sp
         }
@@ -61,10 +63,11 @@ class HostListItemViewModel(
                 } else {
                     sp.append("%.0f %s".format(mem, unit))
                 }
-                sp.setSpan(TextAppearanceSpan(context, R.style.HostMetricUnit),
-                        sp.length - 2, sp.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                sp.setSpan(
+                    TextAppearanceSpan(context, R.style.HostMetricUnit),
+                    sp.length - 2, sp.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
             }
             return sp
         }
-
 }

@@ -11,32 +11,32 @@ import rx.android.schedulers.AndroidSchedulers
 class LoginViewModel(private val context: Context) {
 
     fun logIn(
-            key: String,
-            email: String?,
-            autoLogin: Boolean,
-            onSuccess: (id: Int?) -> Unit,
-            onFailure: () -> Unit
+        key: String,
+        email: String?,
+        autoLogin: Boolean,
+        onSuccess: (id: Int?) -> Unit,
+        onFailure: () -> Unit
     ): Subscription {
         return MackerelApiClient
-                .getUsers(context, key)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    if (autoLogin) {
-                        onSuccess(null)
-                    } else {
-                        storeLoginUser(it, key, email, onSuccess, onFailure)
-                    }
-                }, {
-                    onFailure()
-                })
+            .getUsers(context, key)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                if (autoLogin) {
+                    onSuccess(null)
+                } else {
+                    storeLoginUser(it, key, email, onSuccess, onFailure)
+                }
+            }, {
+                onFailure()
+            })
     }
 
     private fun storeLoginUser(
-            it: Users,
-            key: String,
-            email: String?,
-            onSuccess: (id: Int?) -> Unit,
-            onFailure: () -> Unit
+        it: Users,
+        key: String,
+        email: String?,
+        onSuccess: (id: Int?) -> Unit,
+        onFailure: () -> Unit
     ) {
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()

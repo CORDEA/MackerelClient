@@ -1,9 +1,29 @@
 package jp.cordea.mackerelclient.api
 
 import jp.cordea.mackerelclient.api.request.EmptyBody
-import jp.cordea.mackerelclient.api.response.*
+import jp.cordea.mackerelclient.api.response.Alert
+import jp.cordea.mackerelclient.api.response.Alerts
+import jp.cordea.mackerelclient.api.response.CloseAlert
+import jp.cordea.mackerelclient.api.response.Host
+import jp.cordea.mackerelclient.api.response.Hosts
+import jp.cordea.mackerelclient.api.response.Metrics
+import jp.cordea.mackerelclient.api.response.Monitor
+import jp.cordea.mackerelclient.api.response.Monitors
+import jp.cordea.mackerelclient.api.response.RefreshMonitor
+import jp.cordea.mackerelclient.api.response.RetireHost
+import jp.cordea.mackerelclient.api.response.Roles
+import jp.cordea.mackerelclient.api.response.Services
+import jp.cordea.mackerelclient.api.response.Tsdbs
+import jp.cordea.mackerelclient.api.response.User
+import jp.cordea.mackerelclient.api.response.Users
 import retrofit2.Call
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
+import retrofit2.http.Query
 import rx.Observable
 
 interface MackerelApi {
@@ -19,23 +39,24 @@ interface MackerelApi {
 
     @POST("/api/v0/hosts/{hostId}/retire")
     fun postRetireHost(
-            @Path("hostId") hostId: String,
-            @Body emptyBody: EmptyBody = EmptyBody()
+        @Path("hostId") hostId: String,
+        @Body emptyBody: EmptyBody = EmptyBody()
     ): Call<RetireHost>
 
     @GET("/api/v0/hosts/{hostId}/metrics")
     fun getMetrics(
-            @Path("hostId") hostId: String,
-            @Query("name") name: String,
-            @Query("from") from: Long,
-            @Query("to") to: Long): Observable<Metrics>
+        @Path("hostId") hostId: String,
+        @Query("name") name: String,
+        @Query("from") from: Long,
+        @Query("to") to: Long
+    ): Observable<Metrics>
 
     @GET("/api/v0/hosts")
     fun getAllHosts(
-            @Query("status") status: List<String>,
-            @Query("service") service: String? = null,
-            @Query("role") role: List<String>? = null,
-            @Query("name") name: String? = null
+        @Query("status") status: List<String>,
+        @Query("service") service: String? = null,
+        @Query("role") role: List<String>? = null,
+        @Query("name") name: String? = null
     ): Observable<Hosts>
 
     @GET("/api/v0/monitors")
@@ -43,16 +64,16 @@ interface MackerelApi {
 
     @GET("/api/v0/tsdb/latest")
     fun getLatestMetric(
-            @Query("hostId") hostId: List<String>,
-            @Query("name") name: List<String>
+        @Query("hostId") hostId: List<String>,
+        @Query("name") name: List<String>
     ): Observable<Tsdbs>
 
     @GET("/api/v0/services/{serviceName}/metrics")
     fun getServiceMetrics(
-            @Path("serviceName") serviceName: String,
-            @Query("name") name: String,
-            @Query("from") from: Long,
-            @Query("to") to: Long
+        @Path("serviceName") serviceName: String,
+        @Query("name") name: String,
+        @Query("from") from: Long,
+        @Query("to") to: Long
     ): Observable<Metrics>
 
     @GET("/api/v0/alerts")
@@ -72,7 +93,7 @@ interface MackerelApi {
 
     @PUT("/api/v0/monitors/{monitorId}")
     fun putRefreshMonitor(
-            @Path("monitorId") monitorId: String,
-            @Body monitor: Monitor
+        @Path("monitorId") monitorId: String,
+        @Body monitor: Monitor
     ): Call<RefreshMonitor>
 }

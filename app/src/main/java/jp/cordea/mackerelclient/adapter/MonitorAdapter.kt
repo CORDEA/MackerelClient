@@ -12,8 +12,8 @@ import jp.cordea.mackerelclient.databinding.ListItemMonitorBinding
 import jp.cordea.mackerelclient.databinding.ListItemMonitorSectionBinding
 
 class MonitorAdapter(
-        val fragment: Fragment,
-        val items: List<Pair<String, Monitor?>>
+    val fragment: Fragment,
+    val items: List<Pair<String, Monitor?>>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -39,11 +39,11 @@ class MonitorAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == 1) {
             val view = LayoutInflater.from(fragment.context)
-                    .inflate(R.layout.list_item_monitor_section, parent, false)
+                .inflate(R.layout.list_item_monitor_section, parent, false)
             return SectionViewHolder(view)
         }
         val view = LayoutInflater.from(fragment.context)
-                .inflate(R.layout.list_item_monitor, parent, false)
+            .inflate(R.layout.list_item_monitor, parent, false)
         return ViewHolder(view)
     }
 
