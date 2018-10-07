@@ -5,27 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import io.reactivex.disposables.SerialDisposable
 import jp.cordea.mackerelclient.activity.AlertDetailActivity
 import jp.cordea.mackerelclient.adapter.AlertAdapter
 import jp.cordea.mackerelclient.api.response.Alert
 import jp.cordea.mackerelclient.databinding.FragmentInsideAlertBinding
 import jp.cordea.mackerelclient.viewmodel.AlertViewModel
-import rx.Subscription
-import rx.subscriptions.Subscriptions
 
 class CriticalAlertFragment : Fragment() {
 
-    private val viewModel by lazy {
-        AlertViewModel(context!!)
-    }
+    private val viewModel by lazy { AlertViewModel(context!!) }
 
     private var alerts: List<Alert>? = null
 
-    private var subscription: Subscription? = null
-
-    private var resultSubscription: Subscription? = null
-
-    private var itemSubscription: Subscription? = null
+    private val disposable = SerialDisposable()
+    private val itemDisposable = SerialDisposable()
+    private val resultDisposable = SerialDisposable()
 
     private lateinit var binding: FragmentInsideAlertBinding
 
@@ -43,10 +38,8 @@ class CriticalAlertFragment : Fragment() {
         val context = context ?: return
         val parentFragment = parentFragment ?: return
 
-        itemSubscription?.unsubscribe()
-        itemSubscription = (parentFragment as AlertFragment)
+        (parentFragment as AlertFragment)
             .onAlertItemChanged
-            .asObservable()
             .subscribe({
                 alerts = it?.alerts?.filter { it.status.equals("CRITICAL") }
                 refresh()
@@ -54,6 +47,7 @@ class CriticalAlertFragment : Fragment() {
                 alerts = null
                 refresh()
             })
+            .run(itemDisposable::set)
 
         binding.error.retryButton.setOnClickListener {
             binding.progressLayout.visibility = View.VISIBLE
@@ -71,27 +65,24 @@ class CriticalAlertFragment : Fragment() {
             parentFragment.startActivityForResult(intent, CriticalAlertFragment.REQUEST_CODE)
         }
 
-        resultSubscription?.unsubscribe()
         (parentFragment as? AlertFragment)?.let { fragment ->
-            resultSubscription =
-                fragment.onCriticalAlertFragmentResult
-                    .asObservable()
-                    .filter { it }
-                    .subscribe({
-                        refresh()
-                    }, {})
+            fragment.onCriticalAlertFragmentResult
+                .filter { it }
+                .subscribe({
+                    refresh()
+                }, {})
+                .run(resultDisposable::set)
         }
     }
 
     private fun refresh() {
         binding.swipeRefresh.isRefreshing = true
-        subscription?.unsubscribe()
-        subscription = getAlert()
+        getAlert()
     }
 
-    private fun getAlert(): Subscription {
-        val context = context ?: return Subscriptions.empty()
-        return viewModel
+    private fun getAlert() {
+        val context = context!!
+        viewModel
             .getAlerts(alerts) { it.status.equals("CRITICAL") }
             .subscribe({
                 binding.listView.adapter = AlertAdapter(context, it)
@@ -99,18 +90,18 @@ class CriticalAlertFragment : Fragment() {
                 binding.swipeRefresh.isRefreshing = false
                 binding.progressLayout.visibility = View.GONE
             }, {
-                it.printStackTrace()
                 binding.swipeRefresh.isRefreshing = false
                 binding.error.root.visibility = View.VISIBLE
                 binding.progressLayout.visibility = View.GONE
             })
+            .run(disposable::set)
     }
 
-    override fun onDestroyView() {
-        subscription?.unsubscribe()
-        resultSubscription?.unsubscribe()
-        itemSubscription?.unsubscribe()
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.dispose()
+        resultDisposable.dispose()
+        itemDisposable.dispose()
     }
 
     companion object {

@@ -5,25 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import io.reactivex.disposables.SerialDisposable
 import jp.cordea.mackerelclient.activity.ServiceMetricsActivity
 import jp.cordea.mackerelclient.adapter.ServiceAdapter
 import jp.cordea.mackerelclient.api.response.Service
 import jp.cordea.mackerelclient.databinding.FragmentServiceBinding
 import jp.cordea.mackerelclient.viewmodel.ServiceViewModel
-import rx.Subscription
-import rx.subscriptions.Subscriptions
 
 class ServiceFragment : Fragment() {
+
+    private val viewModel by lazy { ServiceViewModel(context!!) }
+
+    private val disposable = SerialDisposable()
 
     private lateinit var binding: FragmentServiceBinding
 
     private var services: List<Service>? = null
-
-    private var subscription: Subscription? = null
-
-    private val viewModel by lazy {
-        ServiceViewModel(context!!)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,13 +55,12 @@ class ServiceFragment : Fragment() {
     }
 
     private fun refresh() {
-        subscription?.unsubscribe()
-        subscription = getServices()
+        getServices()
     }
 
-    private fun getServices(): Subscription {
-        val context = context ?: return Subscriptions.empty()
-        return viewModel
+    private fun getServices() {
+        val context = context!!
+        viewModel
             .getServices()
             .subscribe({
                 binding.swipeRefresh.isRefreshing = false
@@ -73,16 +69,16 @@ class ServiceFragment : Fragment() {
                 binding.progressLayout.visibility = View.GONE
                 services = it.services
             }, {
-                it.printStackTrace()
                 binding.swipeRefresh.isRefreshing = false
                 binding.error.root.visibility = View.VISIBLE
                 binding.progressLayout.visibility = View.GONE
             })
+            .run(disposable::set)
     }
 
-    override fun onDestroyView() {
-        subscription?.unsubscribe()
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.dispose()
     }
 
     companion object {

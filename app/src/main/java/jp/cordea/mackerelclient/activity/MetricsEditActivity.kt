@@ -17,12 +17,9 @@ import jp.cordea.mackerelclient.viewmodel.MetricsEditViewModel
 
 class MetricsEditActivity : AppCompatActivity() {
 
-    private val viewModel: MetricsEditViewModel by lazy {
-        MetricsEditViewModel()
-    }
+    private val viewModel by lazy { MetricsEditViewModel() }
 
-    private var id: Int = -1
-
+    private var id = -1
     private var type: MetricsType? = null
 
     private lateinit var contentBinding: ContentMetricsEditBinding
@@ -109,9 +106,7 @@ class MetricsEditActivity : AppCompatActivity() {
         const val REQUEST_CODE = 0
 
         private const val ID_KEY = "IdKey"
-
         private const val USER_METRIC_KEY = "UserMetricKey"
-
         private const val TYPE_KEY = "TypeKey"
 
         fun createIntent(

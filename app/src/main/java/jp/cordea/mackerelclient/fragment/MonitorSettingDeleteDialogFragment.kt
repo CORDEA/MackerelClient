@@ -13,9 +13,7 @@ class MonitorSettingDeleteDialogFragment : DialogFragment() {
 
     var onSuccess = { }
 
-    private val viewModel by lazy {
-        MonitorSettingViewModel(context!!)
-    }
+    private val viewModel by lazy { MonitorSettingViewModel(context!!) }
 
     private val monitor: Monitor
         get() = arguments!!.getSerializable(MONITOR_KEY) as Monitor
@@ -25,11 +23,11 @@ class MonitorSettingDeleteDialogFragment : DialogFragment() {
         return AlertDialog
             .Builder(context)
             .setMessage(R.string.monitor_detail_delete_dialog_title)
-            .setPositiveButton(R.string.delete_positive_button, { _, _ ->
+            .setPositiveButton(R.string.delete_positive_button) { _, _ ->
                 val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
                 dialog.show()
                 deleteMonitorSetting()
-            })
+            }
             .create()
     }
 

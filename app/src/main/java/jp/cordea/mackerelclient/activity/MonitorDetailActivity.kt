@@ -16,17 +16,12 @@ import jp.cordea.mackerelclient.api.response.Monitor
 import jp.cordea.mackerelclient.databinding.ActivityDetailCommonBinding
 import jp.cordea.mackerelclient.fragment.MonitorSettingDeleteDialogFragment
 import jp.cordea.mackerelclient.viewmodel.MonitorDetailViewModel
-import rx.Subscription
 
 class MonitorDetailActivity : AppCompatActivity() {
 
-    var monitor: Monitor? = null
+    private val viewModel by lazy { MonitorDetailViewModel() }
 
-    private var subscription: Subscription? = null
-
-    private val viewModel by lazy {
-        MonitorDetailViewModel()
-    }
+    private var monitor: Monitor? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,11 +45,6 @@ class MonitorDetailActivity : AppCompatActivity() {
             }
         }
         return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        subscription?.unsubscribe()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

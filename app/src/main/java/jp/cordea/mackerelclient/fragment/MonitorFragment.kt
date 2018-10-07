@@ -8,18 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.SerialDisposable
 import jp.cordea.mackerelclient.activity.MonitorDetailActivity
 import jp.cordea.mackerelclient.adapter.MonitorAdapter
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Monitor
 import jp.cordea.mackerelclient.databinding.FragmentMonitorBinding
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
-import rx.subscriptions.Subscriptions
 
 class MonitorFragment : Fragment() {
 
-    private var subscription: Subscription? = null
+    private val disposable = SerialDisposable()
 
     private lateinit var binding: FragmentMonitorBinding
 
@@ -34,9 +33,7 @@ class MonitorFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
-
         refresh()
 
         binding.swipeRefresh.setOnRefreshListener {
@@ -52,13 +49,12 @@ class MonitorFragment : Fragment() {
 
     private fun refresh() {
         binding.swipeRefresh.isRefreshing = true
-        subscription?.unsubscribe()
-        subscription = requestApi()
+        requestApi()
     }
 
-    private fun requestApi(): Subscription {
-        val context = context ?: return Subscriptions.empty()
-        return MackerelApiClient
+    private fun requestApi() {
+        val context = context!!
+        MackerelApiClient
             .getMonitors(context)
             .map { it.monitors }
             .map { monitors ->
@@ -87,6 +83,7 @@ class MonitorFragment : Fragment() {
                 binding.error.root.visibility = View.VISIBLE
                 binding.progressLayout.visibility = View.GONE
             })
+            .run(disposable::set)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -98,9 +95,9 @@ class MonitorFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        subscription?.unsubscribe()
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.dispose()
     }
 
     companion object {

@@ -1,6 +1,9 @@
 package jp.cordea.mackerelclient.viewmodel
 
 import android.content.Context
+import io.reactivex.Maybe
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.realm.Realm
 import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.R
@@ -9,8 +12,6 @@ import jp.cordea.mackerelclient.api.response.Hosts
 import jp.cordea.mackerelclient.api.response.Tsdbs
 import jp.cordea.mackerelclient.model.DisplayHostState
 import jp.cordea.mackerelclient.model.UserMetric
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
 
 class HostViewModel(private val context: Context) {
 
@@ -24,7 +25,7 @@ class HostViewModel(private val context: Context) {
                 .also { realm.close() }
         }
 
-    fun getHosts(items: List<DisplayHostState>): Observable<Hosts> =
+    fun getHosts(items: List<DisplayHostState>): Maybe<Hosts> =
         MackerelApiClient
             .getHosts(context, items.map { it.name })
             .filter {
@@ -33,7 +34,7 @@ class HostViewModel(private val context: Context) {
             }
             .observeOn(AndroidSchedulers.mainThread())
 
-    fun getLatestMetrics(hosts: Hosts): Observable<Tsdbs> =
+    fun getLatestMetrics(hosts: Hosts): Single<Tsdbs> =
         MackerelApiClient
             .getLatestMetrics(
                 context, hosts.hosts.map { it.id },

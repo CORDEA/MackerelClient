@@ -8,17 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import io.reactivex.disposables.SerialDisposable
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.activity.HostDetailActivity
 import jp.cordea.mackerelclient.adapter.HostAdapter
 import jp.cordea.mackerelclient.databinding.FragmentHostBinding
 import jp.cordea.mackerelclient.model.DisplayHostState
 import jp.cordea.mackerelclient.viewmodel.HostViewModel
-import rx.Subscription
 
 class HostFragment : Fragment() {
 
-    private var subscription: Subscription? = null
+    private val disposable = SerialDisposable()
 
     private val viewModel by lazy { HostViewModel(context!!) }
     private val adapter by lazy { HostAdapter(this) }
@@ -53,14 +53,13 @@ class HostFragment : Fragment() {
 
     private fun refresh() {
         binding.swipeRefresh.isRefreshing = true
-        subscription?.unsubscribe()
-        subscription = getHosts(viewModel.displayHostState)
+        getHosts(viewModel.displayHostState)
     }
 
-    private fun getHosts(items: List<DisplayHostState>): Subscription {
-        return viewModel
+    private fun getHosts(items: List<DisplayHostState>) {
+        viewModel
             .getHosts(items)
-            .flatMap({ viewModel.getLatestMetrics(it) }, { hosts, tsdbs ->
+            .flatMap({ viewModel.getLatestMetrics(it).toMaybe() }, { hosts, tsdbs ->
                 adapter.update(hosts.hosts, tsdbs.tsdbs)
             })
             .subscribe({
@@ -73,6 +72,7 @@ class HostFragment : Fragment() {
                 binding.progressLayout.visibility = View.GONE
                 binding.swipeRefresh.visibility = View.GONE
             })
+            .run(disposable::set)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -84,9 +84,9 @@ class HostFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        subscription?.unsubscribe()
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.dispose()
     }
 
     companion object {

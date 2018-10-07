@@ -17,12 +17,6 @@ class OtherAlertAdapter(
     R.layout.list_item_other_alart
 ) {
 
-    override fun getItem(position: Int): Alert =
-        items[position]
-
-    override fun getCount(): Int =
-        items.size
-
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         var view = convertView
         val viewHolder: ViewHolder
@@ -46,8 +40,11 @@ class OtherAlertAdapter(
         return view
     }
 
-    class ViewHolder(view: View) {
+    override fun getItem(position: Int): Alert = items[position]
 
+    override fun getCount(): Int = items.size
+
+    class ViewHolder(view: View) {
         val binding: ListItemOtherAlartBinding = ListItemOtherAlartBinding.bind(view)
     }
 }

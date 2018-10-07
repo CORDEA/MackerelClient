@@ -1,5 +1,6 @@
 package jp.cordea.mackerelclient.api
 
+import io.reactivex.Single
 import jp.cordea.mackerelclient.api.request.EmptyBody
 import jp.cordea.mackerelclient.api.response.Alert
 import jp.cordea.mackerelclient.api.response.Alerts
@@ -24,18 +25,17 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
-import rx.Observable
 
 interface MackerelApi {
 
     @GET("/api/v0/services")
-    fun getService(): Observable<Services>
+    fun getService(): Single<Services>
 
     @GET("/api/v0/services/{serviceName}/roles")
-    fun getRoles(@Path("serviceName") serviceName: String): Observable<Roles>
+    fun getRoles(@Path("serviceName") serviceName: String): Single<Roles>
 
     @GET("/api/v0/hosts/{hostId}")
-    fun getHost(@Path("hostId") hostId: String): Observable<Host>
+    fun getHost(@Path("hostId") hostId: String): Single<Host>
 
     @POST("/api/v0/hosts/{hostId}/retire")
     fun postRetireHost(
@@ -49,7 +49,7 @@ interface MackerelApi {
         @Query("name") name: String,
         @Query("from") from: Long,
         @Query("to") to: Long
-    ): Observable<Metrics>
+    ): Single<Metrics>
 
     @GET("/api/v0/hosts")
     fun getAllHosts(
@@ -57,16 +57,16 @@ interface MackerelApi {
         @Query("service") service: String? = null,
         @Query("role") role: List<String>? = null,
         @Query("name") name: String? = null
-    ): Observable<Hosts>
+    ): Single<Hosts>
 
     @GET("/api/v0/monitors")
-    fun getMonitors(): Observable<Monitors>
+    fun getMonitors(): Single<Monitors>
 
     @GET("/api/v0/tsdb/latest")
     fun getLatestMetric(
         @Query("hostId") hostId: List<String>,
         @Query("name") name: List<String>
-    ): Observable<Tsdbs>
+    ): Single<Tsdbs>
 
     @GET("/api/v0/services/{serviceName}/metrics")
     fun getServiceMetrics(
@@ -74,13 +74,13 @@ interface MackerelApi {
         @Query("name") name: String,
         @Query("from") from: Long,
         @Query("to") to: Long
-    ): Observable<Metrics>
+    ): Single<Metrics>
 
     @GET("/api/v0/alerts")
-    fun getAlerts(): Observable<Alerts>
+    fun getAlerts(): Single<Alerts>
 
     @GET("/api/v0/users")
-    fun getUsers(): Observable<Users>
+    fun getUsers(): Single<Users>
 
     @POST("/api/v0/alerts/{alertId}/close")
     fun postCloseAlert(@Path("alertId") alertId: String, @Body close: CloseAlert): Call<Alert>

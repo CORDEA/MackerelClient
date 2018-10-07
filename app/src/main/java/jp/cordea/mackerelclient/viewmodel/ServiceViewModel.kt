@@ -1,17 +1,17 @@
 package jp.cordea.mackerelclient.viewmodel
 
 import android.content.Context
+import io.reactivex.Maybe
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.realm.Realm
 import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Services
 import jp.cordea.mackerelclient.model.UserMetric
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
 
 class ServiceViewModel(private val context: Context) {
 
-    fun getServices(): Observable<Services> =
+    fun getServices(): Maybe<Services> =
         MackerelApiClient
             .getServices(context)
             .filter {

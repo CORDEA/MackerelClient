@@ -5,14 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.SerialDisposable
 import io.realm.Realm
 import jp.cordea.mackerelclient.adapter.UserAdapter
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.databinding.FragmentUserBinding
 import jp.cordea.mackerelclient.model.Preferences
 import jp.cordea.mackerelclient.model.UserKey
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
 
 class UserFragment : Fragment() {
 
@@ -20,8 +21,8 @@ class UserFragment : Fragment() {
 
     private val adapter by lazy { UserAdapter(context!!) }
 
-    private var refreshSubscription: Subscription? = null
-    private var subscription: Subscription? = null
+    private var refreshDisposable = SerialDisposable()
+    private var disposable: Disposable? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,27 +38,25 @@ class UserFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         binding.listView.adapter = adapter
 
-        subscription = adapter.onUserDeleteSucceeded
-            .asObservable()
+        disposable = adapter.onUserDeleteSucceeded
             .filter { it }
             .subscribe({ refresh() }, { })
 
-        refreshSubscription = refresh()
+        refresh()
         binding.swipeRefresh.setOnRefreshListener {
-            refreshSubscription?.unsubscribe()
-            refreshSubscription = refresh()
+            refresh()
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        subscription?.unsubscribe()
-        refreshSubscription?.unsubscribe()
+        disposable?.dispose()
+        refreshDisposable.dispose()
     }
 
-    private fun refresh(): Subscription {
+    private fun refresh() {
         val context = context!!
-        return MackerelApiClient
+        MackerelApiClient
             .getUsers(context)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ users ->
@@ -78,6 +77,7 @@ class UserFragment : Fragment() {
                 binding.progressLayout.visibility = View.GONE
                 binding.swipeRefresh.visibility = View.GONE
             })
+            .run(refreshDisposable::set)
     }
 
     companion object {

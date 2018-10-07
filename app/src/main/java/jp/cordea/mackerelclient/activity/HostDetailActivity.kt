@@ -17,13 +17,10 @@ import jp.cordea.mackerelclient.databinding.ActivityDetailCommonBinding
 import jp.cordea.mackerelclient.fragment.HostRetireDialogFragment
 import jp.cordea.mackerelclient.utils.DateUtils
 import jp.cordea.mackerelclient.utils.StatusUtils
-import rx.Subscription
 
 class HostDetailActivity : AppCompatActivity() {
 
-    var host: Host? = null
-
-    private var subscription: Subscription? = null
+    private var host: Host? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,9 +50,11 @@ class HostDetailActivity : AppCompatActivity() {
         inner = arrayListOf()
         inner.add(
             host.roles.size.let {
-                if (it <= 1) resources.getString(R.string.format_role).format(it)
-                else if (it > 99) resources.getString(R.string.format_roles_ex)
-                else resources.getString(R.string.format_roles).format(it)
+                when {
+                    it <= 1 -> resources.getString(R.string.format_role).format(it)
+                    it > 99 -> resources.getString(R.string.format_roles_ex)
+                    else -> resources.getString(R.string.format_roles).format(it)
+                }
             } to R.string.host_detail_roles
         )
         inner.add(
@@ -68,11 +67,6 @@ class HostDetailActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.host_detail, menu)
         return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        subscription?.unsubscribe()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

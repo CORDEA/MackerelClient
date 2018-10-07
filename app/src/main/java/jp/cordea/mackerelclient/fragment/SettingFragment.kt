@@ -8,6 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.SerialDisposable
+import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import jp.cordea.mackerelclient.BuildConfig
 import jp.cordea.mackerelclient.R
@@ -16,16 +20,11 @@ import jp.cordea.mackerelclient.databinding.FragmentSettingBinding
 import jp.cordea.mackerelclient.model.DisplayHostState
 import jp.cordea.mackerelclient.model.UserMetric
 import jp.cordea.mackerelclient.utils.StatusUtils
-import rx.Observable
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 
 class SettingFragment : Fragment(), SettingStatusSelectionDialogFragment.OnUpdateStatusListener {
 
     private val realm = Realm.getDefaultInstance()
-
-    private var subscription: Subscription? = null
+    private val disposable = SerialDisposable()
 
     private lateinit var binding: FragmentSettingBinding
 
@@ -40,11 +39,9 @@ class SettingFragment : Fragment(), SettingStatusSelectionDialogFragment.OnUpdat
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        subscription?.unsubscribe()
-        subscription = Observable
-            .just(Unit)
+        Single
+            .fromCallable { Realm.getDefaultInstance() }
             .subscribeOn(Schedulers.io())
-            .map { Realm.getDefaultInstance() }
             .map { realm ->
                 if (realm.where(DisplayHostState::class.java).findAll().size == 0) {
                     realm.executeTransaction {
@@ -59,6 +56,7 @@ class SettingFragment : Fragment(), SettingStatusSelectionDialogFragment.OnUpdat
             .observeOn(AndroidSchedulers.mainThread())
             .map { onUpdateStatus() }
             .subscribe({ addEvents() }, {})
+            .run(disposable::set)
 
         binding.licenseLayout.setOnClickListener {
             val intent = Intent(context, LicenseActivity::class.java)
@@ -75,7 +73,7 @@ class SettingFragment : Fragment(), SettingStatusSelectionDialogFragment.OnUpdat
 
     override fun onDestroy() {
         super.onDestroy()
-        subscription?.unsubscribe()
+        disposable.dispose()
         realm.close()
     }
 

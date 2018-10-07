@@ -8,7 +8,10 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
-import com.ogaclejapan.rx.binding.RxEvent
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.SerialDisposable
+import io.reactivex.subjects.PublishSubject
 import io.realm.Realm
 import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.api.MackerelApiClient
@@ -16,21 +19,16 @@ import jp.cordea.mackerelclient.api.response.Metrics
 import jp.cordea.mackerelclient.model.MetricsApiRequestParameter
 import jp.cordea.mackerelclient.model.UserMetric
 import jp.cordea.mackerelclient.utils.DateUtils
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
-import rx.lang.kotlin.onErrorReturnNull
-import rx.subscriptions.SerialSubscription
 import java.util.concurrent.TimeUnit
 
 class MetricsViewModel(val context: Context) : LifecycleObserver {
 
+    val onChartDataAlive = PublishSubject.create<Pair<Int, LineData?>>()
+
     private val apiResponses: MutableList<MetricsApiRequestParameter> = arrayListOf()
+    private val disposable = SerialDisposable()
 
     private var nofMetrics: MutableList<Int> = arrayListOf()
-
-    val onChartDataAlive: RxEvent<Pair<Int, LineData?>> = RxEvent.create()
-
-    private val subscription: SerialSubscription = SerialSubscription()
 
     fun initUserMetrics(parentId: String) {
         val realm = Realm.getDefaultInstance()
@@ -77,13 +75,13 @@ class MetricsViewModel(val context: Context) : LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun onDestroy() {
-        subscription.unsubscribe()
+        disposable.dispose()
     }
 
     private fun hostMetrics(
         hostId: String,
         param: MetricsApiRequestParameter
-    ): Observable<Metrics> =
+    ): Single<Metrics> =
         MackerelApiClient.getMetrics(
             context,
             hostId,
@@ -95,7 +93,7 @@ class MetricsViewModel(val context: Context) : LifecycleObserver {
     private fun serviceMetrics(
         serviceName: String,
         param: MetricsApiRequestParameter
-    ): Observable<Metrics> =
+    ): Single<Metrics> =
         MackerelApiClient.getServiceMetrics(
             context,
             serviceName,
@@ -132,16 +130,14 @@ class MetricsViewModel(val context: Context) : LifecycleObserver {
 
         val param = metricsApiRequestParameters[idx]
 
-        val metricsObservable: Observable<Metrics>
-        if (idType == MetricsType.SERVICE) {
-            metricsObservable = serviceMetrics(id, param)
+        val metricsObservable = if (idType == MetricsType.SERVICE) {
+            serviceMetrics(id, param)
         } else {
-            metricsObservable = hostMetrics(id, param)
+            hostMetrics(id, param)
         }
 
-        subscription.set(
+        disposable.set(
             metricsObservable
-                .onErrorReturnNull()
                 .delay(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -156,7 +152,6 @@ class MetricsViewModel(val context: Context) : LifecycleObserver {
 
                     runMetricsApiWithDelay(id, idType, metricsApiRequestParameters, idx + 1)
                 }, {
-                    it.printStackTrace()
                     apiResponses.add(param.copy(response = null))
                     if (nofMetrics.first() == apiResponses.size) {
                         setData(apiResponses)
@@ -174,7 +169,7 @@ class MetricsViewModel(val context: Context) : LifecycleObserver {
         var data: LineData? = null
 
         if (metricsApiRequestParameters.none { it.response != null }) {
-            onChartDataAlive.post(metricsApiRequestParameters.first().id to null)
+            onChartDataAlive.onNext(metricsApiRequestParameters.first().id to null)
         } else {
             for ((j, param) in metricsApiRequestParameters.withIndex()) {
                 val vals = param.response?.metrics ?: continue
@@ -202,7 +197,7 @@ class MetricsViewModel(val context: Context) : LifecycleObserver {
                 }
             }
 
-            onChartDataAlive.post(metricsApiRequestParameters.first().id to data)
+            onChartDataAlive.onNext(metricsApiRequestParameters.first().id to data)
         }
     }
 }

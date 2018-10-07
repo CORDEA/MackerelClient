@@ -1,12 +1,12 @@
 package jp.cordea.mackerelclient.viewmodel
 
 import android.content.Context
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.realm.Realm
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Users
 import jp.cordea.mackerelclient.model.UserKey
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
 
 class LoginViewModel(private val context: Context) {
 
@@ -16,7 +16,7 @@ class LoginViewModel(private val context: Context) {
         autoLogin: Boolean,
         onSuccess: (id: Int?) -> Unit,
         onFailure: () -> Unit
-    ): Subscription {
+    ): Disposable {
         return MackerelApiClient
             .getUsers(context, key)
             .observeOn(AndroidSchedulers.mainThread())

@@ -13,9 +13,7 @@ class HostRetireDialogFragment : DialogFragment() {
 
     var onSuccess = { }
 
-    private val viewModel by lazy {
-        HostRetireViewModel(context!!)
-    }
+    private val viewModel by lazy { HostRetireViewModel(context!!) }
 
     private val host: Host
         get() = arguments!!.getSerializable(HOST_KEY) as Host
@@ -24,11 +22,11 @@ class HostRetireDialogFragment : DialogFragment() {
         val context = context!!
         return AlertDialog.Builder(context)
             .setMessage(R.string.host_detail_retire_dialog_title)
-            .setPositiveButton(R.string.retire_positive_button, { _, _ ->
+            .setPositiveButton(R.string.retire_positive_button) { _, _ ->
                 val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
                 dialog.show()
                 retireHost()
-            })
+            }
             .create()
     }
 

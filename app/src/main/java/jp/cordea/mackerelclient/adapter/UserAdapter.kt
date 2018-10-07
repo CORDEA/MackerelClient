@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import com.ogaclejapan.rx.binding.RxEvent
 import com.squareup.picasso.Picasso
+import io.reactivex.subjects.PublishSubject
 import jp.cordea.mackerelclient.PicassoCircularTransform
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.response.User
@@ -20,7 +20,7 @@ class UserAdapter(
     context,
     R.layout.list_item_user
 ) {
-    val onUserDeleteSucceeded: RxEvent<Boolean> = RxEvent.create<Boolean>()
+    val onUserDeleteSucceeded = PublishSubject.create<Boolean>()
 
     private var items: List<User> = emptyList()
     private var own: String? = null
@@ -43,7 +43,7 @@ class UserAdapter(
         viewHolder.binding.run {
             val viewModel = UserListItemViewModel(context, items[position])
             viewModel.onUserDeleteSucceeded = {
-                onUserDeleteSucceeded.post(true)
+                onUserDeleteSucceeded.onNext(true)
             }
             GravatarUtils.getGravatarImage(
                 items[position].email,
@@ -82,7 +82,6 @@ class UserAdapter(
     }
 
     class ViewHolder(view: View) {
-
         val binding: ListItemUserBinding = ListItemUserBinding.bind(view)
     }
 }

@@ -4,17 +4,17 @@ import android.content.Context
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.TextAppearanceSpan
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import jp.cordea.mackerelclient.R
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
 class LicenseViewModel(private val context: Context) {
 
-    val licensesObservable: Observable<SpannableStringBuilder>
-        get() = Observable
+    val licensesObservable: Single<SpannableStringBuilder>
+        get() = Single
             .just(R.raw.licenses)
             .subscribeOn(Schedulers.io())
             .map {

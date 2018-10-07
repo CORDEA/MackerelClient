@@ -15,9 +15,7 @@ class AlertCloseDialogFragment : DialogFragment() {
 
     var onSuccess = { }
 
-    private val viewModel by lazy {
-        AlertCloseViewModel(context!!)
-    }
+    private val viewModel by lazy { AlertCloseViewModel(context!!) }
 
     private val alert: Alert
         get() = arguments!!.getSerializable(ALERT_KEY) as Alert
@@ -29,11 +27,11 @@ class AlertCloseDialogFragment : DialogFragment() {
         return AlertDialog.Builder(context)
             .setTitle(R.string.alert_detail_close_dialog_title)
             .setView(layout)
-            .setPositiveButton(R.string.alert_detail_close_positive_button, { _, _ ->
+            .setPositiveButton(R.string.alert_detail_close_positive_button) { _, _ ->
                 val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
                 dialog.show()
                 closeAlert(editText.text.toString())
-            })
+            }
             .create()
     }
 

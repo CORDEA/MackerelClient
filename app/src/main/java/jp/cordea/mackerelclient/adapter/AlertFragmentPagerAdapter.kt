@@ -13,8 +13,7 @@ class AlertFragmentPagerAdapter(
     val context: Context
 ) : FragmentPagerAdapter(manager) {
 
-    override fun getCount(): Int =
-        2
+    override fun getCount(): Int = 2
 
     override fun getItem(position: Int): Fragment? =
         when (position) {

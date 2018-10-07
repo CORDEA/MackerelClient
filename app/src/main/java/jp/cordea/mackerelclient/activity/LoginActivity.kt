@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import io.reactivex.disposables.Disposable
 import io.realm.Realm
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.databinding.ActivityLoginBinding
@@ -17,19 +18,13 @@ import jp.cordea.mackerelclient.databinding.ContentLoginBinding
 import jp.cordea.mackerelclient.model.Preferences
 import jp.cordea.mackerelclient.model.UserKey
 import jp.cordea.mackerelclient.viewmodel.LoginViewModel
-import rx.subscriptions.CompositeSubscription
 
 class LoginActivity : AppCompatActivity() {
 
-    private val viewModel by lazy {
-        LoginViewModel(this)
-    }
+    private val viewModel by lazy { LoginViewModel(this) }
+    private val prefs by lazy { Preferences(this) }
 
-    private val prefs by lazy {
-        Preferences(this)
-    }
-
-    private val compositeSubscription = CompositeSubscription()
+    private var disposable: Disposable? = null
 
     private lateinit var contentBinding: ContentLoginBinding
 
@@ -57,15 +52,13 @@ class LoginActivity : AppCompatActivity() {
                 contentBinding.emailEditText.text = with(it) { SpannableStringBuilder(this) }
             }
 
-            compositeSubscription.add(
-                viewModel.logIn(key.key!!, key.email, true,
-                    onSuccess = {
-                        onLoginSucceeded(it)
-                    },
-                    onFailure = {
-                        onLoginFailure()
-                    }
-                )
+            disposable = viewModel.logIn(key.key!!, key.email, true,
+                onSuccess = {
+                    onLoginSucceeded(it)
+                },
+                onFailure = {
+                    onLoginFailure()
+                }
             )
         }
 
@@ -104,26 +97,22 @@ class LoginActivity : AppCompatActivity() {
         } else {
             contentBinding.progressBar.visibility = View.VISIBLE
             contentBinding.container.visibility = View.GONE
-            compositeSubscription.add(
-                viewModel.logIn(
-                    apiKey.toString().trim(),
-                    contentBinding.emailEditText.text.toString(),
-                    false,
-                    onSuccess = {
-                        onLoginSucceeded(it)
-                    },
-                    onFailure = {
-                        onLoginFailure()
-                    }
-                )
+            disposable = viewModel.logIn(
+                apiKey.toString().trim(),
+                contentBinding.emailEditText.text.toString(),
+                false,
+                onSuccess = {
+                    onLoginSucceeded(it)
+                },
+                onFailure = {
+                    onLoginFailure()
+                }
             )
         }
     }
 
     private fun onLoginSucceeded(id: Int? = null) {
-        id?.let {
-            prefs.userId = it
-        }
+        id?.let { prefs.userId = it }
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
     }
@@ -139,9 +128,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        if (compositeSubscription.hasSubscriptions()) {
-            compositeSubscription.unsubscribe()
-        }
         super.onDestroy()
+        disposable?.dispose()
     }
 }

@@ -10,6 +10,8 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.SerialDisposable
 import io.realm.Realm
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.MetricsType
@@ -20,23 +22,16 @@ import jp.cordea.mackerelclient.databinding.ContentMetricsBinding
 import jp.cordea.mackerelclient.model.MetricsParameter
 import jp.cordea.mackerelclient.model.UserMetric
 import jp.cordea.mackerelclient.viewmodel.MetricsViewModel
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
 
 class MetricsActivity : AppCompatActivity() {
 
-    private val viewModel by lazy {
-        MetricsViewModel(this)
-    }
+    private val viewModel by lazy { MetricsViewModel(this) }
 
-    private var subscription: Subscription? = null
+    private val disposable = SerialDisposable()
 
     private var hostId: String? = null
-
     private var needRefresh = false
-
     private var drawCompleteMetrics = 0
-
     private var enableRefresh = false
 
     private lateinit var contentBinding: ContentMetricsBinding
@@ -87,18 +82,17 @@ class MetricsActivity : AppCompatActivity() {
         contentBinding.recyclerView.addItemDecoration(ListItemDecoration(this))
 
         drawCompleteMetrics = 0
-        subscription?.unsubscribe()
-        subscription = viewModel
+        viewModel
             .onChartDataAlive
-            .asObservable()
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ it0 ->
+            .subscribe({
                 val adapter = contentBinding.recyclerView.adapter as MetricsAdapter
-                drawCompleteMetrics = adapter.refreshRecyclerViewItem(it0, drawCompleteMetrics)
+                drawCompleteMetrics = adapter.refreshRecyclerViewItem(it, drawCompleteMetrics)
                 if (adapter.itemCount == drawCompleteMetrics) {
                     enableRefresh = true
                 }
             }, {})
+            .run(disposable::set)
 
         if (metrics.size == 0) {
             contentBinding.noticeContainer.visibility = View.VISIBLE
@@ -117,7 +111,7 @@ class MetricsActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        subscription?.unsubscribe()
+        disposable.dispose()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -147,7 +141,6 @@ class MetricsActivity : AppCompatActivity() {
     }
 
     companion object {
-
         private const val HOST_ID_KEY = "HostIdKey"
 
         fun createIntent(context: Context, hostId: String?): Intent =

@@ -3,9 +3,9 @@ package jp.cordea.mackerelclient.utils
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Context
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 import retrofit2.Response
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
 
 object DialogUtils {
     fun <T> switchDialog(context: Context, response: Response<T>, title: Int, m403: Int): Boolean {
@@ -22,20 +22,20 @@ object DialogUtils {
     }
 
     fun showDialog(context: Context, title: Int, message: Int = 0) {
-        Observable
+        Single
             .create<Unit> {
-                val ad = AlertDialog
+                val dialog = AlertDialog
                     .Builder(context)
                     .setMessage(title)
                     .create()
                 if (message != 0) {
                 } else {
-                    ad.setTitle(title)
-                    ad.setMessage(context.resources.getString(message))
+                    dialog.setTitle(title)
+                    dialog.setMessage(context.resources.getString(message))
                 }
 
-                ad.show()
-                it.onNext(Unit)
+                dialog.show()
+                it.onSuccess(Unit)
             }
             .subscribeOn(AndroidSchedulers.mainThread())
             .subscribe()

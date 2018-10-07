@@ -2,6 +2,8 @@ package jp.cordea.mackerelclient.api
 
 import android.content.Context
 import com.google.gson.GsonBuilder
+import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import jp.cordea.mackerelclient.BuildConfig
 import jp.cordea.mackerelclient.api.response.Alert
@@ -23,10 +25,8 @@ import jp.cordea.mackerelclient.model.UserKey
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import rx.Observable
-import rx.schedulers.Schedulers
 
 object MackerelApiClient {
 
@@ -39,7 +39,7 @@ object MackerelApiClient {
     private val BUILDER = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create(GSON))
-        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
 
     private fun <T> getService(
         service: java.lang.Class<T>,
@@ -83,27 +83,27 @@ object MackerelApiClient {
             .create(service)
     }
 
-    fun getServices(context: Context): Observable<Services> =
+    fun getServices(context: Context): Single<Services> =
         getService(MackerelApi::class.java, context)
             .getService()
             .subscribeOn(Schedulers.io())
 
-    fun getHosts(context: Context, status: List<String>): Observable<Hosts> =
+    fun getHosts(context: Context, status: List<String>): Single<Hosts> =
         getService(MackerelApi::class.java, context)
             .getAllHosts(status)
             .subscribeOn(Schedulers.io())
 
-    fun getAlerts(context: Context): Observable<Alerts> =
+    fun getAlerts(context: Context): Single<Alerts> =
         getService(MackerelApi::class.java, context)
             .getAlerts()
             .subscribeOn(Schedulers.io())
 
-    fun getMonitors(context: Context): Observable<Monitors> =
+    fun getMonitors(context: Context): Single<Monitors> =
         getService(MackerelApi::class.java, context)
             .getMonitors()
             .subscribeOn(Schedulers.io())
 
-    fun getUsers(context: Context, key: String? = null): Observable<Users> =
+    fun getUsers(context: Context, key: String? = null): Single<Users> =
         getService(MackerelApi::class.java, context, key)
             .getUsers()
             .subscribeOn(Schedulers.io())
@@ -114,7 +114,7 @@ object MackerelApiClient {
         name: String,
         from: Long,
         to: Long
-    ): Observable<Metrics> =
+    ): Single<Metrics> =
         getService(MackerelApi::class.java, context)
             .getMetrics(hostId, name, from, to)
             .subscribeOn(Schedulers.io())
@@ -123,7 +123,7 @@ object MackerelApiClient {
         context: Context,
         hostId: List<String>,
         name: List<String>
-    ): Observable<Tsdbs> =
+    ): Single<Tsdbs> =
         getService(MackerelApi::class.java, context)
             .getLatestMetric(hostId, name)
             .subscribeOn(Schedulers.io())
@@ -134,7 +134,7 @@ object MackerelApiClient {
         name: String,
         from: Long,
         to: Long
-    ): Observable<Metrics> =
+    ): Single<Metrics> =
         getService(MackerelApi::class.java, context)
             .getServiceMetrics(serviceName, name, from, to)
             .subscribeOn(Schedulers.io())

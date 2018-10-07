@@ -7,25 +7,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.ogaclejapan.rx.binding.RxEvent
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.SerialDisposable
+import io.reactivex.subjects.PublishSubject
 import jp.cordea.mackerelclient.adapter.AlertFragmentPagerAdapter
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Alerts
 import jp.cordea.mackerelclient.databinding.FragmentAlertBinding
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
-import rx.subscriptions.Subscriptions
 import java.util.concurrent.TimeUnit
 
 class AlertFragment : Fragment() {
 
-    val onOtherAlertFragmentResult: RxEvent<Boolean> = RxEvent.create<Boolean>()
+    val onOtherAlertFragmentResult = PublishSubject.create<Boolean>()
+    val onCriticalAlertFragmentResult = PublishSubject.create<Boolean>()
+    val onAlertItemChanged = PublishSubject.create<Alerts>()
 
-    val onCriticalAlertFragmentResult: RxEvent<Boolean> = RxEvent.create<Boolean>()
-
-    val onAlertItemChanged: RxEvent<Alerts?> = RxEvent.create<Alerts?>()
-
-    private var subscription: Subscription? = null
+    private val disposable = SerialDisposable()
 
     private lateinit var binding: FragmentAlertBinding
 
@@ -46,21 +43,21 @@ class AlertFragment : Fragment() {
         binding.viewPager.adapter = adapter
         binding.tabLayout.setupWithViewPager(binding.viewPager)
 
-        subscription?.unsubscribe()
-        subscription = requestApi()
+        requestApi()
     }
 
-    private fun requestApi(): Subscription {
-        val context = context ?: return Subscriptions.empty()
-        return MackerelApiClient
+    private fun requestApi() {
+        val context = context!!
+        MackerelApiClient
             .getAlerts(context)
             .delay(100, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                onAlertItemChanged.post(it)
+                onAlertItemChanged.onNext(it)
             }, {
-                onAlertItemChanged.post(null)
+                onAlertItemChanged.onError(it)
             })
+            .run(disposable::set)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -68,24 +65,23 @@ class AlertFragment : Fragment() {
         when (requestCode) {
             CriticalAlertFragment.REQUEST_CODE -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    onCriticalAlertFragmentResult.post(true)
+                    onCriticalAlertFragmentResult.onNext(true)
                 }
             }
             OtherAlertFragment.REQUEST_CODE -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    onOtherAlertFragmentResult.post(true)
+                    onOtherAlertFragmentResult.onNext(true)
                 }
             }
         }
     }
 
-    override fun onDestroyView() {
-        subscription?.unsubscribe()
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.dispose()
     }
 
     companion object {
-        fun newInstance(): AlertFragment =
-            AlertFragment()
+        fun newInstance(): AlertFragment = AlertFragment()
     }
 }

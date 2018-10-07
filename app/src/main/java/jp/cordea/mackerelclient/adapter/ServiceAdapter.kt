@@ -17,12 +17,6 @@ class ServiceAdapter(
     R.layout.list_item_service
 ) {
 
-    override fun getItem(position: Int): Service =
-        items[position]
-
-    override fun getCount(): Int =
-        items.size
-
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         var view = convertView
         val viewHolder: ViewHolder
@@ -55,8 +49,11 @@ class ServiceAdapter(
         return view
     }
 
-    class ViewHolder(view: View) {
+    override fun getItem(position: Int): Service = items[position]
 
+    override fun getCount(): Int = items.size
+
+    class ViewHolder(view: View) {
         val binding: ListItemServiceBinding = ListItemServiceBinding.bind(view)
     }
 }
