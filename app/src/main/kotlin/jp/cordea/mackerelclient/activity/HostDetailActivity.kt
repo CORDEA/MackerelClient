@@ -29,8 +29,6 @@ class HostDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil
                 .setContentView<ActivityDetailCommonBinding>(this, R.layout.activity_detail_common)
-        setSupportActionBar(binding.toolbar)
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val host = intent.getSerializableExtra(HOST_KEY) as Host

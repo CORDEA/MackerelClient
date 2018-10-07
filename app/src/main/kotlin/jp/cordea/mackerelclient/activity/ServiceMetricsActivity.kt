@@ -48,9 +48,7 @@ class ServiceMetricsActivity : AppCompatActivity() {
                 R.layout.activity_service_metrics
         )
         contentBinding = binding.content
-        setSupportActionBar(binding.toolbar)
         lifecycle.addObserver(viewModel)
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         contentBinding.recyclerView.layoutManager = LinearLayoutManager(this)

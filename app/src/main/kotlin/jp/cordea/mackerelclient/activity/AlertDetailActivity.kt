@@ -25,10 +25,7 @@ class AlertDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil
                 .setContentView<ActivityDetailCommonBinding>(this, R.layout.activity_detail_common)
-        setSupportActionBar(binding.toolbar)
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         val alert = intent.getSerializableExtra(ALERT_KEY) as Alert
 
         binding.recyclerView.let {

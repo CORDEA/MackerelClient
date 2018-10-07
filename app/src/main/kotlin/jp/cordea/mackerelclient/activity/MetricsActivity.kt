@@ -46,9 +46,7 @@ class MetricsActivity : AppCompatActivity() {
         val binding = DataBindingUtil
                 .setContentView<ActivityMetricsBinding>(this, R.layout.activity_metrics)
         contentBinding = binding.content
-        setSupportActionBar(binding.toolbar)
         lifecycle.addObserver(viewModel)
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         contentBinding.recyclerView.layoutManager = LinearLayoutManager(this)

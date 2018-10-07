@@ -31,11 +31,11 @@
         <activity
             android:name=".activity.MetricsActivity"
             android:label="@string/title_activity_metrics"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.ServiceMetricsActivity"
             android:label="@string/title_activity_service_metrics"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.MetricsEditActivity"
             android:label="@string/title_activity_metrics_edit"

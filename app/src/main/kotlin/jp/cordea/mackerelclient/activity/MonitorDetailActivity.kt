@@ -32,8 +32,6 @@ class MonitorDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil
                 .setContentView<ActivityDetailCommonBinding>(this, R.layout.activity_detail_common)
-        setSupportActionBar(binding.toolbar)
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val monitor = intent.getSerializableExtra(MONITOR_KEY) as Monitor
