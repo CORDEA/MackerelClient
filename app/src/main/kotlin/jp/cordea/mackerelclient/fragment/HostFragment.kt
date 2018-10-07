@@ -15,15 +15,13 @@ import jp.cordea.mackerelclient.databinding.FragmentHostBinding
 import jp.cordea.mackerelclient.model.DisplayHostState
 import jp.cordea.mackerelclient.viewmodel.HostViewModel
 import rx.Subscription
-import rx.subscriptions.Subscriptions
 
 class HostFragment : Fragment() {
 
     private var subscription: Subscription? = null
 
-    private val viewModel by lazy {
-        HostViewModel(context!!)
-    }
+    private val viewModel by lazy { HostViewModel(context!!) }
+    private val adapter by lazy { HostAdapter(this) }
 
     private lateinit var binding: FragmentHostBinding
 
@@ -38,15 +36,14 @@ class HostFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.addItemDecoration(ListItemDecoration(context!!))
 
         refresh()
-
         binding.swipeRefresh.setOnRefreshListener {
             refresh()
         }
-
         binding.error.retryButton.setOnClickListener {
             binding.progressLayout.visibility = View.VISIBLE
             binding.error.root.visibility = View.GONE
@@ -61,21 +58,16 @@ class HostFragment : Fragment() {
     }
 
     private fun getHosts(items: List<DisplayHostState>): Subscription {
-        val context = context ?: return Subscriptions.empty()
         return viewModel
                 .getHosts(items)
+                .flatMap({ viewModel.getLatestMetrics(it) }, { hosts, tsdbs ->
+                    adapter.update(hosts.hosts, tsdbs.tsdbs)
+                })
                 .subscribe({
-                    viewModel
-                            .getLatestMetrics(it)
-                            .subscribe { tsdbs ->
-                                binding.recyclerView.adapter = HostAdapter(this, it.hosts, tsdbs.tsdbs)
-                                binding.recyclerView.addItemDecoration(ListItemDecoration(context))
-                                binding.progressLayout.visibility = View.GONE
-                                binding.swipeRefresh.visibility = View.VISIBLE
-                                binding.swipeRefresh.isRefreshing = false
-                            }
+                    binding.progressLayout.visibility = View.GONE
+                    binding.swipeRefresh.visibility = View.VISIBLE
+                    binding.swipeRefresh.isRefreshing = false
                 }, {
-                    it.printStackTrace()
                     binding.swipeRefresh.isRefreshing = false
                     binding.error.root.visibility = View.VISIBLE
                     binding.progressLayout.visibility = View.GONE

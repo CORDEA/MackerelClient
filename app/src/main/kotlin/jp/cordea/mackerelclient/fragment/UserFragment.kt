@@ -13,12 +13,14 @@ import jp.cordea.mackerelclient.model.Preferences
 import jp.cordea.mackerelclient.model.UserKey
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
-import rx.subscriptions.Subscriptions
 
 class UserFragment : Fragment() {
 
     private lateinit var binding: FragmentUserBinding
 
+    private val adapter by lazy { UserAdapter(context!!) }
+
+    private var refreshSubscription: Subscription? = null
     private var subscription: Subscription? = null
 
     override fun onCreateView(
@@ -33,17 +35,28 @@ class UserFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        binding.listView.adapter = adapter
 
-        subscription?.let(Subscription::unsubscribe)
-        subscription = refresh()
+        subscription = adapter.onUserDeleteSucceeded
+                .asObservable()
+                .filter { it }
+                .subscribe({ refresh() }, { })
+
+        refreshSubscription = refresh()
         binding.swipeRefresh.setOnRefreshListener {
-            subscription?.let(Subscription::unsubscribe)
-            subscription = refresh()
+            refreshSubscription?.unsubscribe()
+            refreshSubscription = refresh()
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        subscription?.unsubscribe()
+        refreshSubscription?.unsubscribe()
+    }
+
     private fun refresh(): Subscription {
-        val context = context ?: return Subscriptions.empty()
+        val context = context!!
         return MackerelApiClient
                 .getUsers(context)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -56,15 +69,7 @@ class UserFragment : Fragment() {
                     )
                     realm.close()
 
-                    val adapter = UserAdapter(context, users.users, user.email)
-                    binding.listView.adapter = adapter
-                    adapter.onUserDeleteSucceeded
-                            .asObservable()
-                            .filter { it }
-                            .doOnNext {
-                                refresh()
-                            }
-                            .subscribe({}, {})
+                    adapter.update(users.users, user.email)
                     binding.progressLayout.visibility = View.GONE
                     binding.swipeRefresh.visibility = View.VISIBLE
                 }, {
@@ -73,11 +78,6 @@ class UserFragment : Fragment() {
                     binding.progressLayout.visibility = View.GONE
                     binding.swipeRefresh.visibility = View.GONE
                 })
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        subscription?.let(Subscription::unsubscribe)
     }
 
     companion object {

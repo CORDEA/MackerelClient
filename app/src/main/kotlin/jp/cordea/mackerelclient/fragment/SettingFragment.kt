@@ -43,27 +43,21 @@ class SettingFragment : Fragment() {
         subscription = Observable
                 .just(Unit)
                 .subscribeOn(Schedulers.newThread())
-                .map {
-                    Realm.getDefaultInstance()
-                }
-                .map {
-                    if (it.where(DisplayHostState::class.java).findAll().size == 0) {
-                        it.executeTransaction {
+                .map { Realm.getDefaultInstance() }
+                .map { realm ->
+                    if (realm.where(DisplayHostState::class.java).findAll().size == 0) {
+                        realm.executeTransaction {
                             for (key in resources.getStringArray(R.array.setting_host_cell_arr)) {
                                 val item = it.createObject(DisplayHostState::class.java, key)
                                 item.isDisplay = (key == "standby" || key == "working")
                             }
                         }
                     }
-                    it.close()
+                    realm.close()
                 }
                 .observeOn(AndroidSchedulers.mainThread())
-                .map {
-                    updateStatus()
-                }
-                .subscribe({
-                    addEvents()
-                }, {})
+                .map { updateStatus() }
+                .subscribe({ addEvents() }, {})
 
         binding.licenseLayout.setOnClickListener {
             val intent = Intent(context, LicenseActivity::class.java)
@@ -80,30 +74,28 @@ class SettingFragment : Fragment() {
 
     private fun addEvents() {
         var realm: Realm
-        binding.hostLayout.setOnClickListener {
+        binding.hostLayout.setOnClickListener { _ ->
             realm = Realm.getDefaultInstance()
             val items = realm.copyFromRealm(realm.where(DisplayHostState::class.java).findAll())
             realm.close()
             var lastItem = 0
             AlertDialog.Builder(context)
-                    .setMultiChoiceItems(items
-                            .map { it.name }
-                            .map { StatusUtils.requestNameToString(it) }
-                            .toTypedArray(),
-                            BooleanArray(items.size, { i -> items[i].isDisplay!! }),
-                            { _, which, flag ->
-                                val inRealm = Realm.getDefaultInstance()
-                                val item = items[which]
-                                item.isDisplay = flag
-                                inRealm.executeTransaction {
-                                    it.copyToRealmOrUpdate(item)
-                                }
+                    .setMultiChoiceItems(
+                            items.map { StatusUtils.requestNameToString(it.name) }.toTypedArray(),
+                            BooleanArray(items.size) { i -> items[i].isDisplay!! }
+                    ) { _, which, flag ->
+                        val inRealm = Realm.getDefaultInstance()
+                        val item = items[which]
+                        item.isDisplay = flag
+                        inRealm.executeTransaction {
+                            it.copyToRealmOrUpdate(item)
+                        }
 
-                                lastItem = which
-                                updateStatus(inRealm)
-                                inRealm.close()
-                            })
-                    .setOnDismissListener {
+                        lastItem = which
+                        updateStatus(inRealm)
+                        inRealm.close()
+                    }
+                    .setOnDismissListener { _ ->
                         val inRealm = Realm.getDefaultInstance()
                         val all = inRealm.where(DisplayHostState::class.java).findAll()
                         if (all.none { it.isDisplay!! }) {
@@ -121,17 +113,17 @@ class SettingFragment : Fragment() {
                     }.show()
         }
 
-        binding.initLayout.setOnClickListener {
+        binding.initLayout.setOnClickListener { _ ->
             AlertDialog
                     .Builder(context)
                     .setMessage(R.string.setting_init_dialog_title)
-                    .setPositiveButton(R.string.setting_init_dialog_positive_button, { _, _ ->
+                    .setPositiveButton(R.string.setting_init_dialog_positive_button) { _, _ ->
                         realm = Realm.getDefaultInstance()
                         realm.executeTransaction {
                             it.delete(UserMetric::class.java)
                         }
                         realm.close()
-                    })
+                    }
                     .show()
         }
     }

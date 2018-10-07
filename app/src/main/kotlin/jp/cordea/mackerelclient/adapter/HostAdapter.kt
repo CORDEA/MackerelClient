@@ -16,10 +16,11 @@ import jp.cordea.mackerelclient.utils.StatusUtils
 import jp.cordea.mackerelclient.viewmodel.HostListItemViewModel
 
 class HostAdapter(
-        val fragment: Fragment,
-        val items: List<Host>,
-        private val metrics: Map<String, Map<String, Tsdb>>
+        val fragment: Fragment
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private var items = emptyList<Host>()
+    private var metrics = emptyMap<String, Map<String, Tsdb>>()
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val context = fragment.context ?: return
@@ -73,6 +74,12 @@ class HostAdapter(
     }
 
     override fun getItemCount(): Int = items.size
+
+    fun update(items: List<Host>, metrics: Map<String, Map<String, Tsdb>>) {
+        this.items = items
+        this.metrics = metrics
+        notifyDataSetChanged()
+    }
 
     private class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val binding: ListItemHostBinding = ListItemHostBinding.bind(view)

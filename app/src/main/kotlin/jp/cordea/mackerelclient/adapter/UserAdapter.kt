@@ -15,15 +15,15 @@ import jp.cordea.mackerelclient.utils.GravatarUtils
 import jp.cordea.mackerelclient.viewmodel.UserListItemViewModel
 
 class UserAdapter(
-        context: Context,
-        val items: List<User>,
-        private val own: String?
+        context: Context
 ) : ArrayAdapter<User>(
         context,
         R.layout.list_item_user
 ) {
-
     val onUserDeleteSucceeded: RxEvent<Boolean> = RxEvent.create<Boolean>()
+
+    private var items: List<User> = emptyList()
+    private var own: String? = null
 
     override fun getView(
             position: Int,
@@ -71,11 +71,15 @@ class UserAdapter(
         return view
     }
 
-    override fun getItem(position: Int): User? =
-            items[position]
+    override fun getItem(position: Int): User? = items[position]
 
-    override fun getCount(): Int =
-            items.size
+    override fun getCount(): Int = items.size
+
+    fun update(users: List<User>, own: String?) {
+        items = users
+        this.own = own
+        notifyDataSetChanged()
+    }
 
     class ViewHolder(view: View) {
 
