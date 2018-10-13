@@ -1,11 +1,19 @@
 package jp.cordea.mackerelclient
 
+import android.app.Activity
 import android.app.Application
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasActivityInjector
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import jp.cordea.mackerelclient.model.DisplayHostState
+import javax.inject.Inject
 
-class McApplication : Application() {
+class McApplication : Application(), HasActivityInjector {
+
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
 
     override fun onCreate() {
         super.onCreate()
@@ -30,7 +38,15 @@ class McApplication : Application() {
                     }
                 }.build()
         )
+
+        DaggerAppComponent
+            .builder()
+            .application(this)
+            .build()
+            .inject(this)
     }
+
+    override fun activityInjector(): AndroidInjector<Activity> = dispatchingAndroidInjector
 
     companion object {
         private const val SCHEMA_VERSION = 1L
