@@ -1,27 +1,27 @@
 package jp.cordea.mackerelclient.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.fragment.app.Fragment
 import com.squareup.picasso.Picasso
-import io.reactivex.subjects.PublishSubject
 import jp.cordea.mackerelclient.PicassoCircularTransform
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.response.User
 import jp.cordea.mackerelclient.databinding.ListItemUserBinding
+import jp.cordea.mackerelclient.di.FragmentScope
+import jp.cordea.mackerelclient.fragment.UserDeleteConfirmDialogFragment
 import jp.cordea.mackerelclient.utils.GravatarUtils
-import jp.cordea.mackerelclient.viewmodel.UserListItemViewModel
+import javax.inject.Inject
 
-class UserAdapter(
-    context: Context
+@FragmentScope
+class UserAdapter @Inject constructor(
+    private val fragment: Fragment
 ) : ArrayAdapter<User>(
-    context,
+    fragment.context!!,
     R.layout.list_item_user
 ) {
-    val onUserDeleteSucceeded = PublishSubject.create<Boolean>()
-
     private var items: List<User> = emptyList()
     private var own: String? = null
 
@@ -40,13 +40,10 @@ class UserAdapter(
             viewHolder = view.tag as ViewHolder
         }
 
+        val item = items[position]
         viewHolder.binding.run {
-            val viewModel = UserListItemViewModel(context, items[position])
-            viewModel.onUserDeleteSucceeded = {
-                onUserDeleteSucceeded.onNext(true)
-            }
             GravatarUtils.getGravatarImage(
-                items[position].email,
+                item.email,
                 context.resources.getDimensionPixelSize(R.dimen.user_thumbnail_size_small)
             )?.let { url ->
                 Picasso.with(context)
@@ -54,18 +51,21 @@ class UserAdapter(
                     .transform(PicassoCircularTransform())
                     .into(userThumbnailImageView)
             }
-            nameTextView.text = items[position].screenName
-            emailTextView.text = items[position].email
+            nameTextView.text = item.screenName
+            emailTextView.text = item.email
 
             var isOwn = false
             own?.let {
-                if (it == items[position].email) {
+                if (it == item.email) {
                     isOwn = true
                     deleteImageView.visibility = View.GONE
                 }
             }
             if (!isOwn) {
-                deleteImageView.setOnClickListener(viewModel.deleteButtonOnClick)
+                deleteImageView.setOnClickListener {
+                    UserDeleteConfirmDialogFragment.newInstance(item.id)
+                        .show(fragment.childFragmentManager, UserDeleteConfirmDialogFragment.TAG)
+                }
             }
         }
         return view

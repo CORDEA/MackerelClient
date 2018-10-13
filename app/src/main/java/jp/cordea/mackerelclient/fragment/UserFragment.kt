@@ -11,6 +11,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.disposables.SerialDisposable
 import io.realm.Realm
+import jp.cordea.mackerelclient.UserDeleteConfirmSource
 import jp.cordea.mackerelclient.adapter.UserAdapter
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.databinding.FragmentUserBinding
@@ -23,9 +24,13 @@ class UserFragment : Fragment() {
     @Inject
     lateinit var apiClient: MackerelApiClient
 
-    private lateinit var binding: FragmentUserBinding
+    @Inject
+    lateinit var adapter: UserAdapter
 
-    private val adapter by lazy { UserAdapter(context!!) }
+    @Inject
+    lateinit var confirmSource: UserDeleteConfirmSource
+
+    private lateinit var binding: FragmentUserBinding
 
     private var refreshDisposable = SerialDisposable()
     private var disposable: Disposable? = null
@@ -49,9 +54,10 @@ class UserFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         binding.listView.adapter = adapter
 
-        disposable = adapter.onUserDeleteSucceeded
-            .filter { it }
-            .subscribe({ refresh() }, { })
+        disposable =
+            confirmSource
+                .onUserDeleteCompleted()
+                .subscribe({ refresh() }, {})
 
         refresh()
         binding.swipeRefresh.setOnRefreshListener {
