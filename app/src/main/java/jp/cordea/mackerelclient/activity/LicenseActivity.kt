@@ -20,15 +20,14 @@ class LicenseActivity : AppCompatActivity() {
         val binding = DataBindingUtil
             .setContentView<ActivityLicenseBinding>(this, R.layout.activity_license)
 
-        val content = binding.content
         disposable = viewModel.licensesObservable
             .subscribe({
-                content.licenseTextView.text = it
-                content.container.visibility = View.VISIBLE
-                content.progressLayout.visibility = View.GONE
+                binding.licenseTextView.text = it
+                binding.container.visibility = View.VISIBLE
+                binding.progress.visibility = View.GONE
             }, {
-                content.errorLayout.root.visibility = View.VISIBLE
-                content.progressLayout.visibility = View.GONE
+                binding.errorLayout.root.visibility = View.VISIBLE
+                binding.progress.visibility = View.GONE
             })
     }
 
