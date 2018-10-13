@@ -9,6 +9,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import dagger.android.AndroidInjection
 import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.databinding.ActivityMetricsEditBinding
@@ -24,6 +25,7 @@ class MetricsEditActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMetricsEditBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_metrics_edit)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

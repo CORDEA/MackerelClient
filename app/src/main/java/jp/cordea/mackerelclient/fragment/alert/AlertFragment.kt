@@ -1,12 +1,14 @@
 package jp.cordea.mackerelclient.fragment.alert
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import dagger.android.support.AndroidSupportInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.SerialDisposable
 import io.reactivex.subjects.PublishSubject
@@ -25,6 +27,11 @@ class AlertFragment : Fragment() {
     private val disposable = SerialDisposable()
 
     private lateinit var binding: FragmentAlertBinding
+
+    override fun onAttach(context: Context?) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

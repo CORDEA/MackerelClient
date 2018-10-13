@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import dagger.android.AndroidInjection
 import io.reactivex.disposables.Disposable
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.databinding.ActivityLicenseBinding
@@ -16,6 +17,7 @@ class LicenseActivity : AppCompatActivity() {
     private var disposable: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil
             .setContentView<ActivityLicenseBinding>(this, R.layout.activity_license)

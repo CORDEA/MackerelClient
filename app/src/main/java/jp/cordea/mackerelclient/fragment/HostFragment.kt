@@ -1,6 +1,7 @@
 package jp.cordea.mackerelclient.fragment
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.SerialDisposable
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.activity.HostDetailActivity
@@ -24,6 +26,11 @@ class HostFragment : Fragment() {
     private val adapter by lazy { HostAdapter(this) }
 
     private lateinit var binding: FragmentHostBinding
+
+    override fun onAttach(context: Context?) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

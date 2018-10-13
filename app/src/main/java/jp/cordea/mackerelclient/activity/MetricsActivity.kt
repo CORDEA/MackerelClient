@@ -9,7 +9,12 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.android.AndroidInjection
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.HasSupportFragmentInjector
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.SerialDisposable
 import io.realm.Realm
@@ -23,9 +28,14 @@ import jp.cordea.mackerelclient.fragment.MetricsDeleteConfirmDialogFragment
 import jp.cordea.mackerelclient.model.MetricsParameter
 import jp.cordea.mackerelclient.model.UserMetric
 import jp.cordea.mackerelclient.viewmodel.MetricsViewModel
+import javax.inject.Inject
 
 class MetricsActivity : AppCompatActivity(),
+    HasSupportFragmentInjector,
     MetricsDeleteConfirmDialogFragment.OnDeleteMetricsListener {
+
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     private val viewModel by lazy { MetricsViewModel(this) }
 
@@ -40,6 +50,7 @@ class MetricsActivity : AppCompatActivity(),
     private lateinit var contentBinding: ContentMetricsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil
             .setContentView<ActivityMetricsBinding>(this, R.layout.activity_metrics)
@@ -103,6 +114,8 @@ class MetricsActivity : AppCompatActivity(),
     override fun onDelete(position: Int) {
         adapter.removeAt(position)
     }
+
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
 
     private fun refresh(hostId: String) {
         enableRefresh = false

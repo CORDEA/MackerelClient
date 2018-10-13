@@ -1,11 +1,13 @@
 package jp.cordea.mackerelclient.fragment
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import dagger.android.support.AndroidSupportInjection
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.response.Alert
 import jp.cordea.mackerelclient.utils.DialogUtils
@@ -19,6 +21,11 @@ class AlertCloseDialogFragment : DialogFragment() {
 
     private val alert: Alert
         get() = arguments!!.getSerializable(ALERT_KEY) as Alert
+
+    override fun onAttach(context: Context?) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val context = context!!

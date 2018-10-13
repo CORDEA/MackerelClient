@@ -8,7 +8,12 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.android.AndroidInjection
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.HasSupportFragmentInjector
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.DetailCommonAdapter
@@ -16,12 +21,17 @@ import jp.cordea.mackerelclient.api.response.Alert
 import jp.cordea.mackerelclient.databinding.ActivityDetailCommonBinding
 import jp.cordea.mackerelclient.fragment.AlertCloseDialogFragment
 import jp.cordea.mackerelclient.utils.DateUtils
+import javax.inject.Inject
 
-class AlertDetailActivity : AppCompatActivity() {
+class AlertDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
+
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     private var alert: Alert? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil
             .setContentView<ActivityDetailCommonBinding>(this, R.layout.activity_detail_common)
@@ -87,8 +97,9 @@ class AlertDetailActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    companion object {
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
 
+    companion object {
         private const val ALERT_KEY = "AlertKey"
 
         fun createIntent(context: Context, alert: Alert): Intent =

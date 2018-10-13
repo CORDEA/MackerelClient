@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import dagger.android.support.AndroidSupportInjection
 import io.realm.Realm
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.model.MetricsParameter
@@ -24,6 +25,7 @@ class MetricsDeleteConfirmDialogFragment : DialogFragment() {
     private val position get() = arguments!!.getInt(POSITION_KEY)
 
     override fun onAttach(context: Context?) {
+        AndroidSupportInjection.inject(this)
         super.onAttach(context)
         listener = activity as OnDeleteMetricsListener
     }

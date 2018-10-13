@@ -1,10 +1,12 @@
 package jp.cordea.mackerelclient.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.SerialDisposable
 import jp.cordea.mackerelclient.activity.ServiceMetricsActivity
 import jp.cordea.mackerelclient.adapter.ServiceAdapter
@@ -21,6 +23,11 @@ class ServiceFragment : Fragment() {
     private lateinit var binding: FragmentServiceBinding
 
     private var services: List<Service>? = null
+
+    override fun onAttach(context: Context?) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

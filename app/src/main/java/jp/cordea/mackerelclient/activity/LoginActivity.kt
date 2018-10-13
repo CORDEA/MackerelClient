@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import dagger.android.AndroidInjection
 import io.reactivex.disposables.Disposable
 import io.realm.Realm
 import jp.cordea.mackerelclient.R
@@ -29,6 +30,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var contentBinding: ContentLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil
             .setContentView<ActivityLoginBinding>(this, R.layout.activity_login)

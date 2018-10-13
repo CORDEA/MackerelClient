@@ -8,7 +8,12 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.android.AndroidInjection
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.HasSupportFragmentInjector
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.DetailCommonAdapter
@@ -17,12 +22,17 @@ import jp.cordea.mackerelclient.databinding.ActivityDetailCommonBinding
 import jp.cordea.mackerelclient.fragment.HostRetireDialogFragment
 import jp.cordea.mackerelclient.utils.DateUtils
 import jp.cordea.mackerelclient.utils.StatusUtils
+import javax.inject.Inject
 
-class HostDetailActivity : AppCompatActivity() {
+class HostDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
+
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     private var host: Host? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil
             .setContentView<ActivityDetailCommonBinding>(this, R.layout.activity_detail_common)
@@ -38,6 +48,31 @@ class HostDetailActivity : AppCompatActivity() {
 
         this.host = host
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.host_detail, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> finish()
+            R.id.action_retire -> {
+                HostRetireDialogFragment
+                    .newInstance(host!!)
+                    .apply {
+                        onSuccess = {
+                            setResult(Activity.RESULT_OK)
+                            finish()
+                        }
+                    }
+                    .show(supportFragmentManager, "")
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
 
     private fun createData(host: Host): List<List<Pair<String, Int>>> {
         val list: MutableList<MutableList<Pair<String, Int>>> = arrayListOf()
@@ -64,31 +99,7 @@ class HostDetailActivity : AppCompatActivity() {
         return list
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.host_detail, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> finish()
-            R.id.action_retire -> {
-                HostRetireDialogFragment
-                    .newInstance(host!!)
-                    .apply {
-                        onSuccess = {
-                            setResult(Activity.RESULT_OK)
-                            finish()
-                        }
-                    }
-                    .show(supportFragmentManager, "")
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     companion object {
-
         const val REQUEST_CODE = 0
 
         private const val HOST_KEY = "HostKey"

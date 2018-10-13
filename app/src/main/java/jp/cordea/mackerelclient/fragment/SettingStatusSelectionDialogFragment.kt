@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import dagger.android.support.AndroidSupportInjection
 import io.realm.Realm
 import io.realm.RealmResults
 import jp.cordea.mackerelclient.R
@@ -27,6 +28,7 @@ class SettingStatusSelectionDialogFragment : DialogFragment() {
     private lateinit var items: RealmResults<DisplayHostState>
 
     override fun onAttach(context: Context?) {
+        AndroidSupportInjection.inject(this)
         super.onAttach(context)
         listener = parentFragment as OnUpdateStatusListener
     }

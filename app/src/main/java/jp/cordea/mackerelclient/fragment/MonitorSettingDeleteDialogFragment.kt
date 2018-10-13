@@ -1,9 +1,11 @@
 package jp.cordea.mackerelclient.fragment
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import dagger.android.support.AndroidSupportInjection
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.response.Monitor
 import jp.cordea.mackerelclient.utils.DialogUtils
@@ -17,6 +19,11 @@ class MonitorSettingDeleteDialogFragment : DialogFragment() {
 
     private val monitor: Monitor
         get() = arguments!!.getSerializable(MONITOR_KEY) as Monitor
+
+    override fun onAttach(context: Context?) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val context = context!!

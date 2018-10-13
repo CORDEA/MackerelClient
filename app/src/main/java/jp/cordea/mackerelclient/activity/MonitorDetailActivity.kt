@@ -8,7 +8,12 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.android.AndroidInjection
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.HasSupportFragmentInjector
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.DetailCommonAdapter
@@ -16,14 +21,19 @@ import jp.cordea.mackerelclient.api.response.Monitor
 import jp.cordea.mackerelclient.databinding.ActivityDetailCommonBinding
 import jp.cordea.mackerelclient.fragment.MonitorSettingDeleteDialogFragment
 import jp.cordea.mackerelclient.viewmodel.MonitorDetailViewModel
+import javax.inject.Inject
 
-class MonitorDetailActivity : AppCompatActivity() {
+class MonitorDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
+
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     private val viewModel by lazy { MonitorDetailViewModel() }
 
     private var monitor: Monitor? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil
             .setContentView<ActivityDetailCommonBinding>(this, R.layout.activity_detail_common)
@@ -65,8 +75,9 @@ class MonitorDetailActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    companion object {
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
 
+    companion object {
         const val REQUEST_CODE = 0
 
         private const val MONITOR_KEY = "MONITOR_KEY"
