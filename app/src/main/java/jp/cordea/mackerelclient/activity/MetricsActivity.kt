@@ -24,7 +24,8 @@ import jp.cordea.mackerelclient.model.MetricsParameter
 import jp.cordea.mackerelclient.model.UserMetric
 import jp.cordea.mackerelclient.viewmodel.MetricsViewModel
 
-class MetricsActivity : AppCompatActivity(), MetricsDeleteConfirmDialogFragment.OnDeleteMetricsListener {
+class MetricsActivity : AppCompatActivity(),
+    MetricsDeleteConfirmDialogFragment.OnDeleteMetricsListener {
 
     private val viewModel by lazy { MetricsViewModel(this) }
 

@@ -29,7 +29,6 @@ class MetricsEditActivity : AppCompatActivity() {
         val binding = DataBindingUtil
             .setContentView<ActivityMetricsEditBinding>(this, R.layout.activity_metrics_edit)
         contentBinding = binding.content
-        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         id = intent.getIntExtra(USER_METRIC_KEY, -1)

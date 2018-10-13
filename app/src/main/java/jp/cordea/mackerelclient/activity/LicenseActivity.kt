@@ -19,7 +19,6 @@ class LicenseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil
             .setContentView<ActivityLicenseBinding>(this, R.layout.activity_license)
-        setSupportActionBar(binding.toolbar)
 
         val content = binding.content
         disposable = viewModel.licensesObservable

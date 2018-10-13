@@ -28,12 +28,10 @@ class MonitorEditActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_monitor_edit)
-        setSupportActionBar(binding.toolbar)
 
         binding.discardButton.setOnClickListener {
             finish()
         }
-
         contentBinding = binding.content
         val monitor = intent.getSerializableExtra(MONITOR_KEY) as Monitor
 

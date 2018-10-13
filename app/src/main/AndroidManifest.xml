@@ -64,7 +64,7 @@
         <activity
             android:name=".activity.LicenseActivity"
             android:label="@string/title_activity_license"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>
