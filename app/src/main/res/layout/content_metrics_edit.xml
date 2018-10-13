@@ -61,7 +61,7 @@
             android:id="@+id/metric_second_edit_text"
             android:layout_width="match_parent"
             android:layout_height="@dimen/metrics_edit_label_height"
-            android:layout_marginLeft="@dimen/metrics_edit_label_margin_left"
+            android:layout_marginStart="@dimen/metrics_edit_label_margin_left"
             android:hint="@string/metrics_edit_metric1_hint" />
 
     </LinearLayout>

@@ -8,7 +8,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/list_item_alert_margin_side"
+            android:layout_marginStart="@dimen/list_item_alert_margin_side"
             android:layout_marginRight="@dimen/list_item_alert_margin_side">
 
             <LinearLayout

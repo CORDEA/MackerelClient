@@ -9,7 +9,7 @@
         style="@style/ListText.Detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/list_item_detail_section_margin_side"
+        android:layout_marginStart="@dimen/list_item_detail_section_margin_side"
         android:layout_marginRight="@dimen/list_item_detail_section_margin_side"
         android:gravity="center_vertical"
         android:text="@string/na_text"
