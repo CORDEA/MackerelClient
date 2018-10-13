@@ -45,7 +45,7 @@ class SettingStatusSelectionDialogFragment : DialogFragment() {
                 }
                 lastItem = which
                 listener.onUpdateStatus()
-            }.show()
+            }.create()
     }
 
     override fun onDismiss(dialog: DialogInterface?) {

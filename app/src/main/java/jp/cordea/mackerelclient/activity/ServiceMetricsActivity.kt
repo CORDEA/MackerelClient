@@ -19,13 +19,12 @@ import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.MetricsAdapter
 import jp.cordea.mackerelclient.databinding.ActivityServiceMetricsBinding
 import jp.cordea.mackerelclient.databinding.ContentServiceMetricsBinding
+import jp.cordea.mackerelclient.fragment.MetricsDeleteConfirmDialogFragment
 import jp.cordea.mackerelclient.model.MetricsParameter
 import jp.cordea.mackerelclient.model.UserMetric
 import jp.cordea.mackerelclient.viewmodel.MetricsViewModel
 
-class ServiceMetricsActivity : AppCompatActivity() {
-
-    private lateinit var contentBinding: ContentServiceMetricsBinding
+class ServiceMetricsActivity : AppCompatActivity(), MetricsDeleteConfirmDialogFragment.OnDeleteMetricsListener {
 
     private val viewModel by lazy { MetricsViewModel(this) }
 
@@ -35,6 +34,9 @@ class ServiceMetricsActivity : AppCompatActivity() {
     private var needRefresh = false
     private var drawCompleteMetrics = 0
     private var enableRefresh = false
+
+    private lateinit var adapter: MetricsAdapter
+    private lateinit var contentBinding: ContentServiceMetricsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,46 +67,6 @@ class ServiceMetricsActivity : AppCompatActivity() {
         if (needRefresh) {
             refresh(serviceName!!)
             needRefresh = false
-        }
-    }
-
-    private fun refresh(serviceName: String) {
-        enableRefresh = false
-        val realm = Realm.getDefaultInstance()
-        val metrics = realm.copyFromRealm(
-            realm.where(UserMetric::class.java)
-                .equalTo("type", MetricsType.SERVICE.name)
-                .equalTo("parentId", serviceName).findAll()
-        )
-        realm.close()
-
-        val item = metrics.map { MetricsParameter(it.id, null, it.label!!) }
-        contentBinding.recyclerView.adapter =
-            MetricsAdapter(this, item as MutableList, MetricsType.SERVICE, serviceName)
-        contentBinding.recyclerView.addItemDecoration(ListItemDecoration(this))
-
-        drawCompleteMetrics = 0
-        viewModel
-            .onChartDataAlive
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                val adapter = contentBinding.recyclerView.adapter as MetricsAdapter
-                drawCompleteMetrics = adapter.refreshRecyclerViewItem(it, drawCompleteMetrics)
-                if (adapter.itemCount == drawCompleteMetrics) {
-                    enableRefresh = true
-                }
-            }, {})
-            .run(disposable::set)
-
-        contentBinding.run {
-            if (metrics.size == 0) {
-                noticeContainer.visibility = View.VISIBLE
-                swipeRefresh.visibility = View.GONE
-            } else {
-                swipeRefresh.visibility = View.VISIBLE
-                noticeContainer.visibility = View.GONE
-                viewModel.requestMetricsApi(metrics, serviceName, MetricsType.SERVICE)
-            }
         }
     }
 
@@ -140,8 +102,50 @@ class ServiceMetricsActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    companion object {
+    override fun onDelete(position: Int) {
+        adapter.removeAt(position)
+    }
 
+    private fun refresh(serviceName: String) {
+        enableRefresh = false
+        val realm = Realm.getDefaultInstance()
+        val metrics = realm.copyFromRealm(
+            realm.where(UserMetric::class.java)
+                .equalTo("type", MetricsType.SERVICE.name)
+                .equalTo("parentId", serviceName).findAll()
+        )
+        realm.close()
+
+        val item = metrics.map { MetricsParameter(it.id, null, it.label!!) }
+        adapter = MetricsAdapter(this, item as MutableList, MetricsType.SERVICE, serviceName)
+        contentBinding.recyclerView.adapter = adapter
+        contentBinding.recyclerView.addItemDecoration(ListItemDecoration(this))
+
+        drawCompleteMetrics = 0
+        viewModel
+            .onChartDataAlive
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                drawCompleteMetrics = adapter.refreshRecyclerViewItem(it, drawCompleteMetrics)
+                if (adapter.itemCount == drawCompleteMetrics) {
+                    enableRefresh = true
+                }
+            }, {})
+            .run(disposable::set)
+
+        contentBinding.run {
+            if (metrics.size == 0) {
+                noticeContainer.visibility = View.VISIBLE
+                swipeRefresh.visibility = View.GONE
+            } else {
+                swipeRefresh.visibility = View.VISIBLE
+                noticeContainer.visibility = View.GONE
+                viewModel.requestMetricsApi(metrics, serviceName, MetricsType.SERVICE)
+            }
+        }
+    }
+
+    companion object {
         private const val SERVICE_NAME_KEY = "ServiceNameKey"
 
         fun createIntent(context: Context, name: String): Intent =

@@ -1,34 +1,33 @@
 package jp.cordea.mackerelclient.adapter
 
-import android.app.Activity
-import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.LineData
-import io.realm.Realm
 import jp.cordea.mackerelclient.MemoryValueFormatter
 import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.MetricsEditActivity
 import jp.cordea.mackerelclient.databinding.ListItemMetricsChartBinding
+import jp.cordea.mackerelclient.fragment.MetricsDeleteConfirmDialogFragment
 import jp.cordea.mackerelclient.model.MetricsParameter
-import jp.cordea.mackerelclient.model.UserMetric
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 class MetricsAdapter(
-    val activity: Activity,
-    val items: MutableList<MetricsParameter>,
-    val type: MetricsType,
-    val id: String,
+    private val activity: AppCompatActivity,
+    items: List<MetricsParameter>,
+    private val type: MetricsType,
+    private val id: String,
     private var visibles: Int = 0,
     private var canRefresh: Boolean = false
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val lock = ReentrantLock()
+    private val items: MutableList<MetricsParameter> = items.toMutableList()
 
     private var drawComplete: Int = 0
 
@@ -58,7 +57,8 @@ class MetricsAdapter(
             }
 
             binding.deleteButton.setOnClickListener {
-                showDeleteConfirmDialog(position)
+                MetricsDeleteConfirmDialogFragment.newInstance(items, position)
+                    .show(activity.supportFragmentManager, MetricsDeleteConfirmDialogFragment.TAG)
             }
         }
     }
@@ -98,7 +98,7 @@ class MetricsAdapter(
     fun refreshRecyclerViewItem(item: Pair<Int, LineData?>, drawCompleteMetrics: Int): Int {
         drawComplete = drawCompleteMetrics
         lock.withLock {
-            val idx = items.map { it.id }.indexOf(item.first)
+            val idx = items.indexOfFirst { it.id == item.first }
             if (idx != -1 && idx < items.size) {
                 items[idx] = MetricsParameter(
                     item.first,
@@ -113,26 +113,13 @@ class MetricsAdapter(
         return drawComplete
     }
 
-    private fun showDeleteConfirmDialog(position: Int) {
-        AlertDialog
-            .Builder(activity)
-            .setMessage(R.string.metrics_card_delete_dialog_title)
-            .setPositiveButton(R.string.button_positive) { _, _ ->
-                lock.withLock {
-                    val realm = Realm.getDefaultInstance()
-                    realm.executeTransaction {
-                        realm.where(UserMetric::class.java)
-                            .equalTo("id", items[position].id)
-                            .findFirst()!!
-                            .deleteFromRealm()
-                    }
-                    realm.close()
-                    items.removeAt(position)
-                    notifyItemRemoved(position)
-                    notifyItemRangeRemoved(position, items.size)
-                    --drawComplete
-                }
-            }.show()
+    fun removeAt(position: Int) {
+        lock.withLock {
+            items.removeAt(position)
+            notifyItemRemoved(position)
+            notifyItemRangeRemoved(position, items.size)
+            --drawComplete
+        }
     }
 
     private val LineData.needFormat: Boolean

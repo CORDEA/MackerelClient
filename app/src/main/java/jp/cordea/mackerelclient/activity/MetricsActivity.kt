@@ -19,11 +19,12 @@ import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.MetricsAdapter
 import jp.cordea.mackerelclient.databinding.ActivityMetricsBinding
 import jp.cordea.mackerelclient.databinding.ContentMetricsBinding
+import jp.cordea.mackerelclient.fragment.MetricsDeleteConfirmDialogFragment
 import jp.cordea.mackerelclient.model.MetricsParameter
 import jp.cordea.mackerelclient.model.UserMetric
 import jp.cordea.mackerelclient.viewmodel.MetricsViewModel
 
-class MetricsActivity : AppCompatActivity() {
+class MetricsActivity : AppCompatActivity(), MetricsDeleteConfirmDialogFragment.OnDeleteMetricsListener {
 
     private val viewModel by lazy { MetricsViewModel(this) }
 
@@ -34,6 +35,7 @@ class MetricsActivity : AppCompatActivity() {
     private var drawCompleteMetrics = 0
     private var enableRefresh = false
 
+    private lateinit var adapter: MetricsAdapter
     private lateinit var contentBinding: ContentMetricsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,49 +68,6 @@ class MetricsActivity : AppCompatActivity() {
         }
     }
 
-    private fun refresh(hostId: String) {
-        enableRefresh = false
-        val realm = Realm.getDefaultInstance()
-        val metrics = realm.copyFromRealm(
-            realm.where(UserMetric::class.java)
-                .equalTo("type", MetricsType.HOST.name)
-                .equalTo("parentId", hostId).findAll()
-        )
-        val item = metrics.map { MetricsParameter(it.id, null, it.label!!) }
-        realm.close()
-
-        contentBinding.recyclerView.adapter =
-            MetricsAdapter(this, item as MutableList, MetricsType.HOST, hostId)
-        contentBinding.recyclerView.addItemDecoration(ListItemDecoration(this))
-
-        drawCompleteMetrics = 0
-        viewModel
-            .onChartDataAlive
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                val adapter = contentBinding.recyclerView.adapter as MetricsAdapter
-                drawCompleteMetrics = adapter.refreshRecyclerViewItem(it, drawCompleteMetrics)
-                if (adapter.itemCount == drawCompleteMetrics) {
-                    enableRefresh = true
-                }
-            }, {})
-            .run(disposable::set)
-
-        if (metrics.size == 0) {
-            contentBinding.noticeContainer.visibility = View.VISIBLE
-            contentBinding.templateButton.setOnClickListener {
-                contentBinding.templateButton.isClickable = false
-                viewModel.initUserMetrics(hostId)
-                refresh(hostId)
-            }
-            contentBinding.swipeRefresh.visibility = View.GONE
-        } else {
-            contentBinding.swipeRefresh.visibility = View.VISIBLE
-            contentBinding.noticeContainer.visibility = View.GONE
-            viewModel.requestMetricsApi(metrics, hostId, MetricsType.HOST)
-        }
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         disposable.dispose()
@@ -138,6 +97,52 @@ class MetricsActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onDelete(position: Int) {
+        adapter.removeAt(position)
+    }
+
+    private fun refresh(hostId: String) {
+        enableRefresh = false
+        val realm = Realm.getDefaultInstance()
+        val metrics = realm.copyFromRealm(
+            realm.where(UserMetric::class.java)
+                .equalTo("type", MetricsType.HOST.name)
+                .equalTo("parentId", hostId).findAll()
+        )
+        val item = metrics.map { MetricsParameter(it.id, null, it.label!!) }
+        realm.close()
+
+        adapter = MetricsAdapter(this, item, MetricsType.HOST, hostId)
+        contentBinding.recyclerView.adapter = adapter
+        contentBinding.recyclerView.addItemDecoration(ListItemDecoration(this))
+
+        drawCompleteMetrics = 0
+        viewModel
+            .onChartDataAlive
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                drawCompleteMetrics = adapter.refreshRecyclerViewItem(it, drawCompleteMetrics)
+                if (adapter.itemCount == drawCompleteMetrics) {
+                    enableRefresh = true
+                }
+            }, {})
+            .run(disposable::set)
+
+        if (metrics.size == 0) {
+            contentBinding.noticeContainer.visibility = View.VISIBLE
+            contentBinding.templateButton.setOnClickListener {
+                contentBinding.templateButton.isClickable = false
+                viewModel.initUserMetrics(hostId)
+                refresh(hostId)
+            }
+            contentBinding.swipeRefresh.visibility = View.GONE
+        } else {
+            contentBinding.swipeRefresh.visibility = View.VISIBLE
+            contentBinding.noticeContainer.visibility = View.GONE
+            viewModel.requestMetricsApi(metrics, hostId, MetricsType.HOST)
+        }
     }
 
     companion object {
