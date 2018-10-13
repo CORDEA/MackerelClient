@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -14,51 +14,62 @@
         tools:context="activity.LoginActivity"
         tools:showIn="@layout/activity_login">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <ProgressBar
-                android:id="@+id/progress_bar"
-                style="?android:attr/progressBarStyleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="gone" />
+        <EditText
+            android:id="@+id/api_key_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/login_edit_text_height"
+            android:hint="@string/prompt_api_key"
+            android:imeOptions="actionNext"
+            android:singleLine="true"
+            app:layout_constraintBottom_toTopOf="@id/email_edit_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
 
-            <LinearLayout
-                android:id="@+id/container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical">
+        <EditText
+            android:id="@+id/email_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/login_edit_text_height"
+            android:hint="@string/prompt_email"
+            android:imeOptions="actionDone"
+            android:inputType="textEmailAddress"
+            android:singleLine="true"
+            app:layout_constraintBottom_toTopOf="@id/button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/api_key_edit_text"
+            app:layout_constraintVertical_chainStyle="packed" />
 
-                <EditText
-                    android:id="@+id/api_key_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/login_edit_text_height"
-                    android:hint="@string/prompt_api_key"
-                    android:imeOptions="actionNext"
-                    android:singleLine="true" />
+        <Button
+            android:id="@+id/button"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/login_button_height"
+            android:layout_marginTop="@dimen/login_edit_text_height"
+            android:minWidth="@dimen/login_button_min_width"
+            android:text="@string/action_sign_in_short"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/email_edit_text" />
 
-                <EditText
-                    android:id="@+id/email_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/login_edit_text_height"
-                    android:hint="@string/prompt_email"
-                    android:imeOptions="actionDone"
-                    android:inputType="textEmailAddress"
-                    android:singleLine="true" />
-
-                <Button
-                    android:id="@+id/button"
-                    style="@style/Widget.AppCompat.Button.Colored"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/login_button_height"
-                    android:layout_marginTop="@dimen/login_edit_text_height"
-                    android:minWidth="@dimen/login_button_min_width"
-                    android:text="@string/action_sign_in_short" />
-            </LinearLayout>
-        </FrameLayout>
-    </RelativeLayout>
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="api_key_edit_text,email_edit_text,button"
+            tools:ignore="MissingConstraints" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
