@@ -1,59 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/common_cell_height">
+        android:layout_height="@dimen/common_cell_height"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/user_thumbnail_image_view"
+            android:layout_width="@dimen/user_thumbnail_size_small"
+            android:layout_height="@dimen/user_thumbnail_size_small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/name_text_view"
+            style="@style/ListText.Title"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/list_item_user_margin_side"
-            android:layout_marginEnd="@dimen/list_item_user_margin_side"
-            android:orientation="horizontal">
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/na_text"
+            app:layout_constraintBottom_toTopOf="@id/email_text_view"
+            app:layout_constraintEnd_toStartOf="@id/delete_image_view"
+            app:layout_constraintStart_toEndOf="@id/user_thumbnail_image_view"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
 
-            <ImageView
-                android:id="@+id/user_thumbnail_image_view"
-                android:layout_width="@dimen/user_thumbnail_size_small"
-                android:layout_height="@dimen/user_thumbnail_size_small"
-                android:layout_centerVertical="true" />
+        <TextView
+            android:id="@+id/email_text_view"
+            style="@style/ListText.Detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/na_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/delete_image_view"
+            app:layout_constraintStart_toEndOf="@id/user_thumbnail_image_view"
+            app:layout_constraintTop_toBottomOf="@id/name_text_view" />
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/list_item_user_text_margin_left"
-                    android:layout_marginEnd="@dimen/list_item_user_text_margin_right"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/name_text_view"
-                        style="@style/ListText.Title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left"
-                        android:text="@string/na_text" />
-
-                    <TextView
-                        android:id="@+id/email_text_view"
-                        style="@style/ListText.Detail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/na_text" />
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/delete_image_view"
-                    style="@style/IconActive"
-                    android:layout_width="@dimen/common_icon_size"
-                    android:layout_height="@dimen/common_icon_size"
-                    android:layout_gravity="right|center_vertical"
-                    android:src="@drawable/ic_delete_black_24dp" />
-            </FrameLayout>
-        </LinearLayout>
-    </FrameLayout>
+        <ImageView
+            android:id="@+id/delete_image_view"
+            style="@style/IconActive"
+            android:layout_width="@dimen/common_icon_size"
+            android:layout_height="@dimen/common_icon_size"
+            android:src="@drawable/ic_delete_black_24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
