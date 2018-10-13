@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_item_detail_section_height">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/list_item_detail_section_height"
+    android:orientation="vertical">
 
     <TextView
-            android:id="@+id/title"
-            style="@style/ListText.Detail"
-            android:text="@string/na_text"
-            android:layout_marginLeft="@dimen/list_item_detail_section_margin_side"
-            android:layout_marginRight="@dimen/list_item_detail_section_margin_side"
-            android:textStyle="bold"
-            android:gravity="center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+        android:id="@+id/title"
+        style="@style/ListText.Detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/list_item_detail_section_margin_side"
+        android:layout_marginRight="@dimen/list_item_detail_section_margin_side"
+        android:gravity="center_vertical"
+        android:text="@string/na_text"
+        android:textStyle="bold" />
 
     <View
-            style="@style/DividerDefault"
-            android:layout_gravity="bottom"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"/>
+        style="@style/DividerDefault"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom" />
 
 </FrameLayout>
