@@ -1,33 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/common_cell_height"
         android:foreground="?android:attr/selectableItemBackground"
-        android:paddingLeft="@dimen/list_item_monitor_cell_padding_side"
-        android:paddingRight="@dimen/list_item_monitor_cell_padding_side">
+        android:paddingStart="36dp"
+        android:paddingEnd="16dp">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/list_item_monitor_cell_content_margin_left"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+        <TextView
+            android:id="@+id/name_text_view"
+            style="@style/ListText.Title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/na_text"
+            app:layout_constraintBottom_toTopOf="@id/id_text_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
 
-            <TextView
-                android:id="@+id/name_text_view"
-                style="@style/ListText.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/na_text" />
-
-            <TextView
-                android:id="@+id/id_text_view"
-                style="@style/ListText.Detail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/na_text" />
-        </LinearLayout>
-    </FrameLayout>
+        <TextView
+            android:id="@+id/id_text_view"
+            style="@style/ListText.Detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/na_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/name_text_view" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

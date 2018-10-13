@@ -81,9 +81,6 @@
     <dimen name="list_item_monitor_section_cell_height">50dp</dimen>
     <dimen name="list_item_monitor_section_margin_side">16dp</dimen>
 
-    <dimen name="list_item_monitor_cell_padding_side">16dp</dimen>
-    <dimen name="list_item_monitor_cell_content_margin_left">20dp</dimen>
-
     <dimen name="card_metrics_chart_height">200dp</dimen>
     <dimen name="card_metrics_content_margin">16dp</dimen>
     <dimen name="card_metrics_title_margin_top">24dp</dimen>
