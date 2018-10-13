@@ -1,21 +1,22 @@
 package jp.cordea.mackerelclient.viewmodel
 
-import android.content.Context
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Monitor
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class MonitorSettingViewModel(private val context: Context) {
-
+class MonitorSettingViewModel @Inject constructor(
+    private val apiClient: MackerelApiClient
+) {
     fun deleteMonitorSetting(
         monitor: Monitor,
         onResponse: (Response<Monitor>?) -> Unit,
         onFailure: () -> Unit
     ) {
-        MackerelApiClient
-            .deleteMonitor(context, monitor.id)
+        apiClient
+            .deleteMonitor(monitor.id)
             .enqueue(object : Callback<Monitor> {
                 override fun onResponse(p0: Call<Monitor>?, response: Response<Monitor>?) {
                     onResponse(response)

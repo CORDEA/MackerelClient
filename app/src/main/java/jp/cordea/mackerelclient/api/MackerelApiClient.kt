@@ -27,34 +27,36 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object MackerelApiClient {
-
-    private const val BASE_URL = "https://mackerel.io"
-
-    private val GSON = GsonBuilder()
+@Singleton
+class MackerelApiClient @Inject constructor(
+    private val context: Context
+) {
+    private val gson = GsonBuilder()
         .registerTypeAdapter(Tsdbs::class.java, TsdbsDeserializer())
         .create()
 
-    private val BUILDER = Retrofit.Builder()
+    private val builder = Retrofit.Builder()
         .baseUrl(BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create(GSON))
+        .addConverterFactory(GsonConverterFactory.create(gson))
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+
+    private val userKey: String by lazy {
+        val userId = Preferences(context).userId
+        Realm.getDefaultInstance().use {
+            it.copyFromRealm(
+                it.where(UserKey::class.java).equalTo("id", userId).findFirst()!!
+            ).key!!
+        }
+    }
 
     private fun <T> getService(
         service: java.lang.Class<T>,
-        context: Context,
         k: String? = null
     ): T {
-        var key = k
-        if (key == null) {
-            val userId = Preferences(context).userId
-            val realm = Realm.getDefaultInstance()
-            key = realm.copyFromRealm(
-                realm.where(UserKey::class.java).equalTo("id", userId).findFirst()!!
-            ).key!!
-            realm.close()
-        }
+        val key = k ?: userKey
         var httpClientBuilder =
             OkHttpClient.Builder()
                 .addInterceptor {
@@ -77,84 +79,81 @@ object MackerelApiClient {
 
         val httpClient = httpClientBuilder.build()
 
-        return BUILDER
+        return builder
             .client(httpClient)
             .build()
             .create(service)
     }
 
-    fun getServices(context: Context): Single<Services> =
-        getService(MackerelApi::class.java, context)
+    fun getServices(): Single<Services> =
+        getService(MackerelApi::class.java)
             .getService()
             .subscribeOn(Schedulers.io())
 
-    fun getHosts(context: Context, status: List<String>): Single<Hosts> =
-        getService(MackerelApi::class.java, context)
+    fun getHosts(status: List<String>): Single<Hosts> =
+        getService(MackerelApi::class.java)
             .getAllHosts(status)
             .subscribeOn(Schedulers.io())
 
-    fun getAlerts(context: Context): Single<Alerts> =
-        getService(MackerelApi::class.java, context)
+    fun getAlerts(): Single<Alerts> =
+        getService(MackerelApi::class.java)
             .getAlerts()
             .subscribeOn(Schedulers.io())
 
-    fun getMonitors(context: Context): Single<Monitors> =
-        getService(MackerelApi::class.java, context)
+    fun getMonitors(): Single<Monitors> =
+        getService(MackerelApi::class.java)
             .getMonitors()
             .subscribeOn(Schedulers.io())
 
-    fun getUsers(context: Context, key: String? = null): Single<Users> =
-        getService(MackerelApi::class.java, context, key)
+    fun getUsers(key: String? = null): Single<Users> =
+        getService(MackerelApi::class.java, key)
             .getUsers()
             .subscribeOn(Schedulers.io())
 
     fun getMetrics(
-        context: Context,
         hostId: String,
         name: String,
         from: Long,
         to: Long
     ): Single<Metrics> =
-        getService(MackerelApi::class.java, context)
+        getService(MackerelApi::class.java)
             .getMetrics(hostId, name, from, to)
             .subscribeOn(Schedulers.io())
 
     fun getLatestMetrics(
-        context: Context,
         hostId: List<String>,
         name: List<String>
     ): Single<Tsdbs> =
-        getService(MackerelApi::class.java, context)
+        getService(MackerelApi::class.java)
             .getLatestMetric(hostId, name)
             .subscribeOn(Schedulers.io())
 
     fun getServiceMetrics(
-        context: Context,
         serviceName: String,
         name: String,
         from: Long,
         to: Long
     ): Single<Metrics> =
-        getService(MackerelApi::class.java, context)
+        getService(MackerelApi::class.java)
             .getServiceMetrics(serviceName, name, from, to)
             .subscribeOn(Schedulers.io())
 
-    fun deleteUser(context: Context, userId: String): Call<User> =
-        getService(MackerelApi::class.java, context).deleteUser(userId)
+    fun deleteUser(userId: String): Call<User> =
+        getService(MackerelApi::class.java).deleteUser(userId)
 
-    fun closeAlert(context: Context, alertId: String, close: CloseAlert): Call<Alert> =
-        getService(MackerelApi::class.java, context).postCloseAlert(alertId, close)
+    fun closeAlert(alertId: String, close: CloseAlert): Call<Alert> =
+        getService(MackerelApi::class.java).postCloseAlert(alertId, close)
 
-    fun retireHost(context: Context, hostId: String): Call<RetireHost> =
-        getService(MackerelApi::class.java, context).postRetireHost(hostId)
+    fun retireHost(hostId: String): Call<RetireHost> =
+        getService(MackerelApi::class.java).postRetireHost(hostId)
 
-    fun deleteMonitor(context: Context, monitorId: String): Call<Monitor> =
-        getService(MackerelApi::class.java, context).deleteMonitor(monitorId)
+    fun deleteMonitor(monitorId: String): Call<Monitor> =
+        getService(MackerelApi::class.java).deleteMonitor(monitorId)
 
-    fun refreshMonitor(
-        context: Context,
-        monitorId: String,
-        monitor: Monitor
-    ): Call<RefreshMonitor> =
-        getService(MackerelApi::class.java, context).putRefreshMonitor(monitorId, monitor)
+    fun refreshMonitor(monitorId: String, monitor: Monitor): Call<RefreshMonitor> =
+        getService(MackerelApi::class.java).putRefreshMonitor(monitorId, monitor)
+
+    companion object {
+        private const val BASE_URL = "https://mackerel.io"
+    }
 }

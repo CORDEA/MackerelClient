@@ -1,21 +1,23 @@
 package jp.cordea.mackerelclient.viewmodel
 
-import android.content.Context
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Alert
+import javax.inject.Inject
 
-class AlertViewModel(private val context: Context) {
+class AlertViewModel @Inject constructor(
+    private val apiClient: MackerelApiClient
+) {
 
     fun getAlerts(
         alerts: List<Alert>?,
         filter: (Alert) -> Boolean = { true }
     ): Single<List<Alert>> {
         val observable = if (alerts == null) {
-            MackerelApiClient
-                .getAlerts(context)
+            apiClient
+                .getAlerts()
                 .flatMapObservable {
                     Observable
                         .fromIterable(it.alerts)

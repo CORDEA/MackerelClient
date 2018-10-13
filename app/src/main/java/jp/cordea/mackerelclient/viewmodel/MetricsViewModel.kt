@@ -1,6 +1,5 @@
 package jp.cordea.mackerelclient.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
@@ -20,8 +19,11 @@ import jp.cordea.mackerelclient.model.MetricsApiRequestParameter
 import jp.cordea.mackerelclient.model.UserMetric
 import jp.cordea.mackerelclient.utils.DateUtils
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class MetricsViewModel(val context: Context) : LifecycleObserver {
+class MetricsViewModel @Inject constructor(
+    private val apiClient: MackerelApiClient
+) : LifecycleObserver {
 
     val onChartDataAlive = PublishSubject.create<Pair<Int, LineData?>>()
 
@@ -82,8 +84,7 @@ class MetricsViewModel(val context: Context) : LifecycleObserver {
         hostId: String,
         param: MetricsApiRequestParameter
     ): Single<Metrics> =
-        MackerelApiClient.getMetrics(
-            context,
+        apiClient.getMetrics(
             hostId,
             param.metricsName,
             DateUtils.getEpochSec(1),
@@ -94,8 +95,7 @@ class MetricsViewModel(val context: Context) : LifecycleObserver {
         serviceName: String,
         param: MetricsApiRequestParameter
     ): Single<Metrics> =
-        MackerelApiClient.getServiceMetrics(
-            context,
+        apiClient.getServiceMetrics(
             serviceName,
             param.metricsName,
             DateUtils.getEpochSec(1),

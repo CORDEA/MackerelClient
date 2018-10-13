@@ -12,8 +12,12 @@ import jp.cordea.mackerelclient.api.response.Hosts
 import jp.cordea.mackerelclient.api.response.Tsdbs
 import jp.cordea.mackerelclient.model.DisplayHostState
 import jp.cordea.mackerelclient.model.UserMetric
+import javax.inject.Inject
 
-class HostViewModel(private val context: Context) {
+class HostViewModel @Inject constructor(
+    private val context: Context,
+    private val apiClient: MackerelApiClient
+) {
 
     val displayHostState: List<DisplayHostState>
         get() {
@@ -26,8 +30,8 @@ class HostViewModel(private val context: Context) {
         }
 
     fun getHosts(items: List<DisplayHostState>): Maybe<Hosts> =
-        MackerelApiClient
-            .getHosts(context, items.map { it.name })
+        apiClient
+            .getHosts(items.map { it.name })
             .filter {
                 deleteOldMetricData(it.hosts.map { it.id })
                 true
@@ -35,9 +39,9 @@ class HostViewModel(private val context: Context) {
             .observeOn(AndroidSchedulers.mainThread())
 
     fun getLatestMetrics(hosts: Hosts): Single<Tsdbs> =
-        MackerelApiClient
+        apiClient
             .getLatestMetrics(
-                context, hosts.hosts.map { it.id },
+                hosts.hosts.map { it.id },
                 arrayListOf(loadavgMetricsKey, cpuMetricsKey, memoryMetricsKey)
             )
             .observeOn(AndroidSchedulers.mainThread())
@@ -70,11 +74,8 @@ class HostViewModel(private val context: Context) {
     }
 
     companion object {
-
         const val loadavgMetricsKey = "loadavg5"
-
         const val cpuMetricsKey = "cpu.user.percentage"
-
         const val memoryMetricsKey = "memory.used"
     }
 }

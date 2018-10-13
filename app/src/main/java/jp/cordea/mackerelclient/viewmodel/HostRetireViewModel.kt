@@ -1,22 +1,23 @@
 package jp.cordea.mackerelclient.viewmodel
 
-import android.content.Context
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Host
 import jp.cordea.mackerelclient.api.response.RetireHost
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class HostRetireViewModel(private val context: Context) {
-
+class HostRetireViewModel @Inject constructor(
+    private val apiClient: MackerelApiClient
+) {
     fun retireHost(
         host: Host,
         onResponse: (Response<RetireHost>?) -> Unit,
         onFailure: () -> Unit
     ) {
-        MackerelApiClient
-            .retireHost(context, host.id)
+        apiClient
+            .retireHost(host.id)
             .enqueue(object : Callback<RetireHost> {
                 override fun onResponse(
                     call: Call<RetireHost>?,

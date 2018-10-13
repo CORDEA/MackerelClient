@@ -17,8 +17,12 @@ import jp.cordea.mackerelclient.adapter.MonitorAdapter
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Monitor
 import jp.cordea.mackerelclient.databinding.FragmentMonitorBinding
+import javax.inject.Inject
 
 class MonitorFragment : Fragment() {
+
+    @Inject
+    lateinit var apiClient: MackerelApiClient
 
     private val disposable = SerialDisposable()
 
@@ -60,9 +64,8 @@ class MonitorFragment : Fragment() {
     }
 
     private fun requestApi() {
-        val context = context!!
-        MackerelApiClient
-            .getMonitors(context)
+        apiClient
+            .getMonitors()
             .map { it.monitors }
             .map { monitors ->
                 val sections = monitors

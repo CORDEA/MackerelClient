@@ -17,8 +17,12 @@ import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Alerts
 import jp.cordea.mackerelclient.databinding.FragmentAlertBinding
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class AlertFragment : Fragment() {
+
+    @Inject
+    lateinit var apiClient: MackerelApiClient
 
     val onOtherAlertFragmentResult = PublishSubject.create<Boolean>()
     val onCriticalAlertFragmentResult = PublishSubject.create<Boolean>()
@@ -54,9 +58,8 @@ class AlertFragment : Fragment() {
     }
 
     private fun requestApi() {
-        val context = context!!
-        MackerelApiClient
-            .getAlerts(context)
+        apiClient
+            .getAlerts()
             .delay(100, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({

@@ -1,14 +1,16 @@
 package jp.cordea.mackerelclient.viewmodel
 
-import android.content.Context
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.realm.Realm
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Users
 import jp.cordea.mackerelclient.model.UserKey
+import javax.inject.Inject
 
-class LoginViewModel(private val context: Context) {
+class LoginViewModel @Inject constructor(
+    private val apiClient: MackerelApiClient
+) {
 
     fun logIn(
         key: String,
@@ -17,8 +19,8 @@ class LoginViewModel(private val context: Context) {
         onSuccess: (id: Int?) -> Unit,
         onFailure: () -> Unit
     ): Disposable {
-        return MackerelApiClient
-            .getUsers(context, key)
+        return apiClient
+            .getUsers(key)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 if (autoLogin) {

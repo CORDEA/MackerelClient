@@ -1,6 +1,5 @@
 package jp.cordea.mackerelclient.viewmodel
 
-import android.content.Context
 import io.reactivex.Maybe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.realm.Realm
@@ -8,12 +7,15 @@ import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Services
 import jp.cordea.mackerelclient.model.UserMetric
+import javax.inject.Inject
 
-class ServiceViewModel(private val context: Context) {
+class ServiceViewModel @Inject constructor(
+    private val apiClient: MackerelApiClient
+) {
 
     fun getServices(): Maybe<Services> =
-        MackerelApiClient
-            .getServices(context)
+        apiClient
+            .getServices()
             .filter {
                 deleteOldMetricData(it.services.map { it.name })
                 true

@@ -16,8 +16,12 @@ import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.databinding.FragmentUserBinding
 import jp.cordea.mackerelclient.model.Preferences
 import jp.cordea.mackerelclient.model.UserKey
+import javax.inject.Inject
 
 class UserFragment : Fragment() {
+
+    @Inject
+    lateinit var apiClient: MackerelApiClient
 
     private lateinit var binding: FragmentUserBinding
 
@@ -62,13 +66,12 @@ class UserFragment : Fragment() {
     }
 
     private fun refresh() {
-        val context = context!!
-        MackerelApiClient
-            .getUsers(context)
+        apiClient
+            .getUsers()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ users ->
                 binding.swipeRefresh.isRefreshing = false
-                val userId = Preferences(context).userId
+                val userId = Preferences(context!!).userId
                 val realm = Realm.getDefaultInstance()
                 val user = realm.copyFromRealm(
                     realm.where(UserKey::class.java).equalTo("id", userId).findFirst()!!
