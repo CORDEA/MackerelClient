@@ -6,6 +6,7 @@ import jp.cordea.mackerelclient.activity.ServiceMetricsActivity
 
 @Module
 interface ServiceMetricsActivityModule {
+    @ActivityScope
     @ContributesAndroidInjector
     fun contributeServiceMetricsActivity(): ServiceMetricsActivity
 }

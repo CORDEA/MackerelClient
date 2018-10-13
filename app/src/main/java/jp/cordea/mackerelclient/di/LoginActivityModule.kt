@@ -6,6 +6,7 @@ import jp.cordea.mackerelclient.activity.LoginActivity
 
 @Module
 interface LoginActivityModule {
+    @ActivityScope
     @ContributesAndroidInjector
     fun contributeLoginActivity(): LoginActivity
 }

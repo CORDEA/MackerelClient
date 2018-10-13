@@ -7,6 +7,7 @@ import jp.cordea.mackerelclient.fragment.MetricsDeleteConfirmDialogFragment
 
 @Module
 interface MetricsActivityModule {
+    @ActivityScope
     @ContributesAndroidInjector(
         modules = [
             MetricsDeleteConfirmDialogFragmentModule::class
@@ -17,6 +18,7 @@ interface MetricsActivityModule {
 
 @Module
 interface MetricsDeleteConfirmDialogFragmentModule {
+    @FragmentScope
     @ContributesAndroidInjector
     fun contributeMetricsDeleteConfirmDialogFragment(): MetricsDeleteConfirmDialogFragment
 }

@@ -7,6 +7,7 @@ import jp.cordea.mackerelclient.fragment.MonitorSettingDeleteDialogFragment
 
 @Module
 interface MonitorDetailActivityModule {
+    @ActivityScope
     @ContributesAndroidInjector(
         modules = [
             MonitorSettingDeleteDialogFragmentModule::class
@@ -17,6 +18,7 @@ interface MonitorDetailActivityModule {
 
 @Module
 interface MonitorSettingDeleteDialogFragmentModule {
+    @FragmentScope
     @ContributesAndroidInjector
     fun contributeMonitorSettingDeleteDialogFragment(): MonitorSettingDeleteDialogFragment
 }

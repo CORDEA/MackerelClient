@@ -7,6 +7,7 @@ import jp.cordea.mackerelclient.fragment.HostRetireDialogFragment
 
 @Module
 interface HostDetailActivityModule {
+    @ActivityScope
     @ContributesAndroidInjector(
         modules = [
             HostRetireDialogFragmentModule::class
@@ -17,6 +18,7 @@ interface HostDetailActivityModule {
 
 @Module
 interface HostRetireDialogFragmentModule {
+    @FragmentScope
     @ContributesAndroidInjector
     fun contributeHostRetireDialogFragment(): HostRetireDialogFragment
 }

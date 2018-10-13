@@ -7,6 +7,7 @@ import jp.cordea.mackerelclient.fragment.AlertCloseDialogFragment
 
 @Module
 interface AlertDetailActivityModule {
+    @ActivityScope
     @ContributesAndroidInjector(
         modules = [
             AlertCloseDialogFragmentModule::class
@@ -17,6 +18,7 @@ interface AlertDetailActivityModule {
 
 @Module
 interface AlertCloseDialogFragmentModule {
+    @FragmentScope
     @ContributesAndroidInjector
     fun contributeAlertCloseDialogFragment(): AlertCloseDialogFragment
 }

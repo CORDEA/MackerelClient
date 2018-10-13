@@ -6,6 +6,7 @@ import jp.cordea.mackerelclient.activity.LicenseActivity
 
 @Module
 interface LicenseActivityModule {
+    @ActivityScope
     @ContributesAndroidInjector
     fun contributeLicenseActivity(): LicenseActivity
 }
