@@ -53,7 +53,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/common_divider_height"
                     android:layout_marginStart="@dimen/card_metrics_content_margin"
-                    android:layout_marginRight="@dimen/card_metrics_content_margin" />
+                    android:layout_marginEnd="@dimen/card_metrics_content_margin" />
 
                 <TextView
                     android:id="@+id/title_text_view"
@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/card_metrics_content_margin"
                     android:layout_marginTop="@dimen/card_metrics_title_margin_top"
-                    android:layout_marginRight="@dimen/card_metrics_content_margin"
+                    android:layout_marginEnd="@dimen/card_metrics_content_margin"
                     android:layout_marginBottom="@dimen/card_metrics_content_margin"
                     android:textColor="@color/colorPrimaryText"
                     android:textSize="24sp" />

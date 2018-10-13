@@ -19,7 +19,7 @@
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/error_with_retry_button_height"
-            android:layout_marginRight="@dimen/error_with_retry_button_margin_right"
+            android:layout_marginEnd="@dimen/error_with_retry_button_margin_right"
             android:minWidth="@dimen/error_with_retry_button_min_width"
             android:text="@string/retry" />
 

@@ -17,7 +17,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/setting_cell_padding_side"
-                android:layout_marginRight="@dimen/setting_cell_padding_side"
+                android:layout_marginEnd="@dimen/setting_cell_padding_side"
                 android:orientation="vertical">
 
                 <TextView
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/setting_cell_padding_side"
-                android:layout_marginRight="@dimen/setting_cell_padding_side"
+                android:layout_marginEnd="@dimen/setting_cell_padding_side"
                 android:orientation="vertical">
 
                 <TextView
@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/setting_cell_padding_side"
-                android:layout_marginRight="@dimen/setting_cell_padding_side"
+                android:layout_marginEnd="@dimen/setting_cell_padding_side"
                 android:orientation="vertical">
 
                 <TextView
@@ -118,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/setting_cell_padding_side"
-                android:layout_marginRight="@dimen/setting_cell_padding_side"
+                android:layout_marginEnd="@dimen/setting_cell_padding_side"
                 android:orientation="vertical">
 
                 <TextView
@@ -145,7 +145,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/setting_cell_padding_side"
-                android:layout_marginRight="@dimen/setting_cell_padding_side"
+                android:layout_marginEnd="@dimen/setting_cell_padding_side"
                 android:orientation="vertical">
 
                 <TextView

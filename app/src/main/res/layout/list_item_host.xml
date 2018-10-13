@@ -33,13 +33,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/list_item_host_metrics_height"
                     android:layout_marginStart="@dimen/list_item_host_content_margin_side"
-                    android:layout_marginRight="@dimen/list_item_host_content_margin_side">
+                    android:layout_marginEnd="@dimen/list_item_host_content_margin_side">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginStart="@dimen/list_item_host_detail_margin_side"
-                        android:layout_marginRight="@dimen/list_item_host_detail_margin_side"
+                        android:layout_marginEnd="@dimen/list_item_host_detail_margin_side"
                         android:gravity="center_vertical"
                         android:orientation="vertical">
 
@@ -51,7 +51,7 @@
                                 android:id="@+id/name_text_view"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginRight="@dimen/list_item_host_detail_role_max_width"
+                                android:layout_marginEnd="@dimen/list_item_host_detail_role_max_width"
                                 android:ellipsize="end"
                                 android:gravity="left"
                                 android:maxLines="1"
@@ -86,7 +86,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/list_item_host_metrics_height"
                     android:layout_marginStart="@dimen/list_item_host_content_margin_side"
-                    android:layout_marginRight="@dimen/list_item_host_content_margin_side"
+                    android:layout_marginEnd="@dimen/list_item_host_content_margin_side"
                     android:orientation="horizontal">
 
                     <include

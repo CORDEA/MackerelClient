@@ -25,7 +25,7 @@
                 style="@style/IconActive"
                 android:layout_width="@dimen/common_icon_size"
                 android:layout_height="@dimen/common_icon_size"
-                android:layout_marginRight="@dimen/metrics_edit_icon_margin_right"
+                android:layout_marginEnd="@dimen/metrics_edit_icon_margin_right"
                 android:src="@drawable/ic_label_black_24dp" />
 
             <EditText
@@ -46,7 +46,7 @@
                 style="@style/IconActive"
                 android:layout_width="@dimen/common_icon_size"
                 android:layout_height="@dimen/common_icon_size"
-                android:layout_marginRight="@dimen/metrics_edit_icon_margin_right"
+                android:layout_marginEnd="@dimen/metrics_edit_icon_margin_right"
                 android:src="@drawable/ic_timeline_black_24dp" />
 
             <EditText
