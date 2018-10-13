@@ -6,14 +6,12 @@
     <string name="nav_host">ホスト</string>
     <string name="nav_monitor">監視設定</string>
     <string name="nav_user">ユーザー</string>
-    <string name="nav_setting">設定</string>
     <string name="nav_mackerel">Mackerel</string>
     <string name="nav_sign_out">サインアウト</string>
 
     <string name="prompt_api_key">API Key</string>
     <string name="prompt_email">メールアドレス (optional)</string>
     <string name="action_sign_in_short">サインイン</string>
-    <string name="action_sign_out_short">サインアウト</string>
 
     <string name="title_activity_login">Mackerel Client</string>
     <string name="title_activity_main">Mackerel Client</string>
@@ -24,10 +22,8 @@
     <string name="action_settings">設定</string>
     <string name="action_discard">変更を破棄する</string>
     <string name="action_close">アラートを閉じる</string>
-    <string name="action_edit">編集</string>
     <string name="action_delete">削除</string>
     <string name="action_retire">退役</string>
-    <string name="action_refresh">更新</string>
     <string name="action_add">追加</string>
 
     <string name="in_progress_alert_title">Critical</string>
@@ -37,7 +33,7 @@
     <string name="host_card_loadavg_title">loadavg5</string>
     <string name="host_card_cpu_title">cpu.user</string>
     <string name="host_card_memory_title">memory.used</string>
-    <string name="title_activity_service_metrics">サービスメトリック</string>
+    <string name="title_activity_service_metrics">サービスメトリック </string>
 
     <string name="setting_host_cell_title">表示するホストのステータス</string>
     <string name="setting_init_cell_title">メトリック設定を初期化</string>
@@ -82,7 +78,6 @@
 
     <string name="metrics_edit_dialog_title">メトリック名は最低 1 つ入力してください</string>
 
-    <string name="setting_host_dialog_title">ステータス</string>
     <string name="title_activity_monitor_detail">監視設定の詳細</string>
     <string name="title_activity_host_detail">ホストの詳細</string>
 
@@ -96,7 +91,6 @@
 
     <string name="monitor_detail_delete_dialog_title">この監視設定を削除しますか？</string>
     <string name="monitor_detail_error_dialog_title">監視設定の削除に失敗しました</string>
-    <string name="monitor_refresh_error_dialog_title">監視設定の更新に失敗しました</string>
 
     <string name="user_delete_dialog_title">このユーザーを削除しますか？</string>
     <string name="user_delete_error_dialog_title">ユーザーの削除に失敗しました</string>
@@ -109,7 +103,6 @@
 
     <string name="delete_positive_button">削除</string>
     <string name="retire_positive_button">退役</string>
-    <string name="title_activity_monitor_edit">監視設定の編集</string>
 
     <string name="progress_dialog_title">処理中…</string>
 
@@ -117,8 +110,6 @@
     <string name="format_roles_ex">99+ roles</string>
     <string name="format_role">%d role</string>
 
-    <string name="done">完了</string>
-    <string name="discard">変更を破棄</string>
     <string name="retry">再試行</string>
     <string name="detail">詳細</string>
     <string name="delete">削除</string>
@@ -128,10 +119,6 @@
     <string name="title_activity_license">ライセンス情報</string>
     <string name="setting_version_cell_title">バージョン</string>
     <string name="setting_contributor_cell_title">Contributors</string>
-
-    <string name="monitor_edit_warning_hint">0.7</string>
-    <string name="monitor_edit_critical_hint">0.9</string>
-    <string name="monitor_edit_scope_hint">service1, service2, …</string>
 
     <string name="metrics_edit_label_hint">ラベル (optional)</string>
     <string name="metrics_edit_metric0_hint">cpu.user.percentage</string>

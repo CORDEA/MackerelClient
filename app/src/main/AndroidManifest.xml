@@ -57,11 +57,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activity.MonitorEditActivity"
-            android:label="@string/title_activity_monitor_edit"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name=".activity.LicenseActivity"
             android:label="@string/title_activity_license"
             android:theme="@style/AppTheme" />
