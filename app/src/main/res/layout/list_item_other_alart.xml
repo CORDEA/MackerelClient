@@ -1,50 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/common_cell_height">
+        android:layout_height="@dimen/common_cell_height"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/list_item_alert_margin_side"
-            android:layout_marginEnd="@dimen/list_item_alert_margin_side">
+        <jp.cordea.mackerelclient.view.CharCircleView
+            android:id="@+id/status_view"
+            android:layout_width="@dimen/list_item_alert_char_circle_size"
+            android:layout_height="@dimen/list_item_alert_char_circle_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:orientation="horizontal">
+        <TextView
+            android:id="@+id/name_text_view"
+            style="@style/ListText.Title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/na_text"
+            app:layout_constraintBottom_toTopOf="@id/detail_text_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/status_view"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
 
-                <jp.cordea.mackerelclient.view.CharCircleView
-                    android:id="@+id/status_view"
-                    android:layout_width="@dimen/list_item_alert_char_circle_size"
-                    android:layout_height="@dimen/list_item_alert_char_circle_size"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="@dimen/list_item_alert_char_circle_margin_right" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/name_text_view"
-                        style="@style/ListText.Title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/na_text" />
-
-                    <TextView
-                        android:id="@+id/detail_text_view"
-                        style="@style/ListText.Detail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/na_text" />
-                </LinearLayout>
-            </LinearLayout>
-        </RelativeLayout>
-    </FrameLayout>
+        <TextView
+            android:id="@+id/detail_text_view"
+            style="@style/ListText.Detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/na_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/status_view"
+            app:layout_constraintTop_toBottomOf="@id/name_text_view" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
