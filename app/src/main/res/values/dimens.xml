@@ -23,7 +23,6 @@
     <dimen name="login_button_min_width">64dp</dimen>
     <dimen name="login_button_height">48dp</dimen>
 
-    <dimen name="metrics_edit_icon_margin_right">16dp</dimen>
     <dimen name="metrics_edit_label_height">48dp</dimen>
     <dimen name="metrics_edit_label_margin_left">40dp</dimen>
 

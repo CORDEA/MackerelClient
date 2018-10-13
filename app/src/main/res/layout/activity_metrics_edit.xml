@@ -1,15 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activity.MetricsEditActivity">
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        tools:context=".activity.MetricsEditActivity"
+        tools:showIn="@layout/activity_metrics_edit">
 
-        <include
-            android:id="@+id/content"
-            layout="@layout/content_metrics_edit" />
+        <ImageView
+            android:id="@+id/label_icon"
+            style="@style/IconActive"
+            android:layout_width="@dimen/common_icon_size"
+            android:layout_height="@dimen/common_icon_size"
+            android:src="@drawable/ic_label_black_24dp"
+            app:layout_constraintBottom_toBottomOf="@id/label_edit_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/label_edit_text" />
 
-    </FrameLayout>
+        <EditText
+            android:id="@+id/label_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/metrics_edit_label_height"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:hint="@string/metrics_edit_label_hint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/label_icon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/metrics_first_icon"
+            style="@style/IconActive"
+            android:layout_width="@dimen/common_icon_size"
+            android:layout_height="@dimen/common_icon_size"
+            android:src="@drawable/ic_timeline_black_24dp"
+            app:layout_constraintBottom_toBottomOf="@id/metric_first_edit_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/metric_first_edit_text" />
+
+        <EditText
+            android:id="@+id/metric_first_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/metrics_edit_label_height"
+            android:layout_marginStart="16dp"
+            android:hint="@string/metrics_edit_metric0_hint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/metrics_first_icon"
+            app:layout_constraintTop_toBottomOf="@id/label_edit_text" />
+
+        <EditText
+            android:id="@+id/metric_second_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/metrics_edit_label_height"
+            android:layout_marginStart="@dimen/metrics_edit_label_margin_left"
+            android:hint="@string/metrics_edit_metric1_hint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/metric_first_edit_text" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

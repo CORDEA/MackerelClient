@@ -12,7 +12,6 @@ import androidx.databinding.DataBindingUtil
 import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.databinding.ActivityMetricsEditBinding
-import jp.cordea.mackerelclient.databinding.ContentMetricsEditBinding
 import jp.cordea.mackerelclient.viewmodel.MetricsEditViewModel
 
 class MetricsEditActivity : AppCompatActivity() {
@@ -22,22 +21,20 @@ class MetricsEditActivity : AppCompatActivity() {
     private var id = -1
     private var type: MetricsType? = null
 
-    private lateinit var contentBinding: ContentMetricsEditBinding
+    private lateinit var binding: ActivityMetricsEditBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = DataBindingUtil
-            .setContentView<ActivityMetricsEditBinding>(this, R.layout.activity_metrics_edit)
-        contentBinding = binding.content
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_metrics_edit)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         id = intent.getIntExtra(USER_METRIC_KEY, -1)
         type = MetricsType.valueOf(intent.getStringExtra(TYPE_KEY))
         if (id != -1) {
             val metric = viewModel.getMetric(id)
-            contentBinding.labelEditText.setText(metric.label)
-            contentBinding.metricFirstEditText.setText(metric.metric0)
-            contentBinding.metricSecondEditText.setText(metric.metric1)
+            binding.labelEditText.setText(metric.label)
+            binding.metricFirstEditText.setText(metric.metric0)
+            binding.metricSecondEditText.setText(metric.metric1)
         }
     }
 
@@ -78,10 +75,10 @@ class MetricsEditActivity : AppCompatActivity() {
     }
 
     private fun saveMetric(): Boolean? {
-        val metricFirst = contentBinding.metricFirstEditText.text.toString()
-        val metricSecond = contentBinding.metricSecondEditText.text.toString()
+        val metricFirst = binding.metricFirstEditText.text.toString()
+        val metricSecond = binding.metricSecondEditText.text.toString()
         if (metricFirst.isBlank()) {
-            val label = contentBinding.labelEditText.text.toString()
+            val label = binding.labelEditText.text.toString()
             return if (label.isBlank() && metricSecond.isBlank()) {
                 false
             } else {
@@ -95,7 +92,7 @@ class MetricsEditActivity : AppCompatActivity() {
 
         viewModel.storeMetric(
             id, intent.getStringExtra(ID_KEY), type!!.name,
-            contentBinding.labelEditText.text.toString(), metricFirst, metricSecond
+            binding.labelEditText.text.toString(), metricFirst, metricSecond
         )
         return true
     }
