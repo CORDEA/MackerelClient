@@ -9,20 +9,18 @@ import androidx.fragment.app.DialogFragment
 import dagger.android.support.AndroidSupportInjection
 import io.realm.Realm
 import jp.cordea.mackerelclient.R
-import jp.cordea.mackerelclient.model.MetricsParameter
 import jp.cordea.mackerelclient.model.UserMetric
 
 class MetricsDeleteConfirmDialogFragment : DialogFragment() {
 
     interface OnDeleteMetricsListener {
-        fun onDelete(position: Int)
+        fun onDelete(id: Int)
     }
 
     private lateinit var listener: OnDeleteMetricsListener
 
     private val realm = Realm.getDefaultInstance()
     private val metricsId get() = arguments!!.getInt(ID_KEY)
-    private val position get() = arguments!!.getInt(POSITION_KEY)
 
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
@@ -41,7 +39,7 @@ class MetricsDeleteConfirmDialogFragment : DialogFragment() {
                         .findFirst()!!
                         .deleteFromRealm()
                 }
-                listener.onDelete(position)
+                listener.onDelete(metricsId)
             }.create()
 
     override fun onDestroy() {
@@ -53,14 +51,10 @@ class MetricsDeleteConfirmDialogFragment : DialogFragment() {
         const val TAG = "MetricsDeleteConfirmDialogFragment"
 
         private const val ID_KEY = "IdKey"
-        private const val POSITION_KEY = "PositionKey"
 
-        fun newInstance(items: List<MetricsParameter>, position: Int) =
+        fun newInstance(id: Int) =
             MetricsDeleteConfirmDialogFragment().apply {
-                arguments = bundleOf(
-                    ID_KEY to items[position].id,
-                    POSITION_KEY to position
-                )
+                arguments = bundleOf(ID_KEY to id)
             }
     }
 }

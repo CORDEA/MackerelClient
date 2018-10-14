@@ -6,30 +6,26 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import jp.cordea.mackerelclient.model.MetricsLineDataSet
 import jp.cordea.mackerelclient.model.UserDefinedMetrics
 import jp.cordea.mackerelclient.model.toLineData
-import jp.cordea.mackerelclient.repository.MetricsRepository
+import jp.cordea.mackerelclient.repository.ServiceMetricsRepository
 import jp.cordea.mackerelclient.utils.DateUtils
 import javax.inject.Inject
 
-class MetricsViewModel @Inject constructor(
-    private val repository: MetricsRepository
+class ServiceMetricsViewModel @Inject constructor(
+    private val repository: ServiceMetricsRepository
 ) {
-    private lateinit var hostId: String
+    private lateinit var serviceName: String
 
-    fun start(hostId: String) {
-        this.hostId = hostId
-    }
-
-    fun setDefaultUserMetrics(hostId: String) {
-        repository.storeDefaultUserMetrics(hostId)
+    fun start(serviceName: String) {
+        this.serviceName = serviceName
     }
 
     fun fetchMetrics(): Observable<MetricsLineDataSet> {
         val from = DateUtils.getEpochSec(1)
         val to = DateUtils.getEpochSec(0)
-        return Observable.fromIterable(repository.getMetricsDefinition(hostId))
+        return Observable.fromIterable(repository.getMetricsDefinition(serviceName))
             .map { UserDefinedMetrics.from(it) }
             .concatMapSingle { metrics ->
-                repository.getMetrics(hostId, metrics, from, to)
+                repository.getMetrics(serviceName, metrics, from, to)
                     .flatMap { data ->
                         Observable.range(0, data.size)
                             .map { data[it].toLineDataSet(ColorTemplate.COLORFUL_COLORS[it]) }

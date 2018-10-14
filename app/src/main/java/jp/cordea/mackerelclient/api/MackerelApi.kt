@@ -7,7 +7,7 @@ import jp.cordea.mackerelclient.api.response.Alerts
 import jp.cordea.mackerelclient.api.response.CloseAlert
 import jp.cordea.mackerelclient.api.response.Host
 import jp.cordea.mackerelclient.api.response.Hosts
-import jp.cordea.mackerelclient.api.response.Metrics
+import jp.cordea.mackerelclient.api.response.MetricsResponse
 import jp.cordea.mackerelclient.api.response.Monitor
 import jp.cordea.mackerelclient.api.response.Monitors
 import jp.cordea.mackerelclient.api.response.RefreshMonitor
@@ -49,7 +49,7 @@ interface MackerelApi {
         @Query("name") name: String,
         @Query("from") from: Long,
         @Query("to") to: Long
-    ): Single<Metrics>
+    ): Single<MetricsResponse>
 
     @GET("/api/v0/hosts")
     fun getAllHosts(
@@ -74,7 +74,7 @@ interface MackerelApi {
         @Query("name") name: String,
         @Query("from") from: Long,
         @Query("to") to: Long
-    ): Single<Metrics>
+    ): Single<MetricsResponse>
 
     @GET("/api/v0/alerts")
     fun getAlerts(): Single<Alerts>

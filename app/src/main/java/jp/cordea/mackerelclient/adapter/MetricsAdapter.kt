@@ -13,43 +13,25 @@ import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.MetricsEditActivity
 import jp.cordea.mackerelclient.databinding.ListItemMetricsChartBinding
 import jp.cordea.mackerelclient.fragment.MetricsDeleteConfirmDialogFragment
-import jp.cordea.mackerelclient.model.MetricsParameter
-import java.util.concurrent.locks.ReentrantLock
-import kotlin.concurrent.withLock
+import jp.cordea.mackerelclient.model.MetricsLineDataSet
 
 class MetricsAdapter(
     private val activity: AppCompatActivity,
-    items: List<MetricsParameter>,
     private val type: MetricsType,
-    private val id: String,
-    private var visibles: Int = 0,
-    private var canRefresh: Boolean = false
+    private val id: String
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val lock = ReentrantLock()
-    private val items: MutableList<MetricsParameter> = items.toMutableList()
-
-    private var drawComplete: Int = 0
+    private val items = mutableListOf<MetricsLineDataSet>()
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as? ViewHolder)?.binding?.let { binding ->
-            if (items[position].label.isEmpty()) {
+            val item = items[position]
+            if (item.label.isEmpty()) {
                 binding.titleTextView.visibility = View.GONE
             } else {
-                binding.titleTextView.text = items[position].label
+                binding.titleTextView.text = item.label
             }
-            val lineData = items[position].data
-            if (lineData == null) {
-                if (items[position].isError) {
-                    binding.progressLayout.visibility = View.GONE
-                    binding.error.root.visibility = View.VISIBLE
-                }
-            } else {
-                setLineData(binding, lineData)
-                ++visibles
-                canRefresh = visibles == itemCount
-            }
-
+            setLineData(binding, item.data)
             binding.editButton.setOnClickListener {
                 val intent = MetricsEditActivity
                     .createIntent(activity, type, id, items[position].id)
@@ -57,7 +39,7 @@ class MetricsAdapter(
             }
 
             binding.deleteButton.setOnClickListener {
-                MetricsDeleteConfirmDialogFragment.newInstance(items, position)
+                MetricsDeleteConfirmDialogFragment.newInstance(items[position].id)
                     .show(activity.supportFragmentManager, MetricsDeleteConfirmDialogFragment.TAG)
             }
         }
@@ -95,31 +77,20 @@ class MetricsAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    fun refreshRecyclerViewItem(item: Pair<Int, LineData?>, drawCompleteMetrics: Int): Int {
-        drawComplete = drawCompleteMetrics
-        lock.withLock {
-            val idx = items.indexOfFirst { it.id == item.first }
-            if (idx != -1 && idx < items.size) {
-                items[idx] = MetricsParameter(
-                    item.first,
-                    item.second,
-                    items[idx].label,
-                    item.second == null
-                )
-                notifyDataSetChanged()
-                return ++drawComplete
-            }
-        }
-        return drawComplete
+    fun add(item: MetricsLineDataSet) {
+        items.add(item)
+        notifyItemInserted(items.size - 1)
     }
 
-    fun removeAt(position: Int) {
-        lock.withLock {
-            items.removeAt(position)
-            notifyItemRemoved(position)
-            notifyItemRangeRemoved(position, items.size)
-            --drawComplete
-        }
+    fun clear() {
+        items.clear()
+        notifyDataSetChanged()
+    }
+
+    fun removeAt(id: Int) {
+        val index = items.indexOfFirst { it.id == id }
+        items.removeAt(index)
+        notifyItemRemoved(index)
     }
 
     private val LineData.needFormat: Boolean

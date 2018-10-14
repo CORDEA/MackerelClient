@@ -1,12 +1,12 @@
 package jp.cordea.mackerelclient.model
 
 import com.github.mikephil.charting.data.LineData
-import jp.cordea.mackerelclient.api.response.Metrics
+import jp.cordea.mackerelclient.api.response.MetricsResponse
 
 data class MetricsApiRequestParameter(
     val id: Int,
     val metricsName: String,
-    val response: Metrics? = null
+    val response: MetricsResponse? = null
 )
 
 class MetricsParameter(

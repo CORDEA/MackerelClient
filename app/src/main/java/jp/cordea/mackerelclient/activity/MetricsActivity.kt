@@ -15,9 +15,7 @@ import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.SerialDisposable
-import io.realm.Realm
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.R
@@ -25,8 +23,6 @@ import jp.cordea.mackerelclient.adapter.MetricsAdapter
 import jp.cordea.mackerelclient.databinding.ActivityMetricsBinding
 import jp.cordea.mackerelclient.databinding.ContentMetricsBinding
 import jp.cordea.mackerelclient.fragment.MetricsDeleteConfirmDialogFragment
-import jp.cordea.mackerelclient.model.MetricsParameter
-import jp.cordea.mackerelclient.model.UserMetric
 import jp.cordea.mackerelclient.viewmodel.MetricsViewModel
 import javax.inject.Inject
 
@@ -40,11 +36,11 @@ class MetricsActivity : AppCompatActivity(),
     @Inject
     lateinit var viewModel: MetricsViewModel
 
+    private val hostId by lazy { intent.getStringExtra(HOST_ID_KEY) }
+
     private val disposable = SerialDisposable()
 
-    private var hostId: String? = null
     private var needRefresh = false
-    private var drawCompleteMetrics = 0
     private var enableRefresh = false
 
     private lateinit var adapter: MetricsAdapter
@@ -56,27 +52,33 @@ class MetricsActivity : AppCompatActivity(),
         val binding = DataBindingUtil
             .setContentView<ActivityMetricsBinding>(this, R.layout.activity_metrics)
         contentBinding = binding.content
-        lifecycle.addObserver(viewModel)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         contentBinding.recyclerView.layoutManager = LinearLayoutManager(this)
-        val hostId = intent.getStringExtra(HOST_ID_KEY)
+        viewModel.start(hostId)
 
         contentBinding.swipeRefresh.setOnRefreshListener {
             if (enableRefresh) {
-                refresh(hostId)
+                refresh()
             }
             contentBinding.swipeRefresh.isRefreshing = false
         }
+        contentBinding.templateButton.setOnClickListener {
+            contentBinding.templateButton.isClickable = false
+            viewModel.setDefaultUserMetrics(hostId)
+            refresh()
+        }
 
         needRefresh = true
-        this.hostId = hostId
+        adapter = MetricsAdapter(this, MetricsType.HOST, hostId)
+        contentBinding.recyclerView.adapter = adapter
+        contentBinding.recyclerView.addItemDecoration(ListItemDecoration(this))
     }
 
     override fun onResume() {
         super.onResume()
         if (needRefresh) {
-            refresh(hostId!!)
+            refresh()
             needRefresh = false
         }
     }
@@ -105,65 +107,44 @@ class MetricsActivity : AppCompatActivity(),
         when (item.itemId) {
             android.R.id.home -> finish()
             R.id.action_add -> {
-                val intent = MetricsEditActivity.createIntent(this, MetricsType.HOST, hostId!!)
+                val intent = MetricsEditActivity.createIntent(this, MetricsType.HOST, hostId)
                 startActivityForResult(intent, MetricsEditActivity.REQUEST_CODE)
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onDelete(position: Int) {
-        adapter.removeAt(position)
+    override fun onDelete(id: Int) {
+        adapter.removeAt(id)
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
 
-    private fun refresh(hostId: String) {
+    private fun refresh() {
         enableRefresh = false
-        val realm = Realm.getDefaultInstance()
-        val metrics = realm.copyFromRealm(
-            realm.where(UserMetric::class.java)
-                .equalTo("type", MetricsType.HOST.name)
-                .equalTo("parentId", hostId).findAll()
-        )
-        val item = metrics.map { MetricsParameter(it.id, null, it.label!!) }
-        realm.close()
-
-        adapter = MetricsAdapter(this, item, MetricsType.HOST, hostId)
-        contentBinding.recyclerView.adapter = adapter
-        contentBinding.recyclerView.addItemDecoration(ListItemDecoration(this))
-
-        drawCompleteMetrics = 0
+        adapter.clear()
         viewModel
-            .onChartDataAlive
-            .observeOn(AndroidSchedulers.mainThread())
+            .fetchMetrics()
             .subscribe({
-                drawCompleteMetrics = adapter.refreshRecyclerViewItem(it, drawCompleteMetrics)
-                if (adapter.itemCount == drawCompleteMetrics) {
-                    enableRefresh = true
+                adapter.add(it)
+                if (adapter.itemCount == 0) {
+                    contentBinding.noticeContainer.visibility = View.VISIBLE
+                    contentBinding.swipeRefresh.visibility = View.GONE
+                } else {
+                    contentBinding.swipeRefresh.visibility = View.VISIBLE
+                    contentBinding.noticeContainer.visibility = View.GONE
                 }
-            }, {})
+            }, {
+            }, {
+                enableRefresh = true
+            })
             .run(disposable::set)
-
-        if (metrics.size == 0) {
-            contentBinding.noticeContainer.visibility = View.VISIBLE
-            contentBinding.templateButton.setOnClickListener {
-                contentBinding.templateButton.isClickable = false
-                viewModel.initUserMetrics(hostId)
-                refresh(hostId)
-            }
-            contentBinding.swipeRefresh.visibility = View.GONE
-        } else {
-            contentBinding.swipeRefresh.visibility = View.VISIBLE
-            contentBinding.noticeContainer.visibility = View.GONE
-            viewModel.requestMetricsApi(metrics, hostId, MetricsType.HOST)
-        }
     }
 
     companion object {
         private const val HOST_ID_KEY = "HostIdKey"
 
-        fun createIntent(context: Context, hostId: String?): Intent =
+        fun createIntent(context: Context, hostId: String): Intent =
             Intent(context, MetricsActivity::class.java).apply {
                 putExtra(HOST_ID_KEY, hostId)
             }

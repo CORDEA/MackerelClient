@@ -10,7 +10,7 @@ import jp.cordea.mackerelclient.api.response.Alert
 import jp.cordea.mackerelclient.api.response.Alerts
 import jp.cordea.mackerelclient.api.response.CloseAlert
 import jp.cordea.mackerelclient.api.response.Hosts
-import jp.cordea.mackerelclient.api.response.Metrics
+import jp.cordea.mackerelclient.api.response.MetricsResponse
 import jp.cordea.mackerelclient.api.response.Monitor
 import jp.cordea.mackerelclient.api.response.Monitors
 import jp.cordea.mackerelclient.api.response.RefreshMonitor
@@ -115,7 +115,7 @@ class MackerelApiClient @Inject constructor(
         name: String,
         from: Long,
         to: Long
-    ): Single<Metrics> =
+    ): Single<MetricsResponse> =
         getService(MackerelApi::class.java)
             .getMetrics(hostId, name, from, to)
             .subscribeOn(Schedulers.io())
@@ -133,7 +133,7 @@ class MackerelApiClient @Inject constructor(
         name: String,
         from: Long,
         to: Long
-    ): Single<Metrics> =
+    ): Single<MetricsResponse> =
         getService(MackerelApi::class.java)
             .getServiceMetrics(serviceName, name, from, to)
             .subscribeOn(Schedulers.io())
