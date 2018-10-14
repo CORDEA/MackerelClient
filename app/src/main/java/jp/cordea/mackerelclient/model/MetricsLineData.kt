@@ -10,7 +10,11 @@ class MetricsLineDataSet(
     val id: Int,
     val label: String,
     val data: LineData
-)
+) {
+    companion object {
+        val ERROR = MetricsLineDataSet(0, "", LineData())
+    }
+}
 
 class MetricsLineData(
     val label: String,

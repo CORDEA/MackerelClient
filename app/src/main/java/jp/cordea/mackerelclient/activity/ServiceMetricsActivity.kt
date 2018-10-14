@@ -19,6 +19,7 @@ import jp.cordea.mackerelclient.adapter.MetricsAdapter
 import jp.cordea.mackerelclient.databinding.ActivityServiceMetricsBinding
 import jp.cordea.mackerelclient.databinding.ContentServiceMetricsBinding
 import jp.cordea.mackerelclient.fragment.MetricsDeleteConfirmDialogFragment
+import jp.cordea.mackerelclient.model.MetricsLineDataSet
 import jp.cordea.mackerelclient.viewmodel.ServiceMetricsViewModel
 import javax.inject.Inject
 
@@ -124,6 +125,7 @@ class ServiceMetricsActivity : AppCompatActivity(),
                     }
                 }
             }, {
+                adapter.add(MetricsLineDataSet.ERROR)
             }, {
                 enableRefresh = true
             })

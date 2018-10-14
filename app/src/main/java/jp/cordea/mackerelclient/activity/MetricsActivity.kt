@@ -23,6 +23,7 @@ import jp.cordea.mackerelclient.adapter.MetricsAdapter
 import jp.cordea.mackerelclient.databinding.ActivityMetricsBinding
 import jp.cordea.mackerelclient.databinding.ContentMetricsBinding
 import jp.cordea.mackerelclient.fragment.MetricsDeleteConfirmDialogFragment
+import jp.cordea.mackerelclient.model.MetricsLineDataSet
 import jp.cordea.mackerelclient.viewmodel.MetricsViewModel
 import javax.inject.Inject
 
@@ -135,6 +136,7 @@ class MetricsActivity : AppCompatActivity(),
                     contentBinding.noticeContainer.visibility = View.GONE
                 }
             }, {
+                adapter.add(MetricsLineDataSet.ERROR)
             }, {
                 enableRefresh = true
             })

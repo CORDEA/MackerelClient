@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.LineData
@@ -31,13 +32,17 @@ class MetricsAdapter(
             } else {
                 binding.titleTextView.text = item.label
             }
-            setLineData(binding, item.data)
+            if (item == MetricsLineDataSet.ERROR) {
+                binding.lineChart.isVisible = false
+                binding.error.root.isVisible = true
+            } else {
+                setLineData(binding, item.data)
+            }
             binding.editButton.setOnClickListener {
                 val intent = MetricsEditActivity
                     .createIntent(activity, type, id, items[position].id)
                 activity.startActivityForResult(intent, MetricsEditActivity.REQUEST_CODE)
             }
-
             binding.deleteButton.setOnClickListener {
                 MetricsDeleteConfirmDialogFragment.newInstance(items[position].id)
                     .show(activity.supportFragmentManager, MetricsDeleteConfirmDialogFragment.TAG)
@@ -63,15 +68,13 @@ class MetricsAdapter(
 
             axisRight.setLabelCount(3, false)
             axisLeft.setLabelCount(3, false)
-            visibility = View.VISIBLE
-            binding.progressLayout.visibility = View.GONE
             invalidate()
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(activity)
-            .inflate(R.layout.list_item_metrics_chart, parent, false)
+        val view =
+            LayoutInflater.from(activity).inflate(R.layout.list_item_metrics_chart, parent, false)
         return ViewHolder(view)
     }
 
