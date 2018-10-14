@@ -19,10 +19,13 @@ import jp.cordea.mackerelclient.databinding.ContentLoginBinding
 import jp.cordea.mackerelclient.model.Preferences
 import jp.cordea.mackerelclient.model.UserKey
 import jp.cordea.mackerelclient.viewmodel.LoginViewModel
+import javax.inject.Inject
 
 class LoginActivity : AppCompatActivity() {
 
-    private val viewModel by lazy { LoginViewModel(this) }
+    @Inject
+    lateinit var viewModel: LoginViewModel
+
     private val prefs by lazy { Preferences(this) }
 
     private var disposable: Disposable? = null

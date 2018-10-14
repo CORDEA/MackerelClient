@@ -10,12 +10,14 @@ import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.response.Monitor
 import jp.cordea.mackerelclient.utils.DialogUtils
 import jp.cordea.mackerelclient.viewmodel.MonitorSettingViewModel
+import javax.inject.Inject
 
 class MonitorSettingDeleteDialogFragment : DialogFragment() {
 
-    var onSuccess = { }
+    @Inject
+    lateinit var viewModel: MonitorSettingViewModel
 
-    private val viewModel by lazy { MonitorSettingViewModel(context!!) }
+    var onSuccess = { }
 
     private val monitor: Monitor
         get() = arguments!!.getSerializable(MONITOR_KEY) as Monitor

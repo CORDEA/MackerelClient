@@ -12,12 +12,14 @@ import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.response.Alert
 import jp.cordea.mackerelclient.utils.DialogUtils
 import jp.cordea.mackerelclient.viewmodel.AlertCloseViewModel
+import javax.inject.Inject
 
 class AlertCloseDialogFragment : DialogFragment() {
 
-    var onSuccess = { }
+    @Inject
+    lateinit var viewModel: AlertCloseViewModel
 
-    private val viewModel by lazy { AlertCloseViewModel(context!!) }
+    var onSuccess = { }
 
     private val alert: Alert
         get() = arguments!!.getSerializable(ALERT_KEY) as Alert

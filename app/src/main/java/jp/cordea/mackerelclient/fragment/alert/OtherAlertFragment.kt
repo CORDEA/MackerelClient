@@ -13,10 +13,12 @@ import jp.cordea.mackerelclient.adapter.OtherAlertAdapter
 import jp.cordea.mackerelclient.api.response.Alert
 import jp.cordea.mackerelclient.databinding.FragmentInsideAlertBinding
 import jp.cordea.mackerelclient.viewmodel.AlertViewModel
+import javax.inject.Inject
 
 class OtherAlertFragment : Fragment() {
 
-    private val viewModel by lazy { AlertViewModel(context!!) }
+    @Inject
+    lateinit var viewModel: AlertViewModel
 
     private val disposable = SerialDisposable()
     private val itemDisposable = SerialDisposable()

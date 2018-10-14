@@ -17,12 +17,15 @@ import jp.cordea.mackerelclient.adapter.HostAdapter
 import jp.cordea.mackerelclient.databinding.FragmentHostBinding
 import jp.cordea.mackerelclient.model.DisplayHostState
 import jp.cordea.mackerelclient.viewmodel.HostViewModel
+import javax.inject.Inject
 
 class HostFragment : Fragment() {
 
+    @Inject
+    lateinit var viewModel: HostViewModel
+
     private val disposable = SerialDisposable()
 
-    private val viewModel by lazy { HostViewModel(context!!) }
     private val adapter by lazy { HostAdapter(this) }
 
     private lateinit var binding: FragmentHostBinding

@@ -10,12 +10,14 @@ import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.response.Host
 import jp.cordea.mackerelclient.utils.DialogUtils
 import jp.cordea.mackerelclient.viewmodel.HostRetireViewModel
+import javax.inject.Inject
 
 class HostRetireDialogFragment : DialogFragment() {
 
-    var onSuccess = { }
+    @Inject
+    lateinit var viewModel: HostRetireViewModel
 
-    private val viewModel by lazy { HostRetireViewModel(context!!) }
+    var onSuccess = { }
 
     private val host: Host
         get() = arguments!!.getSerializable(HOST_KEY) as Host

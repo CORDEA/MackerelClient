@@ -13,10 +13,12 @@ import jp.cordea.mackerelclient.adapter.AlertAdapter
 import jp.cordea.mackerelclient.api.response.Alert
 import jp.cordea.mackerelclient.databinding.FragmentInsideAlertBinding
 import jp.cordea.mackerelclient.viewmodel.AlertViewModel
+import javax.inject.Inject
 
 class CriticalAlertFragment : Fragment() {
 
-    private val viewModel by lazy { AlertViewModel(context!!) }
+    @Inject
+    lateinit var viewModel: AlertViewModel
 
     private var alerts: List<Alert>? = null
 

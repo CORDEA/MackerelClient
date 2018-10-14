@@ -24,11 +24,13 @@ import jp.cordea.mackerelclient.fragment.MetricsDeleteConfirmDialogFragment
 import jp.cordea.mackerelclient.model.MetricsParameter
 import jp.cordea.mackerelclient.model.UserMetric
 import jp.cordea.mackerelclient.viewmodel.MetricsViewModel
+import javax.inject.Inject
 
 class ServiceMetricsActivity : AppCompatActivity(),
     MetricsDeleteConfirmDialogFragment.OnDeleteMetricsListener {
 
-    private val viewModel by lazy { MetricsViewModel(this) }
+    @Inject
+    lateinit var viewModel: MetricsViewModel
 
     private val disposable = SerialDisposable()
 

@@ -37,7 +37,8 @@ class MetricsActivity : AppCompatActivity(),
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
-    private val viewModel by lazy { MetricsViewModel(this) }
+    @Inject
+    lateinit var viewModel: MetricsViewModel
 
     private val disposable = SerialDisposable()
 

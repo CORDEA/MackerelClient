@@ -13,10 +13,12 @@ import jp.cordea.mackerelclient.adapter.ServiceAdapter
 import jp.cordea.mackerelclient.api.response.Service
 import jp.cordea.mackerelclient.databinding.FragmentServiceBinding
 import jp.cordea.mackerelclient.viewmodel.ServiceViewModel
+import javax.inject.Inject
 
 class ServiceFragment : Fragment() {
 
-    private val viewModel by lazy { ServiceViewModel(context!!) }
+    @Inject
+    lateinit var viewModel: ServiceViewModel
 
     private val disposable = SerialDisposable()
 
