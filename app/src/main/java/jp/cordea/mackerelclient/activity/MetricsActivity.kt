@@ -6,8 +6,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -124,20 +124,26 @@ class MetricsActivity : AppCompatActivity(),
     private fun refresh() {
         enableRefresh = false
         adapter.clear()
+        if (viewModel.isExistsMetricsDefinition) {
+            contentBinding.noticeContainer.isVisible = false
+            contentBinding.progress.isVisible = true
+            contentBinding.swipeRefresh.isVisible = true
+        } else {
+            contentBinding.noticeContainer.isVisible = true
+            contentBinding.progress.isVisible = false
+            contentBinding.swipeRefresh.isVisible = false
+            return
+        }
         viewModel
             .fetchMetrics()
             .subscribe({
                 adapter.add(it)
-                if (adapter.itemCount == 0) {
-                    contentBinding.noticeContainer.visibility = View.VISIBLE
-                    contentBinding.swipeRefresh.visibility = View.GONE
-                } else {
-                    contentBinding.swipeRefresh.visibility = View.VISIBLE
-                    contentBinding.noticeContainer.visibility = View.GONE
-                }
             }, {
                 adapter.add(MetricsLineDataSet.ERROR)
+                contentBinding.progress.isVisible = false
+                enableRefresh = true
             }, {
+                contentBinding.progress.isVisible = false
                 enableRefresh = true
             })
             .run(disposable::set)

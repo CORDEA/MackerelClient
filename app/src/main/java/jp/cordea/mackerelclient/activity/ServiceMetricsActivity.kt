@@ -6,8 +6,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.android.AndroidInjection
@@ -112,21 +112,27 @@ class ServiceMetricsActivity : AppCompatActivity(),
 
     private fun refresh() {
         enableRefresh = false
+
+        adapter.clear()
+        if (viewModel.isExistsMetricsDefinition) {
+            contentBinding.noticeContainer.isVisible = false
+            contentBinding.progress.isVisible = true
+            contentBinding.swipeRefresh.isVisible = true
+        } else {
+            contentBinding.noticeContainer.isVisible = true
+            contentBinding.progress.isVisible = false
+            contentBinding.swipeRefresh.isVisible = false
+            return
+        }
         viewModel.fetchMetrics()
             .subscribe({
                 adapter.add(it)
-                contentBinding.run {
-                    if (adapter.itemCount == 0) {
-                        noticeContainer.visibility = View.VISIBLE
-                        swipeRefresh.visibility = View.GONE
-                    } else {
-                        swipeRefresh.visibility = View.VISIBLE
-                        noticeContainer.visibility = View.GONE
-                    }
-                }
             }, {
                 adapter.add(MetricsLineDataSet.ERROR)
+                contentBinding.progress.isVisible = false
+                enableRefresh = true
             }, {
+                contentBinding.progress.isVisible = false
                 enableRefresh = true
             })
             .run(disposable::set)

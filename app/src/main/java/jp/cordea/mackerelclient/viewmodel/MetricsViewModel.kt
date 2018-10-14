@@ -15,6 +15,10 @@ class MetricsViewModel @Inject constructor(
 ) {
     private lateinit var hostId: String
 
+    private val metricsDefinition by lazy { repository.getMetricsDefinition(hostId) }
+
+    val isExistsMetricsDefinition get() = metricsDefinition.isNotEmpty()
+
     fun start(hostId: String) {
         this.hostId = hostId
     }
@@ -26,7 +30,7 @@ class MetricsViewModel @Inject constructor(
     fun fetchMetrics(): Observable<MetricsLineDataSet> {
         val from = DateUtils.getEpochSec(1)
         val to = DateUtils.getEpochSec(0)
-        return Observable.fromIterable(repository.getMetricsDefinition(hostId))
+        return Observable.fromIterable(metricsDefinition)
             .map { UserDefinedMetrics.from(it) }
             .concatMapSingle { metrics ->
                 repository.getMetrics(hostId, metrics, from, to)
