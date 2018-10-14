@@ -11,12 +11,11 @@ import androidx.fragment.app.Fragment
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.SerialDisposable
-import io.reactivex.subjects.PublishSubject
+import jp.cordea.mackerelclient.AlertItemChangedSink
+import jp.cordea.mackerelclient.AlertResultReceivedSink
 import jp.cordea.mackerelclient.adapter.AlertFragmentPagerAdapter
 import jp.cordea.mackerelclient.api.MackerelApiClient
-import jp.cordea.mackerelclient.api.response.Alerts
 import jp.cordea.mackerelclient.databinding.FragmentAlertBinding
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class AlertFragment : Fragment() {
@@ -24,9 +23,11 @@ class AlertFragment : Fragment() {
     @Inject
     lateinit var apiClient: MackerelApiClient
 
-    val onOtherAlertFragmentResult = PublishSubject.create<Boolean>()
-    val onCriticalAlertFragmentResult = PublishSubject.create<Boolean>()
-    val onAlertItemChanged = PublishSubject.create<Alerts>()
+    @Inject
+    lateinit var alertItemChangedSink: AlertItemChangedSink
+
+    @Inject
+    lateinit var alertResultReceivedSink: AlertResultReceivedSink
 
     private val disposable = SerialDisposable()
 
@@ -60,30 +61,20 @@ class AlertFragment : Fragment() {
     private fun requestApi() {
         apiClient
             .getAlerts()
-            .delay(100, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                onAlertItemChanged.onNext(it)
+                alertItemChangedSink.notifyAlertItemChanged(it)
             }, {
-                onAlertItemChanged.onError(it)
+                alertItemChangedSink.notifyAlertItemChanged(it)
             })
             .run(disposable::set)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            CriticalAlertFragment.REQUEST_CODE -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    onCriticalAlertFragmentResult.onNext(true)
-                }
-            }
-            OtherAlertFragment.REQUEST_CODE -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    onOtherAlertFragmentResult.onNext(true)
-                }
-            }
+        if (resultCode != Activity.RESULT_OK) {
+            return
         }
+        alertResultReceivedSink.notifyAlertResultReceived(requestCode)
     }
 
     override fun onDestroy() {

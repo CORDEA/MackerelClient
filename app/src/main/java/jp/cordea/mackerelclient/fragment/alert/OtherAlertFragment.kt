@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.SerialDisposable
+import jp.cordea.mackerelclient.OtherAlertItemChangedSource
+import jp.cordea.mackerelclient.OtherAlertResultReceivedSource
 import jp.cordea.mackerelclient.activity.AlertDetailActivity
 import jp.cordea.mackerelclient.adapter.OtherAlertAdapter
 import jp.cordea.mackerelclient.api.response.Alert
@@ -19,6 +21,12 @@ class OtherAlertFragment : Fragment() {
 
     @Inject
     lateinit var viewModel: AlertViewModel
+
+    @Inject
+    lateinit var alertItemChangedSource: OtherAlertItemChangedSource
+
+    @Inject
+    lateinit var alertResultReceivedSource: OtherAlertResultReceivedSource
 
     private val disposable = SerialDisposable()
     private val itemDisposable = SerialDisposable()
@@ -47,16 +55,23 @@ class OtherAlertFragment : Fragment() {
         val context = context ?: return
         val parentFragment = parentFragment ?: return
 
-        (parentFragment as AlertFragment)
-            .onAlertItemChanged
-            .subscribe({ alert ->
-                alerts = alert?.alerts?.filter { it.status != "CRITICAL" }
+        alertItemChangedSource
+            .onAlertItemChanged()
+            .subscribe({
+                alerts = it
                 refresh()
             }, {
                 alerts = null
                 refresh()
             })
             .run(itemDisposable::set)
+
+        alertResultReceivedSource
+            .onAlertResultReceived()
+            .subscribe({
+                refresh()
+            }, {})
+            .run(resultDisposable::set)
 
         binding.error.retryButton.setOnClickListener {
             binding.progressLayout.visibility = View.VISIBLE
@@ -72,15 +87,6 @@ class OtherAlertFragment : Fragment() {
             val intent = AlertDetailActivity
                 .createIntent(context, binding.listView.adapter.getItem(i) as Alert)
             parentFragment.startActivityForResult(intent, OtherAlertFragment.REQUEST_CODE)
-        }
-
-        (parentFragment as? AlertFragment)?.let { fragment ->
-            fragment.onOtherAlertFragmentResult
-                .filter { it }
-                .subscribe({
-                    refresh()
-                }, {})
-                .run(resultDisposable::set)
         }
     }
 

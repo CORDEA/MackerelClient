@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.SerialDisposable
+import jp.cordea.mackerelclient.CriticalAlertItemChangedSource
+import jp.cordea.mackerelclient.CriticalAlertResultReceivedSource
 import jp.cordea.mackerelclient.activity.AlertDetailActivity
 import jp.cordea.mackerelclient.adapter.AlertAdapter
 import jp.cordea.mackerelclient.api.response.Alert
@@ -19,6 +21,12 @@ class CriticalAlertFragment : Fragment() {
 
     @Inject
     lateinit var viewModel: AlertViewModel
+
+    @Inject
+    lateinit var alertItemChangedSource: CriticalAlertItemChangedSource
+
+    @Inject
+    lateinit var alertResultReceivedSource: CriticalAlertResultReceivedSource
 
     private var alerts: List<Alert>? = null
 
@@ -47,16 +55,23 @@ class CriticalAlertFragment : Fragment() {
         val context = context ?: return
         val parentFragment = parentFragment ?: return
 
-        (parentFragment as AlertFragment)
-            .onAlertItemChanged
+        alertItemChangedSource
+            .onAlertItemChanged()
             .subscribe({
-                alerts = it?.alerts?.filter { it.status.equals("CRITICAL") }
+                alerts = it
                 refresh()
             }, {
                 alerts = null
                 refresh()
             })
             .run(itemDisposable::set)
+
+        alertResultReceivedSource
+            .onAlertResultReceived()
+            .subscribe({
+                refresh()
+            }, {})
+            .run(resultDisposable::set)
 
         binding.error.retryButton.setOnClickListener {
             binding.progressLayout.visibility = View.VISIBLE
@@ -72,15 +87,6 @@ class CriticalAlertFragment : Fragment() {
             val intent = AlertDetailActivity
                 .createIntent(context, binding.listView.adapter.getItem(i) as Alert)
             parentFragment.startActivityForResult(intent, CriticalAlertFragment.REQUEST_CODE)
-        }
-
-        (parentFragment as? AlertFragment)?.let { fragment ->
-            fragment.onCriticalAlertFragmentResult
-                .filter { it }
-                .subscribe({
-                    refresh()
-                }, {})
-                .run(resultDisposable::set)
         }
     }
 
