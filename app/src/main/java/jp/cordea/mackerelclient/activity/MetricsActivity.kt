@@ -11,6 +11,7 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.Lazy
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -23,7 +24,6 @@ import jp.cordea.mackerelclient.adapter.MetricsAdapter
 import jp.cordea.mackerelclient.databinding.ActivityMetricsBinding
 import jp.cordea.mackerelclient.databinding.ContentMetricsBinding
 import jp.cordea.mackerelclient.fragment.MetricsDeleteConfirmDialogFragment
-import jp.cordea.mackerelclient.model.MetricsLineDataSet
 import jp.cordea.mackerelclient.viewmodel.MetricsViewModel
 import javax.inject.Inject
 
@@ -35,11 +35,12 @@ class MetricsActivity : AppCompatActivity(),
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     @Inject
-    lateinit var viewModel: MetricsViewModel
+    lateinit var viewModelProvider: Lazy<MetricsViewModel>
 
     private val hostId by lazy { intent.getStringExtra(HOST_ID_KEY) }
 
     private val disposable = SerialDisposable()
+    private val viewModel get() = viewModelProvider.get()
 
     private var needRefresh = false
     private var enableRefresh = false
@@ -56,30 +57,32 @@ class MetricsActivity : AppCompatActivity(),
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         contentBinding.recyclerView.layoutManager = LinearLayoutManager(this)
-        viewModel.start(hostId)
-
         contentBinding.swipeRefresh.setOnRefreshListener {
             if (enableRefresh) {
-                refresh()
+                refresh(true)
             }
             contentBinding.swipeRefresh.isRefreshing = false
         }
         contentBinding.templateButton.setOnClickListener {
             contentBinding.templateButton.isClickable = false
             viewModel.setDefaultUserMetrics(hostId)
-            refresh()
+            refresh(true)
         }
-
-        needRefresh = true
         adapter = MetricsAdapter(this, MetricsType.HOST, hostId)
         contentBinding.recyclerView.adapter = adapter
         contentBinding.recyclerView.addItemDecoration(ListItemDecoration(this))
+
+        needRefresh = true
+
+        if (savedInstanceState == null) {
+            viewModel.start(hostId)
+        }
     }
 
     override fun onResume() {
         super.onResume()
         if (needRefresh) {
-            refresh()
+            refresh(false)
             needRefresh = false
         }
     }
@@ -121,7 +124,7 @@ class MetricsActivity : AppCompatActivity(),
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
 
-    private fun refresh() {
+    private fun refresh(forceRefresh: Boolean) {
         enableRefresh = false
         adapter.clear()
         if (viewModel.isExistsMetricsDefinition) {
@@ -135,14 +138,10 @@ class MetricsActivity : AppCompatActivity(),
             return
         }
         viewModel
-            .fetchMetrics()
+            .fetchMetrics(forceRefresh)
             .subscribe({
                 adapter.add(it)
-            }, {
-                adapter.add(MetricsLineDataSet.ERROR)
-                contentBinding.progress.isVisible = false
-                enableRefresh = true
-            }, {
+            }, {}, {
                 contentBinding.progress.isVisible = false
                 enableRefresh = true
             })

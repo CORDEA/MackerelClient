@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.Lazy
 import dagger.android.AndroidInjection
 import io.reactivex.disposables.SerialDisposable
 import jp.cordea.mackerelclient.ListItemDecoration
@@ -19,7 +20,6 @@ import jp.cordea.mackerelclient.adapter.MetricsAdapter
 import jp.cordea.mackerelclient.databinding.ActivityServiceMetricsBinding
 import jp.cordea.mackerelclient.databinding.ContentServiceMetricsBinding
 import jp.cordea.mackerelclient.fragment.MetricsDeleteConfirmDialogFragment
-import jp.cordea.mackerelclient.model.MetricsLineDataSet
 import jp.cordea.mackerelclient.viewmodel.ServiceMetricsViewModel
 import javax.inject.Inject
 
@@ -27,9 +27,10 @@ class ServiceMetricsActivity : AppCompatActivity(),
     MetricsDeleteConfirmDialogFragment.OnDeleteMetricsListener {
 
     @Inject
-    lateinit var viewModel: ServiceMetricsViewModel
+    lateinit var viewModelProvider: Lazy<ServiceMetricsViewModel>
 
     private val disposable = SerialDisposable()
+    private val viewModel get() = viewModelProvider.get()
 
     private var needRefresh = false
     private var enableRefresh = false
@@ -49,27 +50,29 @@ class ServiceMetricsActivity : AppCompatActivity(),
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         serviceName = intent.getStringExtra(SERVICE_NAME_KEY)
-        viewModel.start(serviceName)
 
         adapter = MetricsAdapter(this, MetricsType.SERVICE, serviceName)
         contentBinding.recyclerView.adapter = adapter
         contentBinding.recyclerView.addItemDecoration(ListItemDecoration(this))
         contentBinding.recyclerView.layoutManager = LinearLayoutManager(this)
-
         contentBinding.swipeRefresh.setOnRefreshListener {
             if (enableRefresh) {
-                refresh()
+                refresh(true)
             }
             contentBinding.swipeRefresh.isRefreshing = false
         }
 
         needRefresh = true
+
+        if (savedInstanceState == null) {
+            viewModel.start(serviceName)
+        }
     }
 
     override fun onResume() {
         super.onResume()
         if (needRefresh) {
-            refresh()
+            refresh(false)
             needRefresh = false
         }
     }
@@ -110,9 +113,8 @@ class ServiceMetricsActivity : AppCompatActivity(),
         adapter.removeAt(id)
     }
 
-    private fun refresh() {
+    private fun refresh(forceRefresh: Boolean) {
         enableRefresh = false
-
         adapter.clear()
         if (viewModel.isExistsMetricsDefinition) {
             contentBinding.noticeContainer.isVisible = false
@@ -124,14 +126,11 @@ class ServiceMetricsActivity : AppCompatActivity(),
             contentBinding.swipeRefresh.isVisible = false
             return
         }
-        viewModel.fetchMetrics()
+        viewModel
+            .fetchMetrics(forceRefresh)
             .subscribe({
                 adapter.add(it)
-            }, {
-                adapter.add(MetricsLineDataSet.ERROR)
-                contentBinding.progress.isVisible = false
-                enableRefresh = true
-            }, {
+            }, {}, {
                 contentBinding.progress.isVisible = false
                 enableRefresh = true
             })
