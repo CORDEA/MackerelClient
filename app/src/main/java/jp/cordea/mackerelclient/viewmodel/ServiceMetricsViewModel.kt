@@ -33,6 +33,7 @@ class ServiceMetricsViewModel : ViewModel() {
         return if (!forceRefresh && lineDataSet.isNotEmpty()) {
             Observable.fromIterable(lineDataSet)
         } else {
+            lineDataSet.clear()
             Observable.fromIterable(metricsDefinition)
                 .map { UserDefinedMetrics.from(it) }
                 .concatMapSingle { metrics ->

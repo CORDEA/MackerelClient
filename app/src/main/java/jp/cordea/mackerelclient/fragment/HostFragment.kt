@@ -7,15 +7,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.android.support.AndroidSupportInjection
-import io.reactivex.disposables.SerialDisposable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.activity.HostDetailActivity
 import jp.cordea.mackerelclient.adapter.HostAdapter
 import jp.cordea.mackerelclient.databinding.FragmentHostBinding
-import jp.cordea.mackerelclient.model.DisplayHostState
 import jp.cordea.mackerelclient.viewmodel.HostViewModel
 import javax.inject.Inject
 
@@ -24,9 +27,9 @@ class HostFragment : Fragment() {
     @Inject
     lateinit var viewModel: HostViewModel
 
-    private val disposable = SerialDisposable()
-
     private val adapter by lazy { HostAdapter(this) }
+
+    private val compositeDisposable = CompositeDisposable()
 
     private lateinit var binding: FragmentHostBinding
 
@@ -50,53 +53,53 @@ class HostFragment : Fragment() {
         binding.recyclerView.adapter = adapter
         binding.recyclerView.addItemDecoration(ListItemDecoration(context!!))
 
-        refresh()
+        viewModel.adapterItems
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { adapter.update(it.first.hosts, it.second.tsdbs) }
+            .addTo(compositeDisposable)
+
+        viewModel.isProgressLayoutVisible
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { binding.progressLayout.isVisible = it }
+            .addTo(compositeDisposable)
+
+        viewModel.isSwipeRefreshLayoutVisible
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { binding.swipeRefresh.isVisible = it }
+            .addTo(compositeDisposable)
+
+        viewModel.isErrorLayoutVisible
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { binding.error.root.isVisible = it }
+            .addTo(compositeDisposable)
+
+        viewModel.isRefreshing
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { binding.swipeRefresh.isRefreshing = it }
+            .addTo(compositeDisposable)
+
         binding.swipeRefresh.setOnRefreshListener {
-            refresh()
+            viewModel.refresh(true)
         }
         binding.error.retryButton.setOnClickListener {
-            binding.progressLayout.visibility = View.VISIBLE
-            binding.error.root.visibility = View.GONE
-            refresh()
+            viewModel.clickedRetryButton()
         }
-    }
 
-    private fun refresh() {
-        binding.swipeRefresh.isRefreshing = true
-        getHosts(viewModel.displayHostState)
-    }
-
-    private fun getHosts(items: List<DisplayHostState>) {
-        viewModel
-            .getHosts(items)
-            .flatMap({ viewModel.getLatestMetrics(it).toMaybe() }, { hosts, tsdbs ->
-                adapter.update(hosts.hosts, tsdbs.tsdbs)
-            })
-            .subscribe({
-                binding.progressLayout.visibility = View.GONE
-                binding.swipeRefresh.visibility = View.VISIBLE
-                binding.swipeRefresh.isRefreshing = false
-            }, {
-                binding.swipeRefresh.isRefreshing = false
-                binding.error.root.visibility = View.VISIBLE
-                binding.progressLayout.visibility = View.GONE
-                binding.swipeRefresh.visibility = View.GONE
-            })
-            .run(disposable::set)
+        viewModel.refresh(false)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == HostDetailActivity.REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                refresh()
+                viewModel.refresh(true)
             }
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        disposable.dispose()
+        compositeDisposable.clear()
     }
 
     companion object {

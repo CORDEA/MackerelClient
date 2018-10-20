@@ -1,79 +1,90 @@
 package jp.cordea.mackerelclient.viewmodel
 
 import android.content.Context
-import io.reactivex.Maybe
+import androidx.lifecycle.ViewModel
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.realm.Realm
-import io.realm.kotlin.createObject
-import jp.cordea.mackerelclient.MetricsType
+import io.reactivex.disposables.SerialDisposable
+import io.reactivex.subjects.PublishSubject
 import jp.cordea.mackerelclient.R
-import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Hosts
 import jp.cordea.mackerelclient.api.response.Tsdbs
 import jp.cordea.mackerelclient.model.DisplayHostState
-import jp.cordea.mackerelclient.model.UserMetric
+import jp.cordea.mackerelclient.repository.HostRepository
 import javax.inject.Inject
 
-class HostViewModel @Inject constructor(
-    private val context: Context,
-    private val apiClient: MackerelApiClient
-) {
+typealias HostsWithTsdbs = Pair<Hosts, Tsdbs>
 
-    val displayHostState: List<DisplayHostState>
-        get() {
-            val realm = Realm.getDefaultInstance()
-            initDisplayHostState(realm)
-            return realm
-                .copyFromRealm(realm.where(DisplayHostState::class.java).findAll())
-                .filter { it.isDisplay ?: false }
-                .also { realm.close() }
-        }
+class HostViewModel : ViewModel() {
+    @Inject
+    lateinit var context: Context
 
-    fun getHosts(items: List<DisplayHostState>): Maybe<Hosts> =
-        apiClient
-            .getHosts(items.map { it.name })
-            .filter {
-                deleteOldMetricData(it.hosts.map { it.id })
-                true
-            }
-            .observeOn(AndroidSchedulers.mainThread())
+    @Inject
+    lateinit var repository: HostRepository
 
-    fun getLatestMetrics(hosts: Hosts): Single<Tsdbs> =
-        apiClient
-            .getLatestMetrics(
-                hosts.hosts.map { it.id },
-                arrayListOf(loadavgMetricsKey, cpuMetricsKey, memoryMetricsKey)
-            )
-            .observeOn(AndroidSchedulers.mainThread())
+    private var hosts: Hosts? = null
+    private var tsdbs: Tsdbs? = null
 
-    private fun initDisplayHostState(realm: Realm) {
-        if (realm.where(DisplayHostState::class.java).findAll().isNotEmpty()) {
-            return
-        }
-        realm.executeTransaction {
-            for (key in context.resources.getStringArray(R.array.setting_host_cell_arr)) {
-                it.createObject<DisplayHostState>(key).apply {
-                    isDisplay = (key == "standby" || key == "working")
-                }
-            }
-        }
+    private val serialDisposable = SerialDisposable()
+
+    val adapterItems = PublishSubject.create<HostsWithTsdbs>()
+    val isProgressLayoutVisible = PublishSubject.create<Boolean>()
+    val isSwipeRefreshLayoutVisible = PublishSubject.create<Boolean>()
+    val isErrorLayoutVisible = PublishSubject.create<Boolean>()
+    val isRefreshing = PublishSubject.create<Boolean>()
+
+    private val displayHostState: List<DisplayHostState>
+        get() =
+            repository.getDisplayHostStates(
+                context.resources.getStringArray(R.array.setting_host_cell_arr)
+            ).filter { it.isDisplay }
+
+    fun clickedRetryButton() {
+        isProgressLayoutVisible.onNext(true)
+        isErrorLayoutVisible.onNext(false)
+        refresh(true)
     }
 
-    private fun deleteOldMetricData(hosts: List<String>) {
-        val realm = Realm.getDefaultInstance()
-        val results = realm.where(UserMetric::class.java)
-            .equalTo("type", MetricsType.HOST.name).findAll()
-        val olds = results.map { it.parentId }.distinct().filter { !hosts.contains(it) }
-        realm.executeTransaction {
-            for (old in olds) {
-                realm.where(UserMetric::class.java)
-                    .equalTo("parentId", old)
-                    .findAll()
-                    .deleteAllFromRealm()
-            }
+    fun refresh(forceRefresh: Boolean) {
+        isRefreshing.onNext(true)
+        if (forceRefresh && hosts != null && tsdbs != null) {
+            Single.just(hosts!! to tsdbs!!)
+        } else {
+            getHosts(displayHostState)
+                .flatMap { hosts ->
+                    getLatestMetrics(hosts).map { hosts to it }
+                }
         }
-        realm.close()
+            .subscribe({
+                adapterItems.onNext(it)
+                isProgressLayoutVisible.onNext(false)
+                isSwipeRefreshLayoutVisible.onNext(true)
+                isRefreshing.onNext(false)
+            }, {
+                isErrorLayoutVisible.onNext(true)
+                isProgressLayoutVisible.onNext(false)
+                isSwipeRefreshLayoutVisible.onNext(false)
+                isRefreshing.onNext(false)
+            })
+            .run(serialDisposable::set)
+    }
+
+    private fun getHosts(items: List<DisplayHostState>): Single<Hosts> =
+        repository.getHosts(items)
+            .doOnSuccess { hosts ->
+                repository.deleteOldMetrics(hosts.hosts.map { it.id })
+            }
+            .doOnSuccess { hosts = it }
+
+    private fun getLatestMetrics(hosts: Hosts): Single<Tsdbs> =
+        repository.getLatestMetrics(
+            hosts,
+            listOf(loadavgMetricsKey, cpuMetricsKey, memoryMetricsKey)
+        )
+            .doOnSuccess { tsdbs = it }
+
+    override fun onCleared() {
+        super.onCleared()
+        serialDisposable.dispose()
     }
 
     companion object {
