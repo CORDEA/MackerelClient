@@ -5,6 +5,7 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.realm.Realm
+import io.realm.kotlin.createObject
 import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.MackerelApiClient
@@ -47,11 +48,13 @@ class HostViewModel @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
 
     private fun initDisplayHostState(realm: Realm) {
-        if (realm.where(DisplayHostState::class.java).findAll().size == 0) {
-            realm.executeTransaction {
-                for (key in context.resources.getStringArray(R.array.setting_host_cell_arr)) {
-                    val item = it.createObject(DisplayHostState::class.java, key)
-                    item.isDisplay = (key == "standby" || key == "working")
+        if (realm.where(DisplayHostState::class.java).findAll().isNotEmpty()) {
+            return
+        }
+        realm.executeTransaction {
+            for (key in context.resources.getStringArray(R.array.setting_host_cell_arr)) {
+                it.createObject<DisplayHostState>(key).apply {
+                    isDisplay = (key == "standby" || key == "working")
                 }
             }
         }

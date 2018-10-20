@@ -15,6 +15,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.SerialDisposable
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
+import io.realm.kotlin.createObject
 import jp.cordea.mackerelclient.BuildConfig
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.LicenseActivity
@@ -50,11 +51,14 @@ class SettingFragment : Fragment(), SettingStatusSelectionDialogFragment.OnUpdat
             .fromCallable { Realm.getDefaultInstance() }
             .subscribeOn(Schedulers.io())
             .map { realm ->
-                if (realm.where(DisplayHostState::class.java).findAll().size == 0) {
-                    realm.executeTransaction {
-                        for (key in resources.getStringArray(R.array.setting_host_cell_arr)) {
-                            val item = it.createObject(DisplayHostState::class.java, key)
-                            item.isDisplay = (key == "standby" || key == "working")
+                if (realm.where(DisplayHostState::class.java).findAll().isNotEmpty()) {
+                    realm.close()
+                    return@map
+                }
+                realm.executeTransaction {
+                    for (key in resources.getStringArray(R.array.setting_host_cell_arr)) {
+                        it.createObject<DisplayHostState>(key).apply {
+                            isDisplay = (key == "standby" || key == "working")
                         }
                     }
                 }
@@ -86,7 +90,7 @@ class SettingFragment : Fragment(), SettingStatusSelectionDialogFragment.OnUpdat
 
     override fun onUpdateStatus() {
         binding.hostTextView.text = realm.where(DisplayHostState::class.java).findAll()
-            .filter { it.isDisplay!! }
+            .filter { it.isDisplay }
             .map { it.name }
             .joinToString(", ") { StatusUtils.requestNameToString(it) }
     }

@@ -3,6 +3,7 @@ package jp.cordea.mackerelclient.viewmodel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.realm.Realm
+import io.realm.kotlin.createObject
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.Users
 import jp.cordea.mackerelclient.model.UserKey
@@ -41,29 +42,27 @@ class LoginViewModel @Inject constructor(
         onFailure: () -> Unit
     ) {
         val realm = Realm.getDefaultInstance()
-        realm.beginTransaction()
         val maxId: Number? = realm.where(UserKey::class.java).max("id")
-        val user = UserKey()
         val id = (maxId?.toInt() ?: -1) + 1
-        user.id = id
-        user.key = key
-
         if (email.isNullOrBlank()) {
-            realm.copyToRealm(user)
-            realm.commitTransaction()
+            realm.executeTransaction {
+                it.createObject<UserKey>(id).apply { this.key = key }
+            }
             realm.close()
             onSuccess(id)
         } else {
             val response = it.users.filter { it.email == email }
             if (response.isEmpty()) {
-                realm.cancelTransaction()
                 realm.close()
                 onFailure()
             } else {
-                user.email = response.first().email
-                user.name = response.first().screenName
-                realm.copyToRealm(user)
-                realm.commitTransaction()
+                realm.executeTransaction {
+                    it.createObject<UserKey>(id).apply {
+                        this.key = key
+                        this.email = response.first().email
+                        this.name = response.first().screenName
+                    }
+                }
                 realm.close()
                 onSuccess(id)
             }

@@ -2,20 +2,12 @@ package jp.cordea.mackerelclient.model
 
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
-import io.realm.annotations.Required
 
-open class UserMetric : RealmObject() {
-    @PrimaryKey
-    open var id: Int = 0
-
-    @Required
-    open var parentId: String? = null
-
-    @Required
-    open var type: String? = null
-    open var label: String? = null
-
-    @Required
-    open var metric0: String? = null
-    open var metric1: String? = null
-}
+open class UserMetric(
+    @PrimaryKey var id: Int = 0,
+    var parentId: String = "",
+    var type: String = "",
+    var label: String? = null,
+    var metric0: String = "",
+    var metric1: String? = null
+) : RealmObject()
