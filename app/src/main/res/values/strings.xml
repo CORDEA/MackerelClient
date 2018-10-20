@@ -73,6 +73,7 @@
     <string name="sign_in_error_dialog_title">サインインに失敗しました</string>
     <string name="sign_in_error_dialog_message_mail">入力されたメールアドレスに該当するユーザーが存在しません。</string>
     <string name="sign_in_error_dialog_message_key">API key を入力してください。</string>
+    <string name="sign_in_error_dialog_message_other">入力内容やネットワークの状態を確認してください。</string>
 
     <string name="metrics_card_delete_dialog_title">このカードを削除しますか？</string>
 

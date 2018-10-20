@@ -2,9 +2,11 @@ package jp.cordea.mackerelclient.model
 
 import android.content.Context
 import android.preference.PreferenceManager
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class Preferences(context: Context) {
-
+@Singleton
+class Preferences @Inject constructor(context: Context) {
     private val pref = PreferenceManager.getDefaultSharedPreferences(context)
 
     var userId: Int
@@ -20,7 +22,6 @@ class Preferences(context: Context) {
     }
 
     companion object {
-
         private const val USER_ID_KEY = "UserIdKey"
     }
 }

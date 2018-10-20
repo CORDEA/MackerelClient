@@ -1,71 +1,85 @@
 package jp.cordea.mackerelclient.viewmodel
 
+import android.text.SpannableStringBuilder
+import androidx.lifecycle.ViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.realm.Realm
-import io.realm.kotlin.createObject
-import jp.cordea.mackerelclient.api.MackerelApiClient
-import jp.cordea.mackerelclient.api.response.Users
-import jp.cordea.mackerelclient.model.UserKey
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.subjects.PublishSubject
+import jp.cordea.mackerelclient.model.Preferences
+import jp.cordea.mackerelclient.navigator.LoginNavigator
+import jp.cordea.mackerelclient.repository.LoginRepository
+import jp.cordea.mackerelclient.repository.WrongEmailException
 import javax.inject.Inject
 
-class LoginViewModel @Inject constructor(
-    private val apiClient: MackerelApiClient
-) {
+class LoginViewModel : ViewModel() {
+    @Inject
+    lateinit var repository: LoginRepository
 
-    fun logIn(
-        key: String,
-        email: String?,
-        autoLogin: Boolean,
-        onSuccess: (id: Int?) -> Unit,
-        onFailure: () -> Unit
-    ): Disposable {
-        return apiClient
-            .getUsers(key)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                if (autoLogin) {
-                    onSuccess(null)
-                } else {
-                    storeLoginUser(it, key, email, onSuccess, onFailure)
-                }
-            }, {
-                onFailure()
-            })
+    @Inject
+    lateinit var navigator: LoginNavigator
+
+    @Inject
+    lateinit var preferences: Preferences
+
+    private val compositeDisposable = CompositeDisposable()
+
+    val isProgressBarVisible = PublishSubject.create<Boolean>()
+    val isContainerVisible = PublishSubject.create<Boolean>()
+    val apiKey = PublishSubject.create<SpannableStringBuilder>()
+    val email = PublishSubject.create<SpannableStringBuilder>()
+
+    fun clickedButton(
+        apiKey: String,
+        email: String
+    ) {
+        if (apiKey.isBlank()) {
+            navigator.showKeyRequiredErrorDialog()
+        } else {
+            isProgressBarVisible.onNext(true)
+            isContainerVisible.onNext(false)
+            repository.login(apiKey.trim(), email)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    preferences.userId = it
+                    navigator.navigateToMain()
+                }, {
+                    isContainerVisible.onNext(true)
+                    isProgressBarVisible.onNext(false)
+                    if (it is WrongEmailException) {
+                        navigator.showWrongEmailErrorDialog()
+                    } else {
+                        navigator.showErrorDialog()
+                    }
+                })
+                .addTo(compositeDisposable)
+        }
     }
 
-    private fun storeLoginUser(
-        it: Users,
-        key: String,
-        email: String?,
-        onSuccess: (id: Int?) -> Unit,
-        onFailure: () -> Unit
-    ) {
-        val realm = Realm.getDefaultInstance()
-        val maxId: Number? = realm.where(UserKey::class.java).max("id")
-        val id = (maxId?.toInt() ?: -1) + 1
-        if (email.isNullOrBlank()) {
-            realm.executeTransaction {
-                it.createObject<UserKey>(id).apply { this.key = key }
-            }
-            realm.close()
-            onSuccess(id)
-        } else {
-            val response = it.users.filter { it.email == email }
-            if (response.isEmpty()) {
-                realm.close()
-                onFailure()
-            } else {
-                realm.executeTransaction {
-                    it.createObject<UserKey>(id).apply {
-                        this.key = key
-                        this.email = response.first().email
-                        this.name = response.first().screenName
-                    }
+    fun autoLogin() {
+        val key = repository.getLoginUser(preferences.userId) ?: return
+        isProgressBarVisible.onNext(true)
+        isContainerVisible.onNext(false)
+        apiKey.onNext(SpannableStringBuilder(key.key))
+        key.email?.let { email.onNext(SpannableStringBuilder(it)) }
+        repository.autoLogin(key.key)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                navigator.navigateToMain()
+            }, {
+                isContainerVisible.onNext(true)
+                isProgressBarVisible.onNext(false)
+                if (it is WrongEmailException) {
+                    navigator.showWrongEmailErrorDialog()
+                } else {
+                    navigator.showErrorDialog()
                 }
-                realm.close()
-                onSuccess(id)
-            }
-        }
+            })
+            .addTo(compositeDisposable)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.clear()
     }
 }
