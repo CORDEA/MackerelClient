@@ -5,14 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import dagger.android.support.AndroidSupportInjection
-import io.reactivex.disposables.SerialDisposable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
 import jp.cordea.mackerelclient.OtherAlertItemChangedSource
 import jp.cordea.mackerelclient.OtherAlertResultReceivedSource
 import jp.cordea.mackerelclient.activity.AlertDetailActivity
 import jp.cordea.mackerelclient.adapter.OtherAlertAdapter
-import jp.cordea.mackerelclient.api.response.Alert
 import jp.cordea.mackerelclient.databinding.FragmentInsideAlertBinding
 import jp.cordea.mackerelclient.viewmodel.AlertViewModel
 import javax.inject.Inject
@@ -23,18 +25,17 @@ class OtherAlertFragment : Fragment() {
     lateinit var viewModel: AlertViewModel
 
     @Inject
+    lateinit var adapter: OtherAlertAdapter
+
+    @Inject
     lateinit var alertItemChangedSource: OtherAlertItemChangedSource
 
     @Inject
     lateinit var alertResultReceivedSource: OtherAlertResultReceivedSource
 
-    private val disposable = SerialDisposable()
-    private val itemDisposable = SerialDisposable()
-    private val resultDisposable = SerialDisposable()
+    private val compositeDisposable = CompositeDisposable()
 
     private lateinit var binding: FragmentInsideAlertBinding
-
-    private var alerts: List<Alert>? = null
 
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
@@ -54,69 +55,64 @@ class OtherAlertFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         val context = context ?: return
         val parentFragment = parentFragment ?: return
+        binding.listView.adapter = adapter
+
+        viewModel.adapterItems
+            .subscribeBy { adapter.update(it) }
+            .addTo(compositeDisposable)
+
+        viewModel.isRefreshing
+            .subscribeBy { binding.swipeRefresh.isRefreshing = it }
+            .addTo(compositeDisposable)
+
+        viewModel.isSwipeRefreshLayoutVisible
+            .subscribeBy { binding.swipeRefresh.isVisible = it }
+            .addTo(compositeDisposable)
+
+        viewModel.isProgressLayoutVisible
+            .subscribeBy { binding.progressLayout.isVisible = it }
+            .addTo(compositeDisposable)
+
+        viewModel.isErrorVisible
+            .subscribeBy { binding.error.root.isVisible = it }
+            .addTo(compositeDisposable)
 
         alertItemChangedSource
             .onAlertItemChanged()
             .subscribe({
-                alerts = it
-                refresh()
+                viewModel.updateCache(it)
+                viewModel.refresh(false)
             }, {
-                alerts = null
-                refresh()
+                viewModel.clearCache()
+                viewModel.refresh(false)
             })
-            .run(itemDisposable::set)
+            .addTo(compositeDisposable)
 
         alertResultReceivedSource
             .onAlertResultReceived()
-            .subscribe({
-                refresh()
-            }, {})
-            .run(resultDisposable::set)
+            .subscribeBy { viewModel.refresh(false) }
+            .addTo(compositeDisposable)
 
         binding.error.retryButton.setOnClickListener {
-            binding.progressLayout.visibility = View.VISIBLE
-            binding.error.root.visibility = View.GONE
-            refresh()
+            viewModel.clickedRetryButton()
         }
 
         binding.swipeRefresh.setOnRefreshListener {
-            refresh()
+            viewModel.refresh(true)
         }
 
         binding.listView.setOnItemClickListener { _, _, i, _ ->
             val intent = AlertDetailActivity
-                .createIntent(context, binding.listView.adapter.getItem(i) as Alert)
+                .createIntent(context, adapter.getItem(i))
             parentFragment.startActivityForResult(intent, OtherAlertFragment.REQUEST_CODE)
         }
-    }
 
-    private fun refresh() {
-        binding.swipeRefresh.isRefreshing = true
-        getAlert()
-    }
-
-    private fun getAlert() {
-        val context = context!!
-        viewModel
-            .getAlerts(alerts) { it.status != "CRITICAL" }
-            .subscribe({
-                binding.listView.adapter = OtherAlertAdapter(context, it)
-                binding.swipeRefresh.isRefreshing = false
-                binding.swipeRefresh.visibility = View.VISIBLE
-                binding.progressLayout.visibility = View.GONE
-            }, {
-                binding.swipeRefresh.isRefreshing = false
-                binding.error.root.visibility = View.VISIBLE
-                binding.progressLayout.visibility = View.GONE
-            })
-            .run(disposable::set)
+        viewModel.start { it.status != "CRITICAL" }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        disposable.dispose()
-        resultDisposable.dispose()
-        itemDisposable.dispose()
+        compositeDisposable.dispose()
     }
 
     companion object {

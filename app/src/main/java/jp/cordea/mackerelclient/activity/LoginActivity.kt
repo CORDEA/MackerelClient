@@ -7,6 +7,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
+import dagger.Lazy
 import dagger.android.AndroidInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -21,8 +22,9 @@ import javax.inject.Inject
 class LoginActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var viewModel: LoginViewModel
+    lateinit var viewModelProvider: Lazy<LoginViewModel>
 
+    private val viewModel get() = viewModelProvider.get()
     private val compositeDisposable = CompositeDisposable()
 
     private lateinit var contentBinding: ContentLoginBinding

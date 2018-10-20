@@ -8,11 +8,14 @@ import android.widget.ArrayAdapter
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.response.Alert
 import jp.cordea.mackerelclient.databinding.ListItemAlertBinding
+import jp.cordea.mackerelclient.di.FragmentScope
+import javax.inject.Inject
 
-class AlertAdapter(
-    context: Context,
-    val items: List<Alert>
+@FragmentScope
+class AlertAdapter @Inject constructor(
+    context: Context
 ) : ArrayAdapter<Alert>(context, R.layout.list_item_alert) {
+    private var items = listOf<Alert>()
 
     override fun getItem(position: Int): Alert = items[position]
 
@@ -44,6 +47,11 @@ class AlertAdapter(
         }
 
         return view
+    }
+
+    fun update(items: List<Alert>) {
+        this.items = items
+        notifyDataSetChanged()
     }
 
     class ViewHolder(view: View) {

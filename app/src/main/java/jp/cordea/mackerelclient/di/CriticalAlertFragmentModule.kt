@@ -1,5 +1,6 @@
 package jp.cordea.mackerelclient.di
 
+import androidx.lifecycle.ViewModelStoreOwner
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -13,7 +14,8 @@ interface CriticalAlertFragmentModule {
     @FragmentScope
     @ContributesAndroidInjector(
         modules = [
-            CriticalAlertFragmentBindModule::class
+            CriticalAlertFragmentBindModule::class,
+            AlertViewModelModule::class
         ]
     )
     fun contributeCriticalAlertFragment(): CriticalAlertFragment
@@ -30,4 +32,7 @@ interface CriticalAlertFragmentBindModule {
     fun bindCriticalAlertResultReceivedSource(
         dispatcher: CriticalAlertEventDispatcher
     ): CriticalAlertResultReceivedSource
+
+    @Binds
+    fun bindViewModelStoreOwner(fragment: CriticalAlertFragment): ViewModelStoreOwner
 }
