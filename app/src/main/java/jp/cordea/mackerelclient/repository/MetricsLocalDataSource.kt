@@ -30,24 +30,21 @@ class MetricsLocalDataSource @Inject constructor() {
 
         val maxId = (realm.where(UserMetric::class.java).max("id") ?: 0).toInt()
         realm.executeTransaction {
-            it.createObject<UserMetric>().apply {
+            it.createObject<UserMetric>(maxId + 1).apply {
                 type = MetricsType.HOST.name
-                id = maxId + 1
                 parentId = hostId
                 label = "loadavg5"
                 metric0 = "loadavg5"
             }
-            it.createObject<UserMetric>().apply {
+            it.createObject<UserMetric>(maxId + 2).apply {
                 type = MetricsType.HOST.name
-                id = maxId + 2
                 parentId = hostId
                 label = "cpu percentage"
                 metric0 = "cpu.system.percentage"
                 metric1 = "cpu.user.percentage"
             }
-            it.createObject<UserMetric>().apply {
+            it.createObject<UserMetric>(maxId + 3).apply {
                 type = MetricsType.HOST.name
-                id = maxId + 3
                 parentId = hostId
                 label = "memory"
                 metric0 = "memory.used"

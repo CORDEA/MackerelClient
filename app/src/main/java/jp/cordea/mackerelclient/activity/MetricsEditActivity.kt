@@ -9,17 +9,28 @@ import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import dagger.Lazy
 import dagger.android.AndroidInjection
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
 import jp.cordea.mackerelclient.MetricsType
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.databinding.ActivityMetricsEditBinding
 import jp.cordea.mackerelclient.viewmodel.MetricsEditViewModel
+import javax.inject.Inject
 
 class MetricsEditActivity : AppCompatActivity() {
+    @Inject
+    lateinit var viewModelProvider: Lazy<MetricsEditViewModel>
 
-    private val viewModel by lazy { MetricsEditViewModel() }
+    private val metricId by lazy { intent.getIntExtra(USER_METRIC_KEY, -1) }
+    private val id by lazy { intent.getStringExtra(ID_KEY) }
 
-    private var id = -1
+    private val viewModel get() = viewModelProvider.get()
+    private val compositeDisposable = CompositeDisposable()
+
     private var type: MetricsType? = null
 
     private lateinit var binding: ActivityMetricsEditBinding
@@ -30,13 +41,24 @@ class MetricsEditActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_metrics_edit)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        id = intent.getIntExtra(USER_METRIC_KEY, -1)
+        viewModel.labelText
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { binding.labelEditText.setText(it) }
+            .addTo(compositeDisposable)
+
+        viewModel.metricFirstText
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { binding.metricFirstEditText.setText(it) }
+            .addTo(compositeDisposable)
+
+        viewModel.metricSecondText
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { binding.metricSecondEditText.setText(it) }
+            .addTo(compositeDisposable)
+
         type = MetricsType.valueOf(intent.getStringExtra(TYPE_KEY))
-        if (id != -1) {
-            val metric = viewModel.getMetric(id)
-            binding.labelEditText.setText(metric.label)
-            binding.metricFirstEditText.setText(metric.metric0)
-            binding.metricSecondEditText.setText(metric.metric1)
+        if (metricId != -1) {
+            viewModel.start(metricId)
         }
     }
 
@@ -93,14 +115,17 @@ class MetricsEditActivity : AppCompatActivity() {
         }
 
         viewModel.storeMetric(
-            id, intent.getStringExtra(ID_KEY), type!!.name,
-            binding.labelEditText.text.toString(), metricFirst, metricSecond
+            metricId,
+            id,
+            type!!.name,
+            binding.labelEditText.text.toString(),
+            metricFirst,
+            metricSecond
         )
         return true
     }
 
     companion object {
-
         const val REQUEST_CODE = 0
 
         private const val ID_KEY = "IdKey"
