@@ -19,7 +19,7 @@ class ServiceMetricsViewModel : ViewModel() {
 
     private var lineDataSet = mutableSetOf<MetricsLineDataSet>()
 
-    private val metricsDefinition by lazy { repository.getMetricsDefinition(serviceName) }
+    private val metricsDefinition get() = repository.getMetricsDefinition(serviceName)
 
     val isExistsMetricsDefinition get() = metricsDefinition.isNotEmpty()
 

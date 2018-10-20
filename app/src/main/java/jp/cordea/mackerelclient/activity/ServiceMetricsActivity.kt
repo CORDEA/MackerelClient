@@ -32,7 +32,6 @@ class ServiceMetricsActivity : AppCompatActivity(),
     private val disposable = SerialDisposable()
     private val viewModel get() = viewModelProvider.get()
 
-    private var needRefresh = false
     private var enableRefresh = false
 
     private lateinit var serviceName: String
@@ -62,19 +61,11 @@ class ServiceMetricsActivity : AppCompatActivity(),
             contentBinding.swipeRefresh.isRefreshing = false
         }
 
-        needRefresh = true
-
         if (savedInstanceState == null) {
             viewModel.start(serviceName)
         }
-    }
 
-    override fun onResume() {
-        super.onResume()
-        if (needRefresh) {
-            refresh(false)
-            needRefresh = false
-        }
+        refresh(false)
     }
 
     override fun onDestroy() {
@@ -92,7 +83,7 @@ class ServiceMetricsActivity : AppCompatActivity(),
 
         if (requestCode == MetricsEditActivity.REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                needRefresh = true
+                refresh(true)
             }
         }
     }

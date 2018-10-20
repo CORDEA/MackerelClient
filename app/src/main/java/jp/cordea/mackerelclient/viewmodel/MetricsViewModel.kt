@@ -19,7 +19,7 @@ class MetricsViewModel : ViewModel() {
 
     private var lineDataSet = mutableSetOf<MetricsLineDataSet>()
 
-    private val metricsDefinition by lazy { repository.getMetricsDefinition(hostId) }
+    private val metricsDefinition get() = repository.getMetricsDefinition(hostId)
 
     val isExistsMetricsDefinition get() = metricsDefinition.isNotEmpty()
 

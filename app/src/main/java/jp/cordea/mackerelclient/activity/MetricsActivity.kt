@@ -42,7 +42,6 @@ class MetricsActivity : AppCompatActivity(),
     private val disposable = SerialDisposable()
     private val viewModel get() = viewModelProvider.get()
 
-    private var needRefresh = false
     private var enableRefresh = false
 
     private lateinit var adapter: MetricsAdapter
@@ -72,19 +71,11 @@ class MetricsActivity : AppCompatActivity(),
         contentBinding.recyclerView.adapter = adapter
         contentBinding.recyclerView.addItemDecoration(ListItemDecoration(this))
 
-        needRefresh = true
-
         if (savedInstanceState == null) {
             viewModel.start(hostId)
         }
-    }
 
-    override fun onResume() {
-        super.onResume()
-        if (needRefresh) {
-            refresh(false)
-            needRefresh = false
-        }
+        refresh(false)
     }
 
     override fun onDestroy() {
@@ -102,7 +93,7 @@ class MetricsActivity : AppCompatActivity(),
 
         if (requestCode == MetricsEditActivity.REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                needRefresh = true
+                refresh(true)
             }
         }
     }
