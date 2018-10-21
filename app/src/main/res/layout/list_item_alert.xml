@@ -9,7 +9,7 @@
 
         <variable
             name="model"
-            type="jp.cordea.mackerelclient.view.AlertListItemModel" />
+            type="jp.cordea.mackerelclient.view.CriticalAlertListItemModel" />
     </data>
 
     <androidx.cardview.widget.CardView

@@ -1,5 +1,6 @@
 package jp.cordea.mackerelclient.di
 
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelStoreOwner
 import dagger.Binds
 import dagger.Module
@@ -35,4 +36,7 @@ interface CriticalAlertFragmentBindModule {
 
     @Binds
     fun bindViewModelStoreOwner(fragment: CriticalAlertFragment): ViewModelStoreOwner
+
+    @Binds
+    fun bindFragment(fragment: CriticalAlertFragment): Fragment
 }

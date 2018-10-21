@@ -15,7 +15,7 @@ import jp.cordea.mackerelclient.CriticalAlertItemChangedSource
 import jp.cordea.mackerelclient.CriticalAlertResultReceivedSource
 import jp.cordea.mackerelclient.adapter.AlertAdapter
 import jp.cordea.mackerelclient.databinding.FragmentInsideAlertBinding
-import jp.cordea.mackerelclient.view.AlertListItemModel
+import jp.cordea.mackerelclient.view.CriticalAlertListItemModel
 import jp.cordea.mackerelclient.viewmodel.AlertFragmentViewModel
 import javax.inject.Inject
 
@@ -57,7 +57,7 @@ class CriticalAlertFragment : Fragment() {
 
         viewModel.adapterItems
             .subscribeBy { adapter.update(it.map {
-                AlertListItemModel(
+                CriticalAlertListItemModel(
                     it
                 )
             }) }

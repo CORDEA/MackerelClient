@@ -5,13 +5,16 @@ import com.xwray.groupie.databinding.BindableItem
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.databinding.ListItemAlertBinding
 import jp.cordea.mackerelclient.model.DisplayableAlert
+import jp.cordea.mackerelclient.navigator.CriticalAlertNavigator
 import jp.cordea.mackerelclient.toRelativeTime
 import javax.inject.Inject
 
-class AlertListItem @Inject constructor() : BindableItem<ListItemAlertBinding>() {
-    private lateinit var model: AlertListItemModel
+class CriticalAlertListItem @Inject constructor(
+    private val navigator: CriticalAlertNavigator
+) : BindableItem<ListItemAlertBinding>() {
+    private lateinit var model: CriticalAlertListItemModel
 
-    fun update(model: AlertListItemModel) = apply {
+    fun update(model: CriticalAlertListItemModel) = apply {
         this.model = model
     }
 
@@ -20,14 +23,12 @@ class AlertListItem @Inject constructor() : BindableItem<ListItemAlertBinding>()
     override fun bind(binding: ListItemAlertBinding, position: Int) {
         binding.model = model
         binding.root.setOnClickListener {
-            //            val intent = AlertDetailActivity
-//                .createIntent(context, adapter.getItem(i))
-//            parentFragment.startActivityForResult(intent, OtherAlertFragment.REQUEST_CODE)
+            navigator.navigateToDetail(model.alert)
         }
     }
 }
 
-class AlertListItemModel(
+class CriticalAlertListItemModel(
     val alert: DisplayableAlert
 ) {
     fun getName(context: Context) =

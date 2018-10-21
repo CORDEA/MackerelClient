@@ -1,5 +1,6 @@
 package jp.cordea.mackerelclient.di
 
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelStoreOwner
 import dagger.Binds
 import dagger.Module
@@ -36,6 +37,9 @@ interface OtherAlertFragmentBindModule {
 
     @Binds
     fun bindViewModelStoreOwner(fragment: OtherAlertFragment): ViewModelStoreOwner
+
+    @Binds
+    fun bindFragment(fragment: OtherAlertFragment): Fragment
 }
 
 @Module
