@@ -22,6 +22,7 @@ class OtherAlertListItem @Inject constructor(
 
     override fun bind(binding: ListItemOtherAlertBinding, position: Int) {
         binding.model = model
+        binding.statusView.char = model.statusChar
         binding.root.setOnClickListener {
             navigator.navigateToDetail(model.alert)
         }
@@ -34,6 +35,7 @@ class OtherAlertListItemModel(
     fun getName(context: Context) =
         "${alert.hostName} - ${alert.openedAt.toRelativeTime(context)}"
 
+    val statusChar get() = alert.status.first()
     val availableState get() = alert.value != null
     val state get() = "${alert.value} ${alert.operator} ${alert.warning}"
     val type get() = alert.monitorName ?: alert.type
