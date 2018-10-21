@@ -2,11 +2,13 @@ package jp.cordea.mackerelclient.api.response
 
 import java.io.Serializable
 
-class Monitors(val monitors: List<Monitor>)
+class MonitorsResponse(val monitors: List<MonitorDataResponse>)
+
+class MonitorResponse(val monitor: MonitorDataResponse)
 
 class RefreshMonitor(val id: String)
 
-class Monitor(
+class MonitorDataResponse(
     var id: String,
     var type: String,
     var name: String?,

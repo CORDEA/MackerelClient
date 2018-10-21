@@ -6,13 +6,15 @@ import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import jp.cordea.mackerelclient.BuildConfig
-import jp.cordea.mackerelclient.api.response.Alert
-import jp.cordea.mackerelclient.api.response.Alerts
+import jp.cordea.mackerelclient.api.response.AlertDataResponse
+import jp.cordea.mackerelclient.api.response.AlertsResponse
 import jp.cordea.mackerelclient.api.response.CloseAlert
-import jp.cordea.mackerelclient.api.response.Hosts
+import jp.cordea.mackerelclient.api.response.HostResponse
+import jp.cordea.mackerelclient.api.response.HostsResponse
 import jp.cordea.mackerelclient.api.response.MetricsResponse
-import jp.cordea.mackerelclient.api.response.Monitor
-import jp.cordea.mackerelclient.api.response.Monitors
+import jp.cordea.mackerelclient.api.response.MonitorDataResponse
+import jp.cordea.mackerelclient.api.response.MonitorResponse
+import jp.cordea.mackerelclient.api.response.MonitorsResponse
 import jp.cordea.mackerelclient.api.response.RefreshMonitor
 import jp.cordea.mackerelclient.api.response.RetireHost
 import jp.cordea.mackerelclient.api.response.Services
@@ -90,19 +92,29 @@ class MackerelApiClient @Inject constructor(
             .getService()
             .subscribeOn(Schedulers.io())
 
-    fun getHosts(status: List<String>): Single<Hosts> =
+    fun getHosts(status: List<String>): Single<HostsResponse> =
         getService(MackerelApi::class.java)
             .getAllHosts(status)
             .subscribeOn(Schedulers.io())
 
-    fun getAlerts(): Single<Alerts> =
+    fun getHost(id: String): Single<HostResponse> =
+        getService(MackerelApi::class.java)
+            .getHost(id)
+            .subscribeOn(Schedulers.io())
+
+    fun getAlerts(): Single<AlertsResponse> =
         getService(MackerelApi::class.java)
             .getAlerts()
             .subscribeOn(Schedulers.io())
 
-    fun getMonitors(): Single<Monitors> =
+    fun getMonitors(): Single<MonitorsResponse> =
         getService(MackerelApi::class.java)
             .getMonitors()
+            .subscribeOn(Schedulers.io())
+
+    fun getMonitor(id: String): Single<MonitorResponse> =
+        getService(MackerelApi::class.java)
+            .getMonitor(id)
             .subscribeOn(Schedulers.io())
 
     fun getUsers(key: String? = null): Single<Users> =
@@ -141,16 +153,16 @@ class MackerelApiClient @Inject constructor(
     fun deleteUser(userId: String): Call<User> =
         getService(MackerelApi::class.java).deleteUser(userId)
 
-    fun closeAlert(alertId: String, close: CloseAlert): Call<Alert> =
+    fun closeAlert(alertId: String, close: CloseAlert): Call<AlertDataResponse> =
         getService(MackerelApi::class.java).postCloseAlert(alertId, close)
 
     fun retireHost(hostId: String): Call<RetireHost> =
         getService(MackerelApi::class.java).postRetireHost(hostId)
 
-    fun deleteMonitor(monitorId: String): Call<Monitor> =
+    fun deleteMonitor(monitorId: String): Call<MonitorDataResponse> =
         getService(MackerelApi::class.java).deleteMonitor(monitorId)
 
-    fun refreshMonitor(monitorId: String, monitor: Monitor): Call<RefreshMonitor> =
+    fun refreshMonitor(monitorId: String, monitor: MonitorDataResponse): Call<RefreshMonitor> =
         getService(MackerelApi::class.java).putRefreshMonitor(monitorId, monitor)
 
     companion object {

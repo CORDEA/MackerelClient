@@ -8,7 +8,7 @@ import jp.cordea.mackerelclient.OtherAlertEventDispatcher
 import jp.cordea.mackerelclient.OtherAlertItemChangedSource
 import jp.cordea.mackerelclient.OtherAlertResultReceivedSource
 import jp.cordea.mackerelclient.fragment.alert.OtherAlertFragment
-import jp.cordea.mackerelclient.viewmodel.AlertViewModel
+import jp.cordea.mackerelclient.viewmodel.AlertFragmentViewModel
 
 @Module
 interface OtherAlertFragmentModule {
@@ -16,7 +16,7 @@ interface OtherAlertFragmentModule {
     @ContributesAndroidInjector(
         modules = [
             OtherAlertFragmentBindModule::class,
-            AlertViewModelModule::class
+            AlertFragmentViewModelModule::class
         ]
     )
     fun contributeOtherAlertFragment(): OtherAlertFragment
@@ -39,4 +39,4 @@ interface OtherAlertFragmentBindModule {
 }
 
 @Module
-class AlertViewModelModule : ViewModelModule<AlertViewModel>(AlertViewModel::class)
+class AlertFragmentViewModelModule : ViewModelModule<AlertFragmentViewModel>(AlertFragmentViewModel::class)

@@ -6,10 +6,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import dagger.android.support.AndroidSupportInjection
 import jp.cordea.mackerelclient.R
-import jp.cordea.mackerelclient.api.response.Alert
+import jp.cordea.mackerelclient.model.DisplayableAlert
 import jp.cordea.mackerelclient.utils.DialogUtils
 import jp.cordea.mackerelclient.viewmodel.AlertCloseViewModel
 import javax.inject.Inject
@@ -21,8 +22,7 @@ class AlertCloseDialogFragment : DialogFragment() {
 
     var onSuccess = { }
 
-    private val alert: Alert
-        get() = arguments!!.getSerializable(ALERT_KEY) as Alert
+    private val alert by lazy { arguments!!.getParcelable<DisplayableAlert>(ALERT_KEY) }
 
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
@@ -78,14 +78,13 @@ class AlertCloseDialogFragment : DialogFragment() {
     }
 
     companion object {
-
         private const val ALERT_KEY = "AlertKey"
 
-        fun newInstance(alert: Alert): AlertCloseDialogFragment =
+        fun newInstance(alert: DisplayableAlert): AlertCloseDialogFragment =
             AlertCloseDialogFragment().apply {
-                arguments = Bundle().apply {
-                    putSerializable(ALERT_KEY, alert)
-                }
+                arguments = bundleOf(
+                    ALERT_KEY to alert
+                )
             }
     }
 }

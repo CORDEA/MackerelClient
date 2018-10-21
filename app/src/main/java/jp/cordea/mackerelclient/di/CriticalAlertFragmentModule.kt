@@ -15,7 +15,7 @@ interface CriticalAlertFragmentModule {
     @ContributesAndroidInjector(
         modules = [
             CriticalAlertFragmentBindModule::class,
-            AlertViewModelModule::class
+            AlertFragmentViewModelModule::class
         ]
     )
     fun contributeCriticalAlertFragment(): CriticalAlertFragment

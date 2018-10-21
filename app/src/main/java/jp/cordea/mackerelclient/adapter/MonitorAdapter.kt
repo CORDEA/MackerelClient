@@ -7,13 +7,13 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.MonitorDetailActivity
-import jp.cordea.mackerelclient.api.response.Monitor
+import jp.cordea.mackerelclient.api.response.MonitorDataResponse
 import jp.cordea.mackerelclient.databinding.ListItemMonitorBinding
 import jp.cordea.mackerelclient.databinding.ListItemMonitorSectionBinding
 
 class MonitorAdapter(
     val fragment: Fragment,
-    val items: List<Pair<String, Monitor?>>
+    val items: List<Pair<String, MonitorDataResponse?>>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

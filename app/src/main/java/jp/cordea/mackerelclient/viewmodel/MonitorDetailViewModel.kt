@@ -1,11 +1,11 @@
 package jp.cordea.mackerelclient.viewmodel
 
 import jp.cordea.mackerelclient.R
-import jp.cordea.mackerelclient.api.response.Monitor
+import jp.cordea.mackerelclient.api.response.MonitorDataResponse
 
 class MonitorDetailViewModel {
 
-    fun getDisplayData(it: Monitor): List<List<Pair<String, Int>>> =
+    fun getDisplayData(it: MonitorDataResponse): List<List<Pair<String, Int>>> =
         arrayListOf<MutableList<Pair<String, Int>>>().apply {
             add(arrayListOf<Pair<String, Int>>().apply {
                 it.name?.let {

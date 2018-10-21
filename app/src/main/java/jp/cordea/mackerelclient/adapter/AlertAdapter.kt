@@ -1,60 +1,19 @@
 package jp.cordea.mackerelclient.adapter
 
-import android.content.Context
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import jp.cordea.mackerelclient.R
-import jp.cordea.mackerelclient.api.response.Alert
-import jp.cordea.mackerelclient.databinding.ListItemAlertBinding
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.ViewHolder
 import jp.cordea.mackerelclient.di.FragmentScope
+import jp.cordea.mackerelclient.view.AlertListItem
+import jp.cordea.mackerelclient.view.AlertListItemModel
 import javax.inject.Inject
+import javax.inject.Provider
 
 @FragmentScope
 class AlertAdapter @Inject constructor(
-    context: Context
-) : ArrayAdapter<Alert>(context, R.layout.list_item_alert) {
-    private var items = listOf<Alert>()
-
-    override fun getItem(position: Int): Alert = items[position]
-
-    override fun getCount(): Int = items.size
-
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
-        var view = convertView
-        val viewHolder: ViewHolder
-        if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.list_item_alert, parent, false)
-            viewHolder = ViewHolder(view)
-            view.tag = viewHolder
-        } else {
-            viewHolder = view.tag as ViewHolder
-        }
-
-        val item = getItem(position)
-
-        viewHolder.binding.run {
-            if (!item.type.isBlank() || !item.status.isBlank()) {
-                detailTextView.text = when {
-                    item.type.isBlank() -> item.status
-                    item.status.isBlank() -> item.type
-                    else -> "${item.type} / ${item.status}"
-                }
-            }
-
-            nameTextView.text = item.hostId
-        }
-
-        return view
-    }
-
-    fun update(items: List<Alert>) {
-        this.items = items
-        notifyDataSetChanged()
-    }
-
-    class ViewHolder(view: View) {
-        val binding: ListItemAlertBinding = ListItemAlertBinding.bind(view)
+    val item: Provider<AlertListItem>
+) : GroupAdapter<ViewHolder>() {
+    fun update(items: List<AlertListItemModel>) {
+        clear()
+        addAll(items.map { item.get().update(it) })
     }
 }

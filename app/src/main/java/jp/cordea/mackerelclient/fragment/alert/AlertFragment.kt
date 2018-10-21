@@ -9,19 +9,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import dagger.android.support.AndroidSupportInjection
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.SerialDisposable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import jp.cordea.mackerelclient.AlertItemChangedSink
 import jp.cordea.mackerelclient.AlertResultReceivedSink
 import jp.cordea.mackerelclient.adapter.AlertFragmentPagerAdapter
-import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.databinding.FragmentAlertBinding
+import jp.cordea.mackerelclient.viewmodel.AlertViewModel
 import javax.inject.Inject
 
 class AlertFragment : Fragment() {
 
     @Inject
-    lateinit var apiClient: MackerelApiClient
+    lateinit var viewModel: AlertViewModel
 
     @Inject
     lateinit var alertItemChangedSink: AlertItemChangedSink
@@ -29,7 +29,7 @@ class AlertFragment : Fragment() {
     @Inject
     lateinit var alertResultReceivedSink: AlertResultReceivedSink
 
-    private val disposable = SerialDisposable()
+    private val compositeDisposable = CompositeDisposable()
 
     private lateinit var binding: FragmentAlertBinding
 
@@ -50,24 +50,19 @@ class AlertFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val context = context ?: return
-
         val adapter = AlertFragmentPagerAdapter(childFragmentManager, context)
         binding.viewPager.adapter = adapter
         binding.tabLayout.setupWithViewPager(binding.viewPager)
 
-        requestApi()
-    }
-
-    private fun requestApi() {
-        apiClient
-            .getAlerts()
-            .observeOn(AndroidSchedulers.mainThread())
+        viewModel.items
             .subscribe({
                 alertItemChangedSink.notifyAlertItemChanged(it)
             }, {
                 alertItemChangedSink.notifyAlertItemChanged(it)
             })
-            .run(disposable::set)
+            .addTo(compositeDisposable)
+
+        viewModel.start()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -79,7 +74,7 @@ class AlertFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        disposable.dispose()
+        compositeDisposable.clear()
     }
 
     companion object {

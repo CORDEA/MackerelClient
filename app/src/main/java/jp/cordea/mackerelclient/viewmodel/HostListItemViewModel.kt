@@ -5,12 +5,12 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.TextAppearanceSpan
 import jp.cordea.mackerelclient.R
-import jp.cordea.mackerelclient.api.response.Host
+import jp.cordea.mackerelclient.api.response.HostDataResponse
 import jp.cordea.mackerelclient.api.response.Tsdb
 
 class HostListItemViewModel(
     private val context: Context,
-    private val item: Host,
+    private val item: HostDataResponse,
     private val metric: Map<String, Tsdb>?
 ) {
 

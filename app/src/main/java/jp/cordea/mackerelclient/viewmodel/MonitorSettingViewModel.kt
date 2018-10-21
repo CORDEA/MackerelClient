@@ -1,7 +1,7 @@
 package jp.cordea.mackerelclient.viewmodel
 
 import jp.cordea.mackerelclient.api.MackerelApiClient
-import jp.cordea.mackerelclient.api.response.Monitor
+import jp.cordea.mackerelclient.api.response.MonitorDataResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -11,18 +11,18 @@ class MonitorSettingViewModel @Inject constructor(
     private val apiClient: MackerelApiClient
 ) {
     fun deleteMonitorSetting(
-        monitor: Monitor,
-        onResponse: (Response<Monitor>?) -> Unit,
+        monitor: MonitorDataResponse,
+        onResponse: (Response<MonitorDataResponse>?) -> Unit,
         onFailure: () -> Unit
     ) {
         apiClient
             .deleteMonitor(monitor.id)
-            .enqueue(object : Callback<Monitor> {
-                override fun onResponse(p0: Call<Monitor>?, response: Response<Monitor>?) {
+            .enqueue(object : Callback<MonitorDataResponse> {
+                override fun onResponse(p0: Call<MonitorDataResponse>?, response: Response<MonitorDataResponse>?) {
                     onResponse(response)
                 }
 
-                override fun onFailure(p0: Call<Monitor>?, p1: Throwable?) {
+                override fun onFailure(p0: Call<MonitorDataResponse>?, p1: Throwable?) {
                     onFailure()
                 }
             })

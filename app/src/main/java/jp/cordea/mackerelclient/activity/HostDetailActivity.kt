@@ -17,7 +17,7 @@ import dagger.android.support.HasSupportFragmentInjector
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.DetailCommonAdapter
-import jp.cordea.mackerelclient.api.response.Host
+import jp.cordea.mackerelclient.api.response.HostDataResponse
 import jp.cordea.mackerelclient.databinding.ActivityDetailCommonBinding
 import jp.cordea.mackerelclient.fragment.HostRetireDialogFragment
 import jp.cordea.mackerelclient.utils.DateUtils
@@ -29,7 +29,7 @@ class HostDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
-    private var host: Host? = null
+    private var host: HostDataResponse? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -38,7 +38,7 @@ class HostDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
             .setContentView<ActivityDetailCommonBinding>(this, R.layout.activity_detail_common)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val host = intent.getSerializableExtra(HOST_KEY) as Host
+        val host = intent.getSerializableExtra(HOST_KEY) as HostDataResponse
 
         binding.recyclerView.let {
             it.layoutManager = LinearLayoutManager(this)
@@ -74,7 +74,7 @@ class HostDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
 
-    private fun createData(host: Host): List<List<Pair<String, Int>>> {
+    private fun createData(host: HostDataResponse): List<List<Pair<String, Int>>> {
         val list: MutableList<MutableList<Pair<String, Int>>> = arrayListOf()
         var inner: MutableList<Pair<String, Int>> = arrayListOf()
 
@@ -104,7 +104,7 @@ class HostDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
         private const val HOST_KEY = "HostKey"
 
-        fun createIntent(context: Context, host: Host): Intent =
+        fun createIntent(context: Context, host: HostDataResponse): Intent =
             Intent(context, HostDetailActivity::class.java).apply {
                 putExtra(HOST_KEY, host)
             }

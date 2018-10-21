@@ -15,7 +15,7 @@ import io.reactivex.disposables.SerialDisposable
 import jp.cordea.mackerelclient.activity.MonitorDetailActivity
 import jp.cordea.mackerelclient.adapter.MonitorAdapter
 import jp.cordea.mackerelclient.api.MackerelApiClient
-import jp.cordea.mackerelclient.api.response.Monitor
+import jp.cordea.mackerelclient.api.response.MonitorDataResponse
 import jp.cordea.mackerelclient.databinding.FragmentMonitorBinding
 import javax.inject.Inject
 
@@ -73,7 +73,7 @@ class MonitorFragment : Fragment() {
                     .map { it.type }
                     .distinct()
                     .sortedBy { it }
-                val pairs: MutableList<Pair<String, Monitor?>> = arrayListOf()
+                val pairs: MutableList<Pair<String, MonitorDataResponse?>> = arrayListOf()
                 for (section in sections) {
                     val items = monitors.filter { section == it.type }
                     val type = items[0].type

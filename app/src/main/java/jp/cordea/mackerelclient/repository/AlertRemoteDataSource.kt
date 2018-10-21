@@ -9,4 +9,8 @@ class AlertRemoteDataSource @Inject constructor(
     private val apiClient: MackerelApiClient
 ) {
     fun getAlerts() = apiClient.getAlerts()
+
+    fun getHost(id: String) = apiClient.getHost(id)
+
+    fun getMonitor(id: String) = apiClient.getMonitor(id)
 }

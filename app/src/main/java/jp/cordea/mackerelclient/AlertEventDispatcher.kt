@@ -2,11 +2,10 @@ package jp.cordea.mackerelclient
 
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import jp.cordea.mackerelclient.api.response.Alert
-import jp.cordea.mackerelclient.api.response.Alerts
 import jp.cordea.mackerelclient.di.ActivityScope
 import jp.cordea.mackerelclient.fragment.alert.CriticalAlertFragment
 import jp.cordea.mackerelclient.fragment.alert.OtherAlertFragment
+import jp.cordea.mackerelclient.model.DisplayableAlert
 import javax.inject.Inject
 
 private const val CRITICAL_STATUS = "CRITICAL"
@@ -17,10 +16,11 @@ class AlertEventDispatcher @Inject constructor(
     AlertResultReceivedSink,
     AlertItemChangedSource,
     AlertResultReceivedSource {
-    private val itemChangedSubject = PublishSubject.create<Alerts>()
+    private val itemChangedSubject = PublishSubject.create<List<DisplayableAlert>>()
     private val resultReceivedSubject = PublishSubject.create<Int>()
 
-    override fun notifyAlertItemChanged(alerts: Alerts) = itemChangedSubject.onNext(alerts)
+    override fun notifyAlertItemChanged(alerts: List<DisplayableAlert>) =
+        itemChangedSubject.onNext(alerts)
 
     override fun notifyAlertItemChanged(throwable: Throwable) =
         itemChangedSubject.onError(throwable)
@@ -28,8 +28,8 @@ class AlertEventDispatcher @Inject constructor(
     override fun notifyAlertResultReceived(requestCode: Int) =
         resultReceivedSubject.onNext(requestCode)
 
-    override fun onAlertItemChanged(): Observable<List<Alert>> =
-        itemChangedSubject.map { it.alerts }
+    override fun onAlertItemChanged(): Observable<List<DisplayableAlert>> =
+        itemChangedSubject
 
     override fun onAlertResultReceived(): Observable<Int> = resultReceivedSubject
 }
@@ -39,7 +39,7 @@ class CriticalAlertEventDispatcher @Inject constructor(
     private val dispatcher: AlertEventDispatcher
 ) : CriticalAlertItemChangedSource,
     CriticalAlertResultReceivedSource {
-    override fun onAlertItemChanged(): Observable<List<Alert>> =
+    override fun onAlertItemChanged(): Observable<List<DisplayableAlert>> =
         dispatcher.onAlertItemChanged().map { alerts -> alerts.filter { it.status == CRITICAL_STATUS } }
 
     override fun onAlertResultReceived(): Observable<Int> =
@@ -51,7 +51,7 @@ class OtherAlertEventDispatcher @Inject constructor(
     private val dispatcher: AlertEventDispatcher
 ) : OtherAlertItemChangedSource,
     OtherAlertResultReceivedSource {
-    override fun onAlertItemChanged(): Observable<List<Alert>> =
+    override fun onAlertItemChanged(): Observable<List<DisplayableAlert>> =
         dispatcher.onAlertItemChanged().map { alerts -> alerts.filter { it.status != CRITICAL_STATUS } }
 
     override fun onAlertResultReceived(): Observable<Int> =
@@ -59,12 +59,12 @@ class OtherAlertEventDispatcher @Inject constructor(
 }
 
 interface AlertItemChangedSink {
-    fun notifyAlertItemChanged(alerts: Alerts)
+    fun notifyAlertItemChanged(alerts: List<DisplayableAlert>)
     fun notifyAlertItemChanged(throwable: Throwable)
 }
 
 interface AlertItemChangedSource {
-    fun onAlertItemChanged(): Observable<List<Alert>>
+    fun onAlertItemChanged(): Observable<List<DisplayableAlert>>
 }
 
 interface CriticalAlertItemChangedSource : AlertItemChangedSource

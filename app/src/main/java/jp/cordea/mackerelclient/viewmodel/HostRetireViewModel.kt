@@ -1,7 +1,7 @@
 package jp.cordea.mackerelclient.viewmodel
 
 import jp.cordea.mackerelclient.api.MackerelApiClient
-import jp.cordea.mackerelclient.api.response.Host
+import jp.cordea.mackerelclient.api.response.HostDataResponse
 import jp.cordea.mackerelclient.api.response.RetireHost
 import retrofit2.Call
 import retrofit2.Callback
@@ -12,7 +12,7 @@ class HostRetireViewModel @Inject constructor(
     private val apiClient: MackerelApiClient
 ) {
     fun retireHost(
-        host: Host,
+        host: HostDataResponse,
         onResponse: (Response<RetireHost>?) -> Unit,
         onFailure: () -> Unit
     ) {

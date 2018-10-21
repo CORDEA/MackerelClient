@@ -2,11 +2,11 @@ package jp.cordea.mackerelclient.api.response
 
 import java.io.Serializable
 
-class Alerts(val alerts: List<Alert>)
+class AlertsResponse(val alerts: List<AlertDataResponse>)
 
 class CloseAlert(val reason: String)
 
-class Alert(
+class AlertDataResponse(
     val id: String,
     val status: String,
     val monitorId: String,

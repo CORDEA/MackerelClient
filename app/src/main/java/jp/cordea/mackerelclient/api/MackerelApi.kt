@@ -2,14 +2,15 @@ package jp.cordea.mackerelclient.api
 
 import io.reactivex.Single
 import jp.cordea.mackerelclient.api.request.EmptyBody
-import jp.cordea.mackerelclient.api.response.Alert
-import jp.cordea.mackerelclient.api.response.Alerts
+import jp.cordea.mackerelclient.api.response.AlertDataResponse
+import jp.cordea.mackerelclient.api.response.AlertsResponse
 import jp.cordea.mackerelclient.api.response.CloseAlert
-import jp.cordea.mackerelclient.api.response.Host
-import jp.cordea.mackerelclient.api.response.Hosts
+import jp.cordea.mackerelclient.api.response.HostResponse
+import jp.cordea.mackerelclient.api.response.HostsResponse
 import jp.cordea.mackerelclient.api.response.MetricsResponse
-import jp.cordea.mackerelclient.api.response.Monitor
-import jp.cordea.mackerelclient.api.response.Monitors
+import jp.cordea.mackerelclient.api.response.MonitorDataResponse
+import jp.cordea.mackerelclient.api.response.MonitorResponse
+import jp.cordea.mackerelclient.api.response.MonitorsResponse
 import jp.cordea.mackerelclient.api.response.RefreshMonitor
 import jp.cordea.mackerelclient.api.response.RetireHost
 import jp.cordea.mackerelclient.api.response.Roles
@@ -35,7 +36,10 @@ interface MackerelApi {
     fun getRoles(@Path("serviceName") serviceName: String): Single<Roles>
 
     @GET("/api/v0/hosts/{hostId}")
-    fun getHost(@Path("hostId") hostId: String): Single<Host>
+    fun getHost(@Path("hostId") hostId: String): Single<HostResponse>
+
+    @GET("/api/v0/monitors/{monitorId}")
+    fun getMonitor(@Path("monitorId") monitorId: String): Single<MonitorResponse>
 
     @POST("/api/v0/hosts/{hostId}/retire")
     fun postRetireHost(
@@ -57,10 +61,10 @@ interface MackerelApi {
         @Query("service") service: String? = null,
         @Query("role") role: List<String>? = null,
         @Query("name") name: String? = null
-    ): Single<Hosts>
+    ): Single<HostsResponse>
 
     @GET("/api/v0/monitors")
-    fun getMonitors(): Single<Monitors>
+    fun getMonitors(): Single<MonitorsResponse>
 
     @GET("/api/v0/tsdb/latest")
     fun getLatestMetric(
@@ -77,23 +81,25 @@ interface MackerelApi {
     ): Single<MetricsResponse>
 
     @GET("/api/v0/alerts")
-    fun getAlerts(): Single<Alerts>
+    fun getAlerts(): Single<AlertsResponse>
 
     @GET("/api/v0/users")
     fun getUsers(): Single<Users>
 
     @POST("/api/v0/alerts/{alertId}/close")
-    fun postCloseAlert(@Path("alertId") alertId: String, @Body close: CloseAlert): Call<Alert>
+    fun postCloseAlert(
+        @Path("alertId") alertId: String, @Body close: CloseAlert
+    ): Call<AlertDataResponse>
 
     @DELETE("/api/v0/users/{userId}")
     fun deleteUser(@Path("userId") userId: String): Call<User>
 
     @DELETE("/api/v0/monitors/{monitorId}")
-    fun deleteMonitor(@Path("monitorId") monitorId: String): Call<Monitor>
+    fun deleteMonitor(@Path("monitorId") monitorId: String): Call<MonitorDataResponse>
 
     @PUT("/api/v0/monitors/{monitorId}")
     fun putRefreshMonitor(
         @Path("monitorId") monitorId: String,
-        @Body monitor: Monitor
+        @Body monitor: MonitorDataResponse
     ): Call<RefreshMonitor>
 }

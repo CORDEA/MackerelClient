@@ -17,9 +17,9 @@ import dagger.android.support.HasSupportFragmentInjector
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.DetailCommonAdapter
-import jp.cordea.mackerelclient.api.response.Alert
 import jp.cordea.mackerelclient.databinding.ActivityDetailCommonBinding
 import jp.cordea.mackerelclient.fragment.AlertCloseDialogFragment
+import jp.cordea.mackerelclient.model.DisplayableAlert
 import jp.cordea.mackerelclient.utils.DateUtils
 import javax.inject.Inject
 
@@ -28,7 +28,7 @@ class AlertDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
-    private var alert: Alert? = null
+    private val alert by lazy { intent.getParcelableExtra<DisplayableAlert>(ALERT_KEY) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -36,18 +36,15 @@ class AlertDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
         val binding = DataBindingUtil
             .setContentView<ActivityDetailCommonBinding>(this, R.layout.activity_detail_common)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        val alert = intent.getSerializableExtra(ALERT_KEY) as Alert
 
         binding.recyclerView.let {
             it.layoutManager = LinearLayoutManager(this)
             it.adapter = DetailCommonAdapter(this, insertInfo(alert))
             it.addItemDecoration(ListItemDecoration(this))
         }
-
-        this.alert = alert
     }
 
-    private fun insertInfo(alert: Alert): List<List<Pair<String, Int>>> {
+    private fun insertInfo(alert: DisplayableAlert): List<List<Pair<String, Int>>> {
         val list: MutableList<MutableList<Pair<String, Int>>> = arrayListOf()
         var inner: MutableList<Pair<String, Int>> = arrayListOf()
         inner.add(alert.status to R.string.alert_detail_status)
@@ -84,7 +81,7 @@ class AlertDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
             android.R.id.home -> finish()
             R.id.action_close -> {
                 AlertCloseDialogFragment
-                    .newInstance(alert!!)
+                    .newInstance(alert)
                     .apply {
                         onSuccess = {
                             setResult(Activity.RESULT_OK)
@@ -102,7 +99,7 @@ class AlertDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
     companion object {
         private const val ALERT_KEY = "AlertKey"
 
-        fun createIntent(context: Context, alert: Alert): Intent =
+        fun createIntent(context: Context, alert: DisplayableAlert): Intent =
             Intent(context, AlertDetailActivity::class.java).apply {
                 putExtra(ALERT_KEY, alert)
             }

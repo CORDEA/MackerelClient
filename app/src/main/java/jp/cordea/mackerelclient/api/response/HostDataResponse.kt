@@ -2,11 +2,13 @@ package jp.cordea.mackerelclient.api.response
 
 import java.io.Serializable
 
-class Hosts(val hosts: List<Host>)
+class HostsResponse(val hosts: List<HostDataResponse>)
+
+class HostResponse(val host: HostDataResponse)
 
 class RetireHost(val success: Boolean)
 
-class Host(
+class HostDataResponse(
     var createdAt: Long,
     var id: String,
     var name: String,

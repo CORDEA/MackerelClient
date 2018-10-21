@@ -13,16 +13,16 @@ import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import jp.cordea.mackerelclient.OtherAlertItemChangedSource
 import jp.cordea.mackerelclient.OtherAlertResultReceivedSource
-import jp.cordea.mackerelclient.activity.AlertDetailActivity
 import jp.cordea.mackerelclient.adapter.OtherAlertAdapter
 import jp.cordea.mackerelclient.databinding.FragmentInsideAlertBinding
-import jp.cordea.mackerelclient.viewmodel.AlertViewModel
+import jp.cordea.mackerelclient.view.OtherAlertListItemModel
+import jp.cordea.mackerelclient.viewmodel.AlertFragmentViewModel
 import javax.inject.Inject
 
 class OtherAlertFragment : Fragment() {
 
     @Inject
-    lateinit var viewModel: AlertViewModel
+    lateinit var viewModel: AlertFragmentViewModel
 
     @Inject
     lateinit var adapter: OtherAlertAdapter
@@ -53,12 +53,10 @@ class OtherAlertFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val context = context ?: return
-        val parentFragment = parentFragment ?: return
-        binding.listView.adapter = adapter
+        binding.recyclerView.adapter = adapter
 
         viewModel.adapterItems
-            .subscribeBy { adapter.update(it) }
+            .subscribeBy { adapter.update(it.map { OtherAlertListItemModel(it) }) }
             .addTo(compositeDisposable)
 
         viewModel.isRefreshing
@@ -99,12 +97,6 @@ class OtherAlertFragment : Fragment() {
 
         binding.swipeRefresh.setOnRefreshListener {
             viewModel.refresh(true)
-        }
-
-        binding.listView.setOnItemClickListener { _, _, i, _ ->
-            val intent = AlertDetailActivity
-                .createIntent(context, adapter.getItem(i))
-            parentFragment.startActivityForResult(intent, OtherAlertFragment.REQUEST_CODE)
         }
 
         viewModel.start { it.status != "CRITICAL" }

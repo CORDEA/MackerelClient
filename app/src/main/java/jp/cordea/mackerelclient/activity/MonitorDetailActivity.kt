@@ -17,7 +17,7 @@ import dagger.android.support.HasSupportFragmentInjector
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.DetailCommonAdapter
-import jp.cordea.mackerelclient.api.response.Monitor
+import jp.cordea.mackerelclient.api.response.MonitorDataResponse
 import jp.cordea.mackerelclient.databinding.ActivityDetailCommonBinding
 import jp.cordea.mackerelclient.fragment.MonitorSettingDeleteDialogFragment
 import jp.cordea.mackerelclient.viewmodel.MonitorDetailViewModel
@@ -30,7 +30,7 @@ class MonitorDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     private val viewModel by lazy { MonitorDetailViewModel() }
 
-    private var monitor: Monitor? = null
+    private var monitor: MonitorDataResponse? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -39,7 +39,7 @@ class MonitorDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
             .setContentView<ActivityDetailCommonBinding>(this, R.layout.activity_detail_common)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val monitor = intent.getSerializableExtra(MONITOR_KEY) as Monitor
+        val monitor = intent.getSerializableExtra(MONITOR_KEY) as MonitorDataResponse
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = DetailCommonAdapter(this, viewModel.getDisplayData(monitor))
@@ -82,7 +82,7 @@ class MonitorDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
         private const val MONITOR_KEY = "MONITOR_KEY"
 
-        fun createIntent(context: Context, monitor: Monitor): Intent =
+        fun createIntent(context: Context, monitor: MonitorDataResponse): Intent =
             Intent(context, MonitorDetailActivity::class.java).apply {
                 putExtra(MONITOR_KEY, monitor)
             }

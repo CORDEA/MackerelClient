@@ -7,7 +7,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import dagger.android.support.AndroidSupportInjection
 import jp.cordea.mackerelclient.R
-import jp.cordea.mackerelclient.api.response.Monitor
+import jp.cordea.mackerelclient.api.response.MonitorDataResponse
 import jp.cordea.mackerelclient.utils.DialogUtils
 import jp.cordea.mackerelclient.viewmodel.MonitorSettingViewModel
 import javax.inject.Inject
@@ -19,8 +19,8 @@ class MonitorSettingDeleteDialogFragment : DialogFragment() {
 
     var onSuccess = { }
 
-    private val monitor: Monitor
-        get() = arguments!!.getSerializable(MONITOR_KEY) as Monitor
+    private val monitor: MonitorDataResponse
+        get() = arguments!!.getSerializable(MONITOR_KEY) as MonitorDataResponse
 
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
@@ -75,7 +75,7 @@ class MonitorSettingDeleteDialogFragment : DialogFragment() {
 
         private const val MONITOR_KEY = "MonitorKey"
 
-        fun newInstance(monitor: Monitor): MonitorSettingDeleteDialogFragment =
+        fun newInstance(monitor: MonitorDataResponse): MonitorSettingDeleteDialogFragment =
             MonitorSettingDeleteDialogFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(MONITOR_KEY, monitor)

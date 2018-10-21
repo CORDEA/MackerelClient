@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.HostDetailActivity
 import jp.cordea.mackerelclient.activity.MetricsActivity
-import jp.cordea.mackerelclient.api.response.Host
+import jp.cordea.mackerelclient.api.response.HostDataResponse
 import jp.cordea.mackerelclient.api.response.Tsdb
 import jp.cordea.mackerelclient.databinding.ListItemHostBinding
 import jp.cordea.mackerelclient.utils.StatusUtils
@@ -19,7 +19,7 @@ class HostAdapter(
     val fragment: Fragment
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var items = emptyList<Host>()
+    private var items = emptyList<HostDataResponse>()
     private var metrics = emptyMap<String, Map<String, Tsdb>>()
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -75,7 +75,7 @@ class HostAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    fun update(items: List<Host>, metrics: Map<String, Map<String, Tsdb>>) {
+    fun update(items: List<HostDataResponse>, metrics: Map<String, Map<String, Tsdb>>) {
         this.items = items
         this.metrics = metrics
         notifyDataSetChanged()

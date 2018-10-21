@@ -2,6 +2,7 @@ import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'realm-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: "org.jlleitschuh.gradle.ktlint"
@@ -52,6 +53,8 @@ dependencies {
     implementation 'com.google.dagger:dagger-android-support:2.16'
     kapt 'com.google.dagger:dagger-android-processor:2.16'
     kapt 'com.google.dagger:dagger-compiler:2.16'
+    implementation 'com.xwray:groupie:2.1.0'
+    implementation 'com.xwray:groupie-databinding:2.1.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v2.2.5'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
@@ -66,4 +69,9 @@ dependencies {
     androidTestImplementation 'androidx.annotation:annotation:1.0.0'
     androidTestImplementation 'androidx.test:runner:1.1.0-beta01'
     androidTestImplementation 'androidx.test:rules:1.1.0-beta01'
+}
+
+androidExtensions {
+    experimental = true
+    features = ["parcelize"]
 }

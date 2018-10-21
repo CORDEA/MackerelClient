@@ -1,7 +1,7 @@
 package jp.cordea.mackerelclient.repository
 
 import io.reactivex.Single
-import jp.cordea.mackerelclient.api.response.Hosts
+import jp.cordea.mackerelclient.api.response.HostsResponse
 import jp.cordea.mackerelclient.api.response.Tsdbs
 import jp.cordea.mackerelclient.model.DisplayHostState
 import javax.inject.Inject
@@ -12,11 +12,11 @@ class HostRepository @Inject constructor(
     private val remoteDataSource: HostRemoteDataSource,
     private val localDataSource: HostLocalDataSource
 ) {
-    fun getHosts(items: List<DisplayHostState>): Single<Hosts> =
+    fun getHosts(items: List<DisplayHostState>): Single<HostsResponse> =
         remoteDataSource.getHosts(items)
 
     fun getLatestMetrics(
-        hosts: Hosts,
+        hosts: HostsResponse,
         names: List<String>
     ): Single<Tsdbs> = remoteDataSource.getLatestMetrics(hosts, names)
 

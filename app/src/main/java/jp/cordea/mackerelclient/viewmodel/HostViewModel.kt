@@ -6,13 +6,13 @@ import io.reactivex.Single
 import io.reactivex.disposables.SerialDisposable
 import io.reactivex.subjects.PublishSubject
 import jp.cordea.mackerelclient.R
-import jp.cordea.mackerelclient.api.response.Hosts
+import jp.cordea.mackerelclient.api.response.HostsResponse
 import jp.cordea.mackerelclient.api.response.Tsdbs
 import jp.cordea.mackerelclient.model.DisplayHostState
 import jp.cordea.mackerelclient.repository.HostRepository
 import javax.inject.Inject
 
-typealias HostsWithTsdbs = Pair<Hosts, Tsdbs>
+typealias HostsWithTsdbs = Pair<HostsResponse, Tsdbs>
 
 class HostViewModel : ViewModel() {
     @Inject
@@ -21,7 +21,7 @@ class HostViewModel : ViewModel() {
     @Inject
     lateinit var repository: HostRepository
 
-    private var hosts: Hosts? = null
+    private var hosts: HostsResponse? = null
     private var tsdbs: Tsdbs? = null
 
     private val serialDisposable = SerialDisposable()
@@ -68,14 +68,14 @@ class HostViewModel : ViewModel() {
             .run(serialDisposable::set)
     }
 
-    private fun getHosts(items: List<DisplayHostState>): Single<Hosts> =
+    private fun getHosts(items: List<DisplayHostState>): Single<HostsResponse> =
         repository.getHosts(items)
             .doOnSuccess { hosts ->
                 repository.deleteOldMetrics(hosts.hosts.map { it.id })
             }
             .doOnSuccess { hosts = it }
 
-    private fun getLatestMetrics(hosts: Hosts): Single<Tsdbs> =
+    private fun getLatestMetrics(hosts: HostsResponse): Single<Tsdbs> =
         repository.getLatestMetrics(
             hosts,
             listOf(loadavgMetricsKey, cpuMetricsKey, memoryMetricsKey)
