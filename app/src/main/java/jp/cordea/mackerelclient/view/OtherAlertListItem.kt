@@ -33,7 +33,7 @@ class OtherAlertListItemModel(
     val alert: DisplayableAlert
 ) {
     fun getName(context: Context) =
-        "${alert.hostName} - ${alert.openedAt.toRelativeTime(context)}"
+        "${alert.hostName} - ${alert.openedAt.toRelativeTime(context, System.currentTimeMillis())}"
 
     val statusChar get() = alert.status.first()
     val availableState get() = alert.value != null

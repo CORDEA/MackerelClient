@@ -2,9 +2,9 @@ package jp.cordea.mackerelclient
 
 import android.content.Context
 
-fun Long.toRelativeTime(context: Context): String {
-    val current = System.currentTimeMillis() / 1000f
-    var diff = current - this
+fun Long.toRelativeTime(context: Context, current: Long): String {
+    val currentSec = current / 1000f
+    var diff = currentSec - this
     if (diff <= 59) {
         return context.getString(R.string.relative_time_format_seconds, diff.toInt())
     }

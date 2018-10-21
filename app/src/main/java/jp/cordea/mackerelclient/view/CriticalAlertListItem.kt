@@ -32,7 +32,7 @@ class CriticalAlertListItemModel(
     val alert: DisplayableAlert
 ) {
     fun getName(context: Context) =
-        "${alert.hostName} - ${alert.openedAt.toRelativeTime(context)}"
+        "${alert.hostName} - ${alert.openedAt.toRelativeTime(context, System.currentTimeMillis())}"
 
     val availableState get() = alert.value != null
     val state get() = "${alert.value} ${alert.operator} ${alert.critical}"
