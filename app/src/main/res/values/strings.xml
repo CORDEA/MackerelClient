@@ -140,4 +140,9 @@
 
     <string name="setting_status_select_limit_dialog_message">ステータスは 1 つ以上選択してください</string>
 
+    <string name="relative_time_format_seconds">%d 秒前</string>
+    <string name="relative_time_format_minutes">%d 分前</string>
+    <string name="relative_time_format_hours">%d 時間前</string>
+    <string name="relative_time_format_days">%d 日前</string>
+    <string name="relative_time_format_others">10 日以上前</string>
 </resources>
