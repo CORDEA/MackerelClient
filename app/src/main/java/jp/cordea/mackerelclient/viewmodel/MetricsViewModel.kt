@@ -48,9 +48,9 @@ class MetricsViewModel : ViewModel() {
                                 .toList()
                                 .map { list -> list.toLineData(data.first().x.map { it.value }) }
                                 .map { MetricsLineDataSet(metrics.id, metrics.label, it) }
+                                .onErrorReturnItem(MetricsLineDataSet.ERROR)
                         }
                 }
-                .onErrorReturnItem(MetricsLineDataSet.ERROR)
                 .doOnNext { lineDataSet.add(it) }
         }
             .observeOn(AndroidSchedulers.mainThread())
