@@ -89,7 +89,7 @@ interface MackerelApi {
     @POST("/api/v0/alerts/{alertId}/close")
     fun postCloseAlert(
         @Path("alertId") alertId: String, @Body close: CloseAlert
-    ): Call<AlertDataResponse>
+    ): Single<AlertDataResponse>
 
     @DELETE("/api/v0/users/{userId}")
     fun deleteUser(@Path("userId") userId: String): Call<User>

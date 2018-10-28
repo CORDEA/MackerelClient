@@ -56,3 +56,9 @@ object DialogUtils {
         return progress
     }
 }
+
+fun ProgressDialog.applyCommonProgressStyle() = apply {
+    setProgressStyle(ProgressDialog.STYLE_SPINNER)
+    setCancelable(false)
+    setCanceledOnTouchOutside(false)
+}

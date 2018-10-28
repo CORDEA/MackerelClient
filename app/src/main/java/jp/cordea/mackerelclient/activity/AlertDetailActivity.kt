@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -18,9 +19,10 @@ import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.DetailCommonAdapter
 import jp.cordea.mackerelclient.databinding.ActivityDetailCommonBinding
-import jp.cordea.mackerelclient.fragment.AlertCloseDialogFragment
+import jp.cordea.mackerelclient.fragment.showAlertCloseConfirmDialogFragment
 import jp.cordea.mackerelclient.model.DisplayableAlert
 import jp.cordea.mackerelclient.utils.DateUtils
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class AlertDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
@@ -28,13 +30,14 @@ class AlertDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
+    private lateinit var binding: ActivityDetailCommonBinding
+
     private val alert by lazy { intent.getParcelableExtra<DisplayableAlert>(ALERT_KEY) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        val binding = DataBindingUtil
-            .setContentView<ActivityDetailCommonBinding>(this, R.layout.activity_detail_common)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_common)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         binding.recyclerView.let {
@@ -80,15 +83,23 @@ class AlertDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
         when (item.itemId) {
             android.R.id.home -> finish()
             R.id.action_close -> {
-                AlertCloseDialogFragment
-                    .newInstance(alert)
-                    .apply {
-                        onSuccess = {
-                            setResult(Activity.RESULT_OK)
-                            finish()
+                showAlertCloseConfirmDialogFragment(alert)
+                    .subscribe({
+                        setResult(Activity.RESULT_OK)
+                        finish()
+                    }, {
+                        var message = R.string.alert_detail_error_message
+                        if (it is HttpException) {
+                            if (it.code() == 403) {
+                                message = R.string.alert_detail_403_error_message
+                            }
                         }
-                    }
-                    .show(supportFragmentManager, "")
+                        Snackbar.make(
+                            binding.root,
+                            message,
+                            Snackbar.LENGTH_LONG
+                        ).show()
+                    })
             }
         }
         return super.onOptionsItemSelected(item)

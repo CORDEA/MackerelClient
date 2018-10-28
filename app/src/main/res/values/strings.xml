@@ -83,7 +83,8 @@
     <string name="title_activity_host_detail">ホストの詳細</string>
 
     <string name="alert_detail_close_dialog_title">このアラートを閉じますか？</string>
-    <string name="alert_detail_error_close_dialog_title">アラートのクローズに失敗しました</string>
+    <string name="alert_detail_error_message">アラートのクローズに失敗しました。</string>
+    <string name="alert_detail_403_error_message">アラートのクローズに失敗しました。クローズする権限がありません。</string>
     <string name="alert_detail_close_positive_button">アラートを閉じる</string>
 
     <string name="host_detail_retire_dialog_title">このホストを退役させますか？</string>

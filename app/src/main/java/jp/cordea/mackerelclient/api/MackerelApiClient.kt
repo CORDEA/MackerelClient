@@ -153,7 +153,7 @@ class MackerelApiClient @Inject constructor(
     fun deleteUser(userId: String): Call<User> =
         getService(MackerelApi::class.java).deleteUser(userId)
 
-    fun closeAlert(alertId: String, close: CloseAlert): Call<AlertDataResponse> =
+    fun closeAlert(alertId: String, close: CloseAlert): Single<AlertDataResponse> =
         getService(MackerelApi::class.java).postCloseAlert(alertId, close)
 
     fun retireHost(hostId: String): Call<RetireHost> =
