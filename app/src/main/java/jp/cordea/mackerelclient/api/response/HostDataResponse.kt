@@ -1,7 +1,5 @@
 package jp.cordea.mackerelclient.api.response
 
-import java.io.Serializable
-
 class HostsResponse(val hosts: List<HostDataResponse>)
 
 class HostResponse(val host: HostDataResponse)
@@ -16,4 +14,4 @@ class HostDataResponse(
     var status: String,
     var memo: String,
     var roles: Map<String, Array<String>> = mapOf()
-) : Serializable
+)

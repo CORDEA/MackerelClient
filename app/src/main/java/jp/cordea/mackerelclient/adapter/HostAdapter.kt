@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.activity.HostDetailActivity
 import jp.cordea.mackerelclient.activity.MetricsActivity
-import jp.cordea.mackerelclient.api.response.HostDataResponse
 import jp.cordea.mackerelclient.api.response.Tsdb
 import jp.cordea.mackerelclient.databinding.ListItemHostBinding
+import jp.cordea.mackerelclient.model.DisplayableHost
 import jp.cordea.mackerelclient.utils.StatusUtils
 import jp.cordea.mackerelclient.viewmodel.HostListItemViewModel
 
@@ -19,7 +19,7 @@ class HostAdapter(
     val fragment: Fragment
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var items = emptyList<HostDataResponse>()
+    private var items = emptyList<DisplayableHost>()
     private var metrics = emptyMap<String, Map<String, Tsdb>>()
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -39,11 +39,7 @@ class HostAdapter(
             val metric = metrics[item.id]
             val viewModel = HostListItemViewModel(context, item, metric)
 
-            nameTextView.text = if (item.displayName.isNullOrBlank()) {
-                item.name
-            } else {
-                item.displayName
-            }
+            nameTextView.text = item.name
 
             detailTextView.text = item.memo
             roleTextView.text = viewModel.roleText
@@ -75,7 +71,7 @@ class HostAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    fun update(items: List<HostDataResponse>, metrics: Map<String, Map<String, Tsdb>>) {
+    fun update(items: List<DisplayableHost>, metrics: Map<String, Map<String, Tsdb>>) {
         this.items = items
         this.metrics = metrics
         notifyDataSetChanged()

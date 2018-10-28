@@ -4,10 +4,11 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import dagger.android.support.AndroidSupportInjection
 import jp.cordea.mackerelclient.R
-import jp.cordea.mackerelclient.api.response.HostDataResponse
+import jp.cordea.mackerelclient.model.DisplayableHost
 import jp.cordea.mackerelclient.utils.DialogUtils
 import jp.cordea.mackerelclient.viewmodel.HostRetireViewModel
 import javax.inject.Inject
@@ -19,8 +20,7 @@ class HostRetireDialogFragment : DialogFragment() {
 
     var onSuccess = { }
 
-    private val host: HostDataResponse
-        get() = arguments!!.getSerializable(HOST_KEY) as HostDataResponse
+    private val host: DisplayableHost get() = arguments!!.getParcelable(HOST_KEY)!!
 
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
@@ -72,14 +72,11 @@ class HostRetireDialogFragment : DialogFragment() {
     }
 
     companion object {
-
         private const val HOST_KEY = "HostKey"
 
-        fun newInstance(host: HostDataResponse): HostRetireDialogFragment =
+        fun newInstance(host: DisplayableHost): HostRetireDialogFragment =
             HostRetireDialogFragment().apply {
-                arguments = Bundle().apply {
-                    putSerializable(HOST_KEY, host)
-                }
+                arguments = bundleOf(HOST_KEY to host)
             }
     }
 }

@@ -5,17 +5,16 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.TextAppearanceSpan
 import jp.cordea.mackerelclient.R
-import jp.cordea.mackerelclient.api.response.HostDataResponse
 import jp.cordea.mackerelclient.api.response.Tsdb
+import jp.cordea.mackerelclient.model.DisplayableHost
 
 class HostListItemViewModel(
     private val context: Context,
-    private val item: HostDataResponse,
+    private val item: DisplayableHost,
     private val metric: Map<String, Tsdb>?
 ) {
-
     val roleText: String
-        get() = item.roles.size.let {
+        get() = item.numberOfRoles.let {
             if (it <= 1) {
                 context.resources.getString(R.string.format_role).format(it)
             } else {

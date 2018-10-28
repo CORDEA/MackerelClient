@@ -19,11 +19,11 @@ import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.activity.HostDetailActivity
 import jp.cordea.mackerelclient.adapter.HostAdapter
 import jp.cordea.mackerelclient.databinding.FragmentHostBinding
+import jp.cordea.mackerelclient.model.DisplayableHost
 import jp.cordea.mackerelclient.viewmodel.HostViewModel
 import javax.inject.Inject
 
 class HostFragment : Fragment() {
-
     @Inject
     lateinit var viewModel: HostViewModel
 
@@ -55,7 +55,12 @@ class HostFragment : Fragment() {
 
         viewModel.adapterItems
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribeBy { adapter.update(it.first.hosts, it.second.tsdbs) }
+            .subscribeBy { pair ->
+                adapter.update(
+                    pair.first.hosts.map { DisplayableHost.from(it) },
+                    pair.second.tsdbs
+                )
+            }
             .addTo(compositeDisposable)
 
         viewModel.isProgressLayoutVisible
