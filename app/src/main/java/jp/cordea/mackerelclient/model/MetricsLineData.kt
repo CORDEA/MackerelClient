@@ -8,11 +8,11 @@ import jp.cordea.mackerelclient.utils.DateUtils
 
 class MetricsLineDataSet(
     val id: Int,
-    val label: String,
+    val label: String?,
     val data: LineData
 ) {
     companion object {
-        val ERROR = MetricsLineDataSet(0, "", LineData())
+        val ERROR = MetricsLineDataSet(0, null, LineData())
     }
 }
 

@@ -27,7 +27,7 @@ class MetricsAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as? ViewHolder)?.binding?.let { binding ->
             val item = items[position]
-            if (item.label.isEmpty()) {
+            if (item.label.isNullOrBlank()) {
                 binding.titleTextView.visibility = View.GONE
             } else {
                 binding.titleTextView.text = item.label

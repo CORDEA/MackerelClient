@@ -43,7 +43,7 @@ class MetricsEditLocalDataSource @Inject constructor() {
         val maxId = query.max("id")
         val nextId = if (maxId == null) 0 else maxId.toInt() + 1
         realm.executeTransaction {
-            realm.createObject<UserMetric>(nextId).apply {
+            it.createObject<UserMetric>(nextId).apply {
                 this.parentId = parentId
                 this.type = type
                 this.label = label
