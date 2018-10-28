@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <data>
+
+        <variable
+            name="model"
+            type="jp.cordea.mackerelclient.view.MonitorSectionListItemModel" />
+    </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_item_monitor_section_cell_height"
@@ -19,8 +26,7 @@
             android:layout_marginStart="@dimen/list_item_monitor_section_margin_side"
             android:layout_marginEnd="@dimen/list_item_monitor_section_margin_side"
             android:gravity="center_vertical"
-            android:text="@string/na_text"
+            android:text="@{model.label}"
             android:textStyle="bold" />
-
     </LinearLayout>
 </layout>

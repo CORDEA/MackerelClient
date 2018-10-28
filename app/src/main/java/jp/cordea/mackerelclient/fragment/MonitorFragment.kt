@@ -7,24 +7,26 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.android.support.AndroidSupportInjection
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.SerialDisposable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
 import jp.cordea.mackerelclient.activity.MonitorDetailActivity
 import jp.cordea.mackerelclient.adapter.MonitorAdapter
-import jp.cordea.mackerelclient.api.MackerelApiClient
-import jp.cordea.mackerelclient.api.response.MonitorDataResponse
 import jp.cordea.mackerelclient.databinding.FragmentMonitorBinding
+import jp.cordea.mackerelclient.viewmodel.MonitorViewModel
 import javax.inject.Inject
 
 class MonitorFragment : Fragment() {
+    @Inject
+    lateinit var viewModel: MonitorViewModel
 
     @Inject
-    lateinit var apiClient: MackerelApiClient
+    lateinit var adapter: MonitorAdapter
 
-    private val disposable = SerialDisposable()
+    private val compositeDisposable = CompositeDisposable()
 
     private lateinit var binding: FragmentMonitorBinding
 
@@ -44,70 +46,50 @@ class MonitorFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        binding.recyclerView.layoutManager = LinearLayoutManager(context)
-        refresh()
+        binding.recyclerView.adapter = adapter
+
+        viewModel.adapterItems
+            .subscribeBy { adapter.update(it) }
+            .addTo(compositeDisposable)
+
+        viewModel.isRefreshing
+            .subscribeBy { binding.swipeRefresh.isRefreshing = it }
+            .addTo(compositeDisposable)
+
+        viewModel.isSwipeRefreshLayoutVisible
+            .subscribeBy { binding.swipeRefresh.isVisible = it }
+            .addTo(compositeDisposable)
+
+        viewModel.isProgressLayoutVisible
+            .subscribeBy { binding.progressLayout.isVisible = it }
+            .addTo(compositeDisposable)
+
+        viewModel.isErrorVisible
+            .subscribeBy { binding.error.root.isVisible = it }
+            .addTo(compositeDisposable)
 
         binding.swipeRefresh.setOnRefreshListener {
-            refresh()
+            viewModel.refresh()
         }
-
         binding.error.retryButton.setOnClickListener {
-            binding.progressLayout.visibility = View.VISIBLE
-            binding.error.root.visibility = View.GONE
-            refresh()
+            viewModel.clickedRetryButton()
         }
-    }
 
-    private fun refresh() {
-        binding.swipeRefresh.isRefreshing = true
-        requestApi()
-    }
-
-    private fun requestApi() {
-        apiClient
-            .getMonitors()
-            .map { it.monitors }
-            .map { monitors ->
-                val sections = monitors
-                    .asSequence()
-                    .map { it.type }
-                    .distinct()
-                    .sortedBy { it }
-                val pairs: MutableList<Pair<String, MonitorDataResponse?>> = arrayListOf()
-                for (section in sections) {
-                    val items = monitors.filter { section == it.type }
-                    val type = items[0].type
-                    pairs.add(type to null)
-                    items.map { pairs.add(type to it) }
-                }
-                pairs
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                binding.swipeRefresh.isRefreshing = false
-                binding.recyclerView.adapter = MonitorAdapter(this, it)
-                binding.progressLayout.visibility = View.GONE
-                binding.swipeRefresh.visibility = View.VISIBLE
-            }, {
-                binding.swipeRefresh.isRefreshing = false
-                binding.error.root.visibility = View.VISIBLE
-                binding.progressLayout.visibility = View.GONE
-            })
-            .run(disposable::set)
+        viewModel.start()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == MonitorDetailActivity.REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                refresh()
+                viewModel.refresh()
             }
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        disposable.dispose()
+        compositeDisposable.dispose()
     }
 
     companion object {

@@ -1,61 +1,30 @@
 package jp.cordea.mackerelclient.adapter
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
-import jp.cordea.mackerelclient.R
-import jp.cordea.mackerelclient.activity.MonitorDetailActivity
+import android.content.Context
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.ViewHolder
 import jp.cordea.mackerelclient.api.response.MonitorDataResponse
-import jp.cordea.mackerelclient.databinding.ListItemMonitorBinding
-import jp.cordea.mackerelclient.databinding.ListItemMonitorSectionBinding
+import jp.cordea.mackerelclient.di.FragmentScope
+import jp.cordea.mackerelclient.view.MonitorListItem
+import jp.cordea.mackerelclient.view.MonitorListItemModel
+import jp.cordea.mackerelclient.view.MonitorSectionListItem
+import jp.cordea.mackerelclient.view.MonitorSectionListItemModel
+import javax.inject.Inject
+import javax.inject.Provider
 
-class MonitorAdapter(
-    val fragment: Fragment,
-    val items: List<Pair<String, MonitorDataResponse?>>
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val context = fragment.context ?: return
-        (holder as? ViewHolder)?.binding?.run {
-            items[position].second?.let { item ->
-                root.setOnClickListener {
-                    val intent = MonitorDetailActivity.createIntent(context, item)
-                    fragment.startActivityForResult(intent, MonitorDetailActivity.REQUEST_CODE)
-                }
-                if (!item.name.isNullOrBlank()) {
-                    nameTextView.text = item.name
-                }
-                idTextView.text = item.id
-                return
-            }
+@FragmentScope
+class MonitorAdapter @Inject constructor(
+    private val context: Context,
+    private val sectionListItem: Provider<MonitorSectionListItem>,
+    private val listItem: Provider<MonitorListItem>
+) : GroupAdapter<ViewHolder>() {
+    fun update(items: Map<String, List<MonitorDataResponse>>) {
+        clear()
+        items.forEach { entry ->
+            add(sectionListItem.get().update(MonitorSectionListItemModel(entry.key)))
+            addAll(entry.value.map {
+                listItem.get().update(MonitorListItemModel.from(context, it))
+            })
         }
-        (holder as? SectionViewHolder)?.binding?.run {
-            titleTextView.text = items[position].first
-        }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        if (viewType == 1) {
-            val view = LayoutInflater.from(fragment.context)
-                .inflate(R.layout.list_item_monitor_section, parent, false)
-            return SectionViewHolder(view)
-        }
-        val view = LayoutInflater.from(fragment.context)
-            .inflate(R.layout.list_item_monitor, parent, false)
-        return ViewHolder(view)
-    }
-
-    override fun getItemViewType(position: Int): Int = if (items[position].second == null) 1 else 0
-
-    override fun getItemCount(): Int = items.size
-
-    private class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val binding: ListItemMonitorBinding = ListItemMonitorBinding.bind(view)
-    }
-
-    private class SectionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val binding: ListItemMonitorSectionBinding = ListItemMonitorSectionBinding.bind(view)
     }
 }

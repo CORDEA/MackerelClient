@@ -2,6 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <variable
+            name="model"
+            type="jp.cordea.mackerelclient.view.MonitorListItemModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/common_cell_height"
@@ -14,7 +21,7 @@
             style="@style/ListText.Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/na_text"
+            android:text="@{model.name}"
             app:layout_constraintBottom_toTopOf="@id/id_text_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +33,7 @@
             style="@style/ListText.Detail"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/na_text"
+            android:text="@{model.id}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -3,7 +3,6 @@ package jp.cordea.mackerelclient.di
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import jp.cordea.mackerelclient.activity.MainActivity
-import jp.cordea.mackerelclient.fragment.MonitorFragment
 import jp.cordea.mackerelclient.fragment.ServiceFragment
 import jp.cordea.mackerelclient.fragment.SettingFragment
 import jp.cordea.mackerelclient.fragment.SettingStatusSelectionDialogFragment
@@ -17,6 +16,7 @@ interface MainActivityModule {
             HostFragmentModule::class,
             UserFragmentModule::class,
             AlertFragmentModule::class,
+            MonitorFragmentModule::class,
             OtherAlertFragmentModule::class,
             CriticalAlertFragmentModule::class,
             UserDeleteConfirmDialogFragmentModule::class
@@ -27,10 +27,6 @@ interface MainActivityModule {
 
 @Module
 interface MainFragmentModule {
-    @FragmentScope
-    @ContributesAndroidInjector
-    fun contributeMonitorFragment(): MonitorFragment
-
     @FragmentScope
     @ContributesAndroidInjector
     fun contributeServiceFragment(): ServiceFragment
