@@ -4,12 +4,14 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
-        style="@style/CardDefault"
+        style="@style/Widget.MaterialComponents.CardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/card_margin"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="4dp"
         android:foreground="?android:attr/selectableItemBackground"
-        app:cardBackgroundColor="@android:color/white">
+        app:cardUseCompatPadding="true">
 
         <LinearLayout
             android:layout_width="match_parent"

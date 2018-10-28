@@ -13,11 +13,13 @@
     </data>
 
     <androidx.cardview.widget.CardView
-        style="@style/CardDefault"
+        style="@style/Widget.MaterialComponents.CardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:foreground="?android:attr/selectableItemBackground"
-        app:cardBackgroundColor="@android:color/white">
+        app:cardUseCompatPadding="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -51,10 +53,10 @@
             <TextView
                 android:id="@+id/type"
                 android:layout_width="0dp"
-                android:visibility="@{model.availableState ? View.VISIBLE : View.GONE}"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@{model.type}"
+                android:visibility="@{model.availableState ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
