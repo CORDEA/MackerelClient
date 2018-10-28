@@ -5,7 +5,6 @@ import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import jp.cordea.mackerelclient.activity.MetricsActivity
-import jp.cordea.mackerelclient.fragment.MetricsDeleteConfirmDialogFragment
 import jp.cordea.mackerelclient.viewmodel.MetricsViewModel
 
 @Module
@@ -19,13 +18,6 @@ interface MetricsActivityModule {
         ]
     )
     fun contributeMetricsActivity(): MetricsActivity
-}
-
-@Module
-interface MetricsDeleteConfirmDialogFragmentModule {
-    @FragmentScope
-    @ContributesAndroidInjector
-    fun contributeMetricsDeleteConfirmDialogFragment(): MetricsDeleteConfirmDialogFragment
 }
 
 @Module

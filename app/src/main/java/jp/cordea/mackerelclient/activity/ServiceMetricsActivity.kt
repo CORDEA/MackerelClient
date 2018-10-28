@@ -9,9 +9,13 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.Lazy
 import dagger.android.AndroidInjection
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.HasSupportFragmentInjector
 import io.reactivex.disposables.SerialDisposable
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.MetricsType
@@ -24,7 +28,11 @@ import jp.cordea.mackerelclient.viewmodel.ServiceMetricsViewModel
 import javax.inject.Inject
 
 class ServiceMetricsActivity : AppCompatActivity(),
+    HasSupportFragmentInjector,
     MetricsDeleteConfirmDialogFragment.OnDeleteMetricsListener {
+
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     @Inject
     lateinit var viewModelProvider: Lazy<ServiceMetricsViewModel>
@@ -103,6 +111,8 @@ class ServiceMetricsActivity : AppCompatActivity(),
     override fun onDelete(id: Int) {
         adapter.removeAt(id)
     }
+
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
 
     private fun refresh(forceRefresh: Boolean) {
         enableRefresh = false

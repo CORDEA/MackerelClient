@@ -13,7 +13,8 @@ interface ServiceMetricsActivityModule {
     @ContributesAndroidInjector(
         modules = [
             ServiceMetricsActivityBindModule::class,
-            ServiceMetricsViewModelModule::class
+            ServiceMetricsViewModelModule::class,
+            MetricsDeleteConfirmDialogFragmentModule::class
         ]
     )
     fun contributeServiceMetricsActivity(): ServiceMetricsActivity
