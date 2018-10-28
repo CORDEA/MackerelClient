@@ -1,6 +1,7 @@
 package jp.cordea.mackerelclient.fragment
 
 import android.app.Dialog
+import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
@@ -34,12 +35,12 @@ class HostRetireDialogFragment : DialogFragment() {
             .setPositiveButton(R.string.retire_positive_button) { _, _ ->
                 val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
                 dialog.show()
-                retireHost()
+                retireHost(dialog)
             }
             .create()
     }
 
-    private fun retireHost() {
+    private fun retireHost(dialog: ProgressDialog) {
         val context = context ?: return
         viewModel.retireHost(
             host,

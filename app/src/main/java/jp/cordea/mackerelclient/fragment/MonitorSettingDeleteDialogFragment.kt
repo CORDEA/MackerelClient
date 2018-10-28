@@ -1,6 +1,7 @@
 package jp.cordea.mackerelclient.fragment
 
 import android.app.Dialog
+import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
@@ -35,14 +36,15 @@ class MonitorSettingDeleteDialogFragment : DialogFragment() {
             .setPositiveButton(R.string.delete_positive_button) { _, _ ->
                 val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
                 dialog.show()
-                deleteMonitorSetting()
+                deleteMonitorSetting(dialog)
             }
             .create()
     }
 
-    private fun deleteMonitorSetting() {
+    private fun deleteMonitorSetting(dialog: ProgressDialog) {
         val context = context ?: return
-        viewModel.deleteMonitorSetting(monitor,
+        viewModel.deleteMonitorSetting(
+            monitor,
             onResponse = {
                 dialog.dismiss()
                 if (it != null) {

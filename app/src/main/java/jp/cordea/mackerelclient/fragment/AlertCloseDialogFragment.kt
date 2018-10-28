@@ -1,6 +1,7 @@
 package jp.cordea.mackerelclient.fragment
 
 import android.app.Dialog
+import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -39,12 +40,12 @@ class AlertCloseDialogFragment : DialogFragment() {
             .setPositiveButton(R.string.alert_detail_close_positive_button) { _, _ ->
                 val dialog = DialogUtils.progressDialog(context, R.string.progress_dialog_title)
                 dialog.show()
-                closeAlert(editText.text.toString())
+                closeAlert(dialog, editText.text.toString())
             }
             .create()
     }
 
-    private fun closeAlert(text: String) {
+    private fun closeAlert(dialog: ProgressDialog, text: String) {
         val context = context ?: return
         viewModel.closeAlert(
             alert,
