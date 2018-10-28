@@ -8,10 +8,8 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import dagger.android.support.AndroidSupportInjection
-import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.subjects.CompletableSubject
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.api.MackerelApiClient
 import jp.cordea.mackerelclient.api.response.CloseAlert
@@ -20,13 +18,12 @@ import jp.cordea.mackerelclient.utils.applyCommonProgressStyle
 import javax.inject.Inject
 
 class AlertCloseDialogFragment : DialogFragment() {
-
     @Inject
     lateinit var apiClient: MackerelApiClient
 
-    private val onDismiss = CompletableSubject.create()
+    @Inject
+    lateinit var listener: AlertCloseDialogListener
 
-    private var throwable: Throwable? = null
     private var disposable: Disposable? = null
 
     private val alert by lazy { arguments!!.getParcelable<DisplayableAlert>(ALERT_KEY)!! }
@@ -42,9 +39,10 @@ class AlertCloseDialogFragment : DialogFragment() {
         disposable = apiClient.closeAlert(alert.id, CloseAlert(reason))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
+                listener.onNext(AlertCloseResult.Success)
                 dismiss()
             }, {
-                throwable = it
+                listener.onNext(AlertCloseResult.Error(it))
                 dismiss()
             })
     }
@@ -63,19 +61,8 @@ class AlertCloseDialogFragment : DialogFragment() {
         disposable?.dispose()
     }
 
-    override fun dismiss() {
-        super.dismiss()
-        val throwable = throwable
-        if (throwable == null) {
-            onDismiss.onComplete()
-        } else {
-            onDismiss.onError(throwable)
-        }
-    }
-
-    fun show(fragmentManager: FragmentManager): Completable {
+    fun show(fragmentManager: FragmentManager) {
         show(fragmentManager, TAG)
-        return onDismiss
     }
 
     companion object {

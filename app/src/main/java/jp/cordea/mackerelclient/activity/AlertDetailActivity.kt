@@ -15,22 +15,30 @@ import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.subscribeBy
 import jp.cordea.mackerelclient.ListItemDecoration
 import jp.cordea.mackerelclient.R
 import jp.cordea.mackerelclient.adapter.DetailCommonAdapter
 import jp.cordea.mackerelclient.databinding.ActivityDetailCommonBinding
-import jp.cordea.mackerelclient.fragment.showAlertCloseConfirmDialogFragment
+import jp.cordea.mackerelclient.fragment.AlertCloseDialogLoader
+import jp.cordea.mackerelclient.fragment.AlertCloseResult
 import jp.cordea.mackerelclient.model.DisplayableAlert
 import jp.cordea.mackerelclient.utils.DateUtils
 import retrofit2.HttpException
 import javax.inject.Inject
 
 class AlertDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
-
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
+    @Inject
+    lateinit var dialogLoader: AlertCloseDialogLoader
+
     private lateinit var binding: ActivityDetailCommonBinding
+
+    private var disposable: Disposable? = null
 
     private val alert by lazy { intent.getParcelableExtra<DisplayableAlert>(ALERT_KEY) }
 
@@ -45,6 +53,31 @@ class AlertDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
             it.adapter = DetailCommonAdapter(this, insertInfo(alert))
             it.addItemDecoration(ListItemDecoration(this))
         }
+
+        disposable = dialogLoader.closeAlertCloseDialog
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy {
+                when (it) {
+                    AlertCloseResult.Success -> {
+                        setResult(Activity.RESULT_OK)
+                        finish()
+                    }
+                    is AlertCloseResult.Error -> {
+                        val throwable = it.throwable
+                        var message = R.string.alert_detail_error_message
+                        if (throwable is HttpException) {
+                            if (throwable.code() == 403) {
+                                message = R.string.alert_detail_403_error_message
+                            }
+                        }
+                        Snackbar.make(
+                            binding.root,
+                            message,
+                            Snackbar.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
     }
 
     private fun insertInfo(alert: DisplayableAlert): List<List<Pair<String, Int>>> {
@@ -82,27 +115,14 @@ class AlertDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> finish()
-            R.id.action_close -> {
-                showAlertCloseConfirmDialogFragment(alert)
-                    .subscribe({
-                        setResult(Activity.RESULT_OK)
-                        finish()
-                    }, {
-                        var message = R.string.alert_detail_error_message
-                        if (it is HttpException) {
-                            if (it.code() == 403) {
-                                message = R.string.alert_detail_403_error_message
-                            }
-                        }
-                        Snackbar.make(
-                            binding.root,
-                            message,
-                            Snackbar.LENGTH_LONG
-                        ).show()
-                    })
-            }
+            R.id.action_close -> dialogLoader.show(alert)
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable?.dispose()
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
