@@ -92,7 +92,7 @@ class CriticalAlertFragment : Fragment() {
 
         alertResultReceivedSource
             .onAlertResultReceived()
-            .subscribeBy { viewModel.refresh(false) }
+            .subscribeBy { viewModel.refresh(true) }
             .addTo(compositeDisposable)
 
         binding.error.retryButton.setOnClickListener {

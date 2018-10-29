@@ -46,7 +46,7 @@ class HostViewModel : ViewModel() {
 
     fun refresh(forceRefresh: Boolean) {
         isRefreshing.onNext(true)
-        if (forceRefresh && hosts != null && tsdbs != null) {
+        if (!forceRefresh && hosts != null && tsdbs != null) {
             Single.just(hosts!! to tsdbs!!)
         } else {
             getHosts(displayHostState)
