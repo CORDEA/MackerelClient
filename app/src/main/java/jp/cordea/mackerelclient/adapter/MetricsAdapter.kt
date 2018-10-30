@@ -98,6 +98,7 @@ class MetricsAdapter(
         val index = items.indexOfFirst { it.id == id }
         items.removeAt(index)
         notifyItemRemoved(index)
+        notifyItemRangeChanged(index, itemCount - index)
     }
 
     private val LineData.needFormat: Boolean
