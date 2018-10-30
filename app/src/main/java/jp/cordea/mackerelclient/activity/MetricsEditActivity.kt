@@ -141,15 +141,12 @@ class MetricsEditActivity : AppCompatActivity() {
             context: Context,
             type: MetricsType,
             id: String,
-            metricId: Int? = null
-        ): Intent {
-            val intent = Intent(context, MetricsEditActivity::class.java)
-            metricId?.let {
-                intent.putExtra(USER_METRIC_KEY, metricId)
+            metricId: Int = -1
+        ): Intent =
+            Intent(context, MetricsEditActivity::class.java).apply {
+                putExtra(USER_METRIC_KEY, metricId)
+                putExtra(ID_KEY, id)
+                putExtra(TYPE_KEY, type.name)
             }
-            intent.putExtra(ID_KEY, id)
-            intent.putExtra(TYPE_KEY, type.name)
-            return intent
-        }
     }
 }

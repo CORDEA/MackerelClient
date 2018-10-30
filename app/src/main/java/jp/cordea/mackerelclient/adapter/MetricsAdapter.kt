@@ -27,16 +27,20 @@ class MetricsAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as? ViewHolder)?.binding?.let { binding ->
             val item = items[position]
-            if (item.label.isNullOrBlank()) {
-                binding.titleTextView.visibility = View.GONE
-            } else {
-                binding.titleTextView.text = item.label
-            }
-            if (item == MetricsLineDataSet.ERROR) {
-                binding.lineChart.isVisible = false
-                binding.error.root.isVisible = true
-            } else {
-                setLineData(binding, item.data)
+            when (item) {
+                is MetricsLineDataSet.Success -> {
+                    if (item.label.isNullOrBlank()) {
+                        binding.titleTextView.visibility = View.GONE
+                    } else {
+                        binding.titleTextView.text = item.label
+                    }
+                    setLineData(binding, item.data)
+                }
+                is MetricsLineDataSet.Failure -> {
+                    binding.titleTextView.visibility = View.GONE
+                    binding.lineChart.isVisible = false
+                    binding.error.root.isVisible = true
+                }
             }
             binding.editButton.setOnClickListener {
                 val intent = MetricsEditActivity

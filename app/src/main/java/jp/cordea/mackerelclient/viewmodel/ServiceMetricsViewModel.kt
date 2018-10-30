@@ -38,14 +38,20 @@ class ServiceMetricsViewModel : ViewModel() {
                 .map { UserDefinedMetrics.from(it) }
                 .concatMapSingle { metrics ->
                     repository.getMetrics(serviceName, metrics, from, to)
-                        .flatMap { data ->
+                        .flatMap<MetricsLineDataSet> { data ->
                             Observable.range(0, data.size)
                                 .map { data[it].toLineDataSet(ColorTemplate.COLORFUL_COLORS[it]) }
                                 .toList()
                                 .map { list -> list.toLineData(data.first().x.map { it.value }) }
-                                .map { MetricsLineDataSet(metrics.id, metrics.label, it) }
+                                .map {
+                                    MetricsLineDataSet.Success(
+                                        metrics.id,
+                                        metrics.label,
+                                        it
+                                    )
+                                }
                         }
-                        .onErrorReturnItem(MetricsLineDataSet.ERROR)
+                        .onErrorReturnItem(MetricsLineDataSet.Failure(metrics.id))
                 }
                 .doOnNext { lineDataSet.add(it) }
         }

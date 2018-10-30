@@ -6,14 +6,18 @@ import com.github.mikephil.charting.data.LineDataSet
 import jp.cordea.mackerelclient.api.response.MetricsResponse
 import jp.cordea.mackerelclient.utils.DateUtils
 
-class MetricsLineDataSet(
-    val id: Int,
-    val label: String?,
-    val data: LineData
+sealed class MetricsLineDataSet(
+    val id: Int
 ) {
-    companion object {
-        val ERROR = MetricsLineDataSet(0, null, LineData())
-    }
+    class Success(
+        id: Int,
+        val label: String?,
+        val data: LineData
+    ) : MetricsLineDataSet(id)
+
+    class Failure(
+        id: Int
+    ) : MetricsLineDataSet(id)
 }
 
 class MetricsLineData(
