@@ -25,7 +25,7 @@ class McApplication : Application(), HasActivityInjector {
                 .migration { dynamicRealm, old, _ ->
                     val scheme = dynamicRealm.schema
                     var oldVersion = old
-                    if (old == 0L) {
+                    if (oldVersion == 0L) {
                         scheme[DisplayHostState::class.java.simpleName]!!
                             .addField("new_name", String::class.java)
                             .transform {
@@ -34,6 +34,14 @@ class McApplication : Application(), HasActivityInjector {
                             .removeField("name")
                             .addPrimaryKey("new_name")
                             .renameField("new_name", "name")
+                        ++oldVersion
+                    }
+                    if (oldVersion == 1L) {
+                        scheme[DisplayHostState::class.java.simpleName]!!
+                            .removePrimaryKey()
+                            .setRequired(DisplayHostState::name.name, true)
+                            .addIndex(DisplayHostState::name.name)
+                            .addPrimaryKey(DisplayHostState::name.name)
                         ++oldVersion
                     }
                 }.build()
@@ -49,6 +57,6 @@ class McApplication : Application(), HasActivityInjector {
     override fun activityInjector(): AndroidInjector<Activity> = dispatchingAndroidInjector
 
     companion object {
-        private const val SCHEMA_VERSION = 1L
+        private const val SCHEMA_VERSION = 2L
     }
 }
