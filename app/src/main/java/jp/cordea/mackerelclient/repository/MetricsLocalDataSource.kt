@@ -10,12 +10,12 @@ import javax.inject.Singleton
 @Singleton
 class MetricsLocalDataSource @Inject constructor() {
     fun getMetricsDefinition(hostId: String): List<UserMetric> =
-        Realm.getDefaultInstance().use {
-            it.copyFromRealm(
-                it.where(UserMetric::class.java)
+        Realm.getDefaultInstance().use { realm ->
+            realm.copyFromRealm(
+                realm.where(UserMetric::class.java)
                     .equalTo("type", MetricsType.HOST.name)
                     .equalTo("parentId", hostId).findAll()
-            )
+            ).sortedBy { it.id }
         }
 
     fun storeDefaultUserMetrics(hostId: String) {

@@ -9,11 +9,11 @@ import javax.inject.Singleton
 @Singleton
 class ServiceMetricsLocalDataSource @Inject constructor() {
     fun getMetricsDefinition(serviceName: String): List<UserMetric> =
-        Realm.getDefaultInstance().use {
-            it.copyFromRealm(
-                it.where(UserMetric::class.java)
+        Realm.getDefaultInstance().use { realm ->
+            realm.copyFromRealm(
+                realm.where(UserMetric::class.java)
                     .equalTo("type", MetricsType.SERVICE.name)
                     .equalTo("parentId", serviceName).findAll()
-            )
+            ).sortedBy { it.id }
         }
 }
