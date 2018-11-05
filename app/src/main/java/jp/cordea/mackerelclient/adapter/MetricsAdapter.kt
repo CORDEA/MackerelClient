@@ -56,15 +56,14 @@ class MetricsAdapter(
 
     private fun setLineData(binding: ListItemMetricsChartBinding, lineData: LineData) {
         binding.lineChart.apply {
-            data = lineData
             setDescription("")
             xAxis.position = XAxis.XAxisPosition.BOTTOM
 
-            if (data.needFormat) {
+            if (lineData.needFormat) {
                 val format = context.resources.getString(R.string.metrics_data_gb_format)
-                data.dataSets[0].label = format.format(data.dataSets[0].label)
-                if (data.dataSets.size > 1) {
-                    data.dataSets[1].label = format.format(data.dataSets[1].label)
+                lineData.dataSets[0].label = format.format(lineData.dataSets[0].label)
+                if (lineData.dataSets.size > 1) {
+                    lineData.dataSets[1].label = format.format(lineData.dataSets[1].label)
                 }
                 axisRight.valueFormatter = MemoryValueFormatter()
                 axisLeft.valueFormatter = MemoryValueFormatter()
@@ -72,6 +71,7 @@ class MetricsAdapter(
 
             axisRight.setLabelCount(3, false)
             axisLeft.setLabelCount(3, false)
+            data = lineData
             invalidate()
         }
     }
