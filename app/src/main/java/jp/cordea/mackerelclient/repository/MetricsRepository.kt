@@ -21,7 +21,7 @@ class MetricsRepository @Inject constructor(
         to: Long
     ): Single<List<MetricsLineData>> =
         Observable.fromIterable(metrics.metrics)
-            .flatMapSingle { name ->
+            .concatMapSingle { name ->
                 remoteDataSource.getMetrics(hostId, name, from, to)
                     .map { MetricsLineData.from(name, it) }
             }
