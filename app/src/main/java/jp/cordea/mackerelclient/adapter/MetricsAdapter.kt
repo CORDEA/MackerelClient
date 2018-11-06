@@ -72,13 +72,6 @@ class MetricsAdapter(
         notifyDataSetChanged()
     }
 
-    fun removeAt(id: Int) {
-        val index = items.indexOfFirst { it.id == id }
-        items.removeAt(index)
-        notifyItemRemoved(index)
-        notifyItemRangeChanged(index, itemCount - index)
-    }
-
     private fun ListItemMetricsChartBinding.setLineData(lineData: LineData) {
         lineChart.apply {
             setDescription("")

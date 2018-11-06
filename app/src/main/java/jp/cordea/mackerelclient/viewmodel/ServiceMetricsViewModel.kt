@@ -25,6 +25,10 @@ class ServiceMetricsViewModel : ViewModel() {
         this.serviceName = serviceName
     }
 
+    fun removeBy(id: Int) {
+        lineDataSet.remove(lineDataSet.first { it.id == id })
+    }
+
     fun fetchMetrics(forceRefresh: Boolean): Observable<MetricsLineDataSet> {
         val from = DateUtils.getEpochSec(1)
         val to = DateUtils.getEpochSec(0)

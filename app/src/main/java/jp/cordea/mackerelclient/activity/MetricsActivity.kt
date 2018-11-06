@@ -110,7 +110,8 @@ class MetricsActivity : AppCompatActivity(),
     }
 
     override fun onDelete(id: Int) {
-        adapter.removeAt(id)
+        viewModel.removeBy(id)
+        refresh(false)
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingAndroidInjector
