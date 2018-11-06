@@ -3,6 +3,7 @@ package jp.cordea.mackerelclient.model
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.utils.ColorTemplate
 import jp.cordea.mackerelclient.api.response.MetricsResponse
 import jp.cordea.mackerelclient.utils.DateUtils
 
@@ -11,9 +12,22 @@ sealed class MetricsLineDataSet(
 ) {
     class Success(
         id: Int,
-        val label: String?,
-        val data: LineData
-    ) : MetricsLineDataSet(id)
+        val title: String?,
+        private val data: List<MetricsLineData>
+    ) : MetricsLineDataSet(id) {
+        private val xValues: List<String>
+            get() = data.first().x.map { it.value }
+
+        private fun getLineData(index: Int) =
+            data[index].toLineDataSet(ColorTemplate.COLORFUL_COLORS[index])
+
+        fun toLineData(): LineData =
+            LineData(xValues, getLineData(0)).also {
+                if (data.size > 1) {
+                    it.addDataSet(getLineData(1))
+                }
+            }
+    }
 
     class Failure(
         id: Int
@@ -23,7 +37,7 @@ sealed class MetricsLineDataSet(
 class MetricsLineData(
     val label: String,
     val x: List<MetricsLineX>,
-    val y: List<MetricsLineY>
+    private val y: List<MetricsLineY>
 ) {
     companion object {
         fun from(name: String, response: MetricsResponse) =
@@ -53,10 +67,3 @@ class MetricsLineX(
 ) {
     val value = DateUtils.stringFromEpoch(value)
 }
-
-fun List<LineDataSet>.toLineData(xValues: List<String>): LineData =
-    LineData(xValues, first()).also {
-        if (size > 1) {
-            it.addDataSet(this[1])
-        }
-    }

@@ -29,12 +29,12 @@ class MetricsAdapter(
             val item = items[position]
             when (item) {
                 is MetricsLineDataSet.Success -> {
-                    if (item.label.isNullOrBlank()) {
+                    if (item.title.isNullOrBlank()) {
                         binding.titleTextView.visibility = View.GONE
                     } else {
-                        binding.titleTextView.text = item.label
+                        binding.titleTextView.text = item.title
                     }
-                    setLineData(binding, item.data)
+                    binding.setLineData(item.toLineData())
                 }
                 is MetricsLineDataSet.Failure -> {
                     binding.titleTextView.visibility = View.GONE
@@ -51,28 +51,6 @@ class MetricsAdapter(
                 MetricsDeleteConfirmDialogFragment.newInstance(items[position].id)
                     .show(activity.supportFragmentManager, MetricsDeleteConfirmDialogFragment.TAG)
             }
-        }
-    }
-
-    private fun setLineData(binding: ListItemMetricsChartBinding, lineData: LineData) {
-        binding.lineChart.apply {
-            setDescription("")
-            xAxis.position = XAxis.XAxisPosition.BOTTOM
-
-            if (lineData.needFormat) {
-                val format = context.resources.getString(R.string.metrics_data_gb_format)
-                lineData.dataSets[0].label = format.format(lineData.dataSets[0].label)
-                if (lineData.dataSets.size > 1) {
-                    lineData.dataSets[1].label = format.format(lineData.dataSets[1].label)
-                }
-                axisRight.valueFormatter = MemoryValueFormatter()
-                axisLeft.valueFormatter = MemoryValueFormatter()
-            }
-
-            axisRight.setLabelCount(3, false)
-            axisLeft.setLabelCount(3, false)
-            data = lineData
-            invalidate()
         }
     }
 
@@ -101,11 +79,32 @@ class MetricsAdapter(
         notifyItemRangeChanged(index, itemCount - index)
     }
 
-    private val LineData.needFormat: Boolean
-        get() =
-            this.dataSets
-                .filter { "memory" == it.label.split(".")[0] }
-                .size == this.dataSets.size
+    private fun ListItemMetricsChartBinding.setLineData(lineData: LineData) {
+        lineChart.apply {
+            setDescription("")
+            xAxis.position = XAxis.XAxisPosition.BOTTOM
+
+            if (lineData.needsFormat) {
+                val format = context.resources.getString(R.string.metrics_data_gb_format)
+                lineData.dataSets[0].label = format.format(lineData.dataSets[0].label)
+                if (lineData.dataSets.size > 1) {
+                    lineData.dataSets[1].label = format.format(lineData.dataSets[1].label)
+                }
+                axisRight.valueFormatter = MemoryValueFormatter()
+                axisLeft.valueFormatter = MemoryValueFormatter()
+            }
+
+            axisRight.setLabelCount(3, false)
+            axisLeft.setLabelCount(3, false)
+            this.data = lineData
+            invalidate()
+        }
+    }
+
+    private val LineData.needsFormat: Boolean
+        get() = dataSets
+            .filter { "memory" == it.label.split(".")[0] }
+            .size == this.dataSets.size
 
     private class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val binding: ListItemMetricsChartBinding = ListItemMetricsChartBinding.bind(view)

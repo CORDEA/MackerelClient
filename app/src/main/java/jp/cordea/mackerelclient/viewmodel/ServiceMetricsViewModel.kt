@@ -1,12 +1,10 @@
 package jp.cordea.mackerelclient.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.github.mikephil.charting.utils.ColorTemplate
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import jp.cordea.mackerelclient.model.MetricsLineDataSet
 import jp.cordea.mackerelclient.model.UserDefinedMetrics
-import jp.cordea.mackerelclient.model.toLineData
 import jp.cordea.mackerelclient.repository.ServiceMetricsRepository
 import jp.cordea.mackerelclient.utils.DateUtils
 import javax.inject.Inject
@@ -38,18 +36,12 @@ class ServiceMetricsViewModel : ViewModel() {
                 .map { UserDefinedMetrics.from(it) }
                 .concatMapSingle { metrics ->
                     repository.getMetrics(serviceName, metrics, from, to)
-                        .flatMap<MetricsLineDataSet> { data ->
-                            Observable.range(0, data.size)
-                                .map { data[it].toLineDataSet(ColorTemplate.COLORFUL_COLORS[it]) }
-                                .toList()
-                                .map { list -> list.toLineData(data.first().x.map { it.value }) }
-                                .map {
-                                    MetricsLineDataSet.Success(
-                                        metrics.id,
-                                        metrics.label,
-                                        it
-                                    )
-                                }
+                        .map<MetricsLineDataSet> {
+                            MetricsLineDataSet.Success(
+                                metrics.id,
+                                metrics.label,
+                                it
+                            )
                         }
                         .onErrorReturnItem(MetricsLineDataSet.Failure(metrics.id))
                 }
