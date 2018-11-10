@@ -16,7 +16,7 @@ class MetricsEditRepository @Inject constructor(
         type: String,
         label: String,
         metric0: String,
-        metric1: String?
+        metric1: String
     ) = localDataSource.storeMetric(
         id,
         parentId,

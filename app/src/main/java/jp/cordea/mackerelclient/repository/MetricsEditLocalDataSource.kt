@@ -21,7 +21,7 @@ class MetricsEditLocalDataSource @Inject constructor() {
         type: String,
         label: String,
         metric0: String,
-        metric1: String?
+        metric1: String
     ) {
         val realm = Realm.getDefaultInstance()
         val query = realm.where(UserMetric::class.java)
@@ -32,9 +32,7 @@ class MetricsEditLocalDataSource @Inject constructor() {
                 metric.type = type
                 metric.label = label
                 metric.metric0 = metric0
-                if (!metric1.isNullOrBlank()) {
-                    metric.metric1 = metric1
-                }
+                metric.metric1 = metric1
             }
             realm.close()
             return
@@ -48,9 +46,7 @@ class MetricsEditLocalDataSource @Inject constructor() {
                 this.type = type
                 this.label = label
                 this.metric0 = metric0
-                if (!metric1.isNullOrBlank()) {
-                    this.metric1 = metric1
-                }
+                this.metric1 = metric1
             }
         }
         realm.close()
